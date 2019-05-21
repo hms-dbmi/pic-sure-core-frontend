@@ -1,0 +1,44 @@
+<div class="constrain-row row">
+    <div class="col-md-3 constrain-filter-btn">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle value-constraint-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{#if constrainByValue}}By numeric value{{else}}No value{{/if}}
+                <span class="glyphicon glyphicon-chevron-down blue"></span>
+            </button>
+            <ul class="constrain-dropdown-menu dropdown-menu" aria-labelledby="value-constraint-btn">
+                <li><a class="dropdown-item" href="#">No value</a></li>
+                <li><a class="dropdown-item" href="#">By numeric value</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="value-operator {{#unless constrainByValue}}hidden{{/unless}}">
+        <div class="col-md-4 constrain-filter-btn">
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle value-operator-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    {{{valueOperatorLabel}}}
+                    <span class="glyphicon glyphicon-chevron-down blue"></span>
+                </button>
+                <ul class="value-dropdown-menu dropdown-menu" aria-labelledby="value-operator-btn">
+                    <li><a class="dropdown-item" href="#" value="LT">Less than</a></li>
+                    <li><a class="dropdown-item" href="#" value="BETWEEN">Between</a></li>
+                    <li><a class="dropdown-item" href="#" value="GT">Greater than</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-1 constrain-filter-input">
+            <input class="constrain-value constrain-value-one form-control" value="{{constrainValueOne}}" type="number"></input>
+        </div>
+        <div class="{{#unless isValueOperatorBetween}}hidden{{/unless}}">
+            <div class="col-md-1 constrain-filter-input" style="width: 5%; text-align: center;">
+                <span class="glyphicon glyphicon-minus" style="margin-top: 25%;"></span>
+            </div>
+            <div class="col-md-1 constrain-filter-input">
+                <input class="constrain-value constrain-value-two form-control" value="{{constrainValueTwo}}" type="number"></input>
+            </div>
+        </div>
+    </div>
+    <div class="constrain-search-button col-md-1">
+        <span class="glyphicon glyphicon-ok btn search-btn constrain-apply-btn"></span>
+    </div>
+    <div class="validation-message col-md-12"></div>
+</div>

@@ -1,0 +1,24 @@
+version: '3'
+services:
+  httpd:
+    build:
+      context: ./httpd
+      dockerfile: Dockerfile
+    expose:
+      - 80
+      - 443
+    ports:
+      - 82:80
+      - 445:443
+    networks:
+      - udn-hpds
+    volumes:
+      - ./target/pic-sure-ui/webjars/META-INF/resources/webjars/:/usr/local/apache2/htdocs/webjars
+      - ./target/pic-sure-ui:/usr/local/apache2/htdocs
+      - ./src/main/javascript/overrides:/usr/local/apache2/htdocs/overrides
+      - ./src/main/javascript/hpds:/usr/local/apache2/htdocs/hpds
+      - ./src/main/resources:/usr/local/apache2/htdocs/settings
+networks:
+  udn-hpds:
+    external:
+      name: udn-hpds

@@ -1,0 +1,12 @@
+{
+  "resources":[
+		{
+			"id" : "UDN",
+			"name" : "UDN",
+			"basePath" : "/picsure",
+			"findPath" : "/PIC-SURE/search"
+		}
+		],
+  "helpLink": "mailto:udn@hms.harvard.edu",
+  "advancedSearchLink": "/transmart"
+}

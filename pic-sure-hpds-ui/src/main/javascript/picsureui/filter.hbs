@@ -1,0 +1,40 @@
+<div class="filter-row container">
+	<div class="filter-search-row row">
+        <div class="filter-edit">
+            <div class="filter-qualifier col-md-3">
+            </div>
+            <div class="filter-search-box col-md-7">
+                <div class="spinner-div"></div>
+                <input class="search-box form-control" placeholder="Search..." value="{{searchValue}}"></input>
+            </div>
+            <div class="search-tooltip-help col-md-2">
+            </div>
+            <!--div class="search-button col-md-2">
+                <span class="glyphicon glyphicon-search btn search-btn"></span>
+            </div-->
+        </div>
+        <div class="filter-saved">
+            <div class="filter-qualifier col-md-9">
+                <div class="filter-result-entry filter-result-saved">
+                    <span class="autocomplete-category">{{#if category}}{{category}}{{else}}Variant{{/if}}</span>
+                    <br></br>
+                    <div>
+                        <span class="search-value">{{searchValue}}</span>
+                    </div>
+                </div>
+            </div>
+                <div class="delete btn btn-default col-md-2">
+                    <a href="#">delete</a>
+                </div>
+                <div class="edit btn btn-default col-md-1">
+                    <a href="#">edit</a>
+                </div>
+        </div>
+    </div>
+    <div class="constrain-filter"></div>
+	<div class="search-tabs"></div>
+	<br></br>
+	<div class="filter-boolean-operator row hidden">
+	<span>AND</span>
+	</div>
+</div>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>edu.harvard.hms.dbmi.avillach.picsure.hpds</groupId>
+	<artifactId>pic-sure-hpds-ui</artifactId>
+	<version>1.0-SNAPSHOT</version>
+
+	<name>pic-sure-hpds-ui</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>edu.harvard.hms.dbmi.avillach.picsure</groupId>
+			<artifactId>pic-sure-ui</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jstree</artifactId>
+			<version>3.3.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>popper.js</artifactId>
+			<version>1.14.6</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>package</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>edu.harvard.hms.dbmi.avillach.picsure</groupId>
+									<artifactId>pic-sure-ui</artifactId>
+									<version>1.0-SNAPSHOT</version>
+									<type>zip</type>
+									<classifier>webapp</classifier>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack-dependencies</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/pic-sure-ui/webjars</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.github.searls</groupId>
+				<artifactId>jasmine-maven-plugin</artifactId>
+				<version>3.0-alpha-01</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<additionalContexts>
+						<additionalContext>
+							<contextRoot>/</contextRoot>
+							<directory>src/main/javascript/pic-sure-ui-patches</directory>
+						</additionalContext>
+						<additionalContext>
+							<contextRoot>picsureui</contextRoot>
+							<directory>target/pic-sure-ui/picsureui</directory>
+						</additionalContext>
+						<additionalContext>
+							<contextRoot>picsureui/webjars</contextRoot>
+							<directory>target/pic-sure-ui/webjars</directory>
+						</additionalContext>
+					</additionalContexts>
+					<specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
+					<customRunnerConfiguration>src/test/javascript/require_config.txt</customRunnerConfiguration>
+					<preloadSources>
+						<source>webjars/requirejs/2.3.5/require.min.js</source>
+					</preloadSources>
+					<srcDirectoryName>/picsureui</srcDirectoryName>
+					<jsSrcDir>src/main/javascript/picsureui</jsSrcDir>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>io.github.bonigarcia</groupId>
+						<artifactId>webdrivermanager</artifactId>
+						<version>3.3.0</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <version>3.1.0</version> 
+				<configuration> <descriptors> <descriptor>src/assembly/webapp-zip.xml</descriptor> 
+				<descriptor>src/assembly/archetype-assets.xml</descriptor> </descriptors> 
+				<attach>true</attach> <outputDirectory>target</outputDirectory> </configuration> 
+				<executions> <execution> <id>make-assembly</id> this is used for inheritance 
+				merges <phase>package</phase> bind to the packaging phase <goals> <goal>single</goal> 
+				</goals> </execution> </executions> </plugin> -->
+
+		</plugins>
+	</build>
+</project>

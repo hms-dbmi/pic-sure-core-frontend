@@ -1,0 +1,14 @@
+<div>
+<div id="patient-count-box">
+	<span class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</span>
+	<span id="patient-count" class="blue center large">{{#if queryRan}}{{#if countDisplayOverride}}{{> (countDisplayOverride) totalPatients}}{{else}}{{outputPanel_obfuscate totalPatients}}{{/if}}{{else}}-{{/if}}</span><br></br>
+	<span class="center medium">Total Patients</span><br></br>
+	<div class="container" id="pic-sure-instances">
+<a class="center btn btn-default" id="select-btn">Select Data For Export</a>
+<div id="select-spinner"></div>
+	</div>
+</div>
+<link rel="stylesheet" href="/picsureui/webjars/jstree/3.3.7/themes/default/style.min.css"></link>
+<div id="concept-tree-div">
+</div>
+</div>

@@ -1,0 +1,14 @@
+<div class="filter-search row">
+    <ul class="nav nav-pills">
+        {{#each this}}
+	        <li data-toggle="tooltip" title="{{description}}"><a href="#{{this}}" data-label="{{this}}" data-toggle="tab" aria-expanded="true">{{this}}</a></li>
+        {{/each}}
+    </ul>
+
+    <div class="tab-content">
+	    	{{#each this}}
+			<div class="tab-pane" id="{{this}}"></div>
+		{{/each}}
+	</div>
+
+</div>

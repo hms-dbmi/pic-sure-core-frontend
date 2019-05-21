@@ -1,0 +1,339 @@
+#main-content {
+     width: 80%;
+     position: relative;
+     margin-top: 2em;
+     margin-bottom: 2em;
+     padding-bottom: 2em;
+}
+ #patient-count-box {
+     line-height: 1;
+     border-width: 1px;
+     border-style: solid;
+     border-color: lightgrey;
+     padding: 40px 0px;
+}
+.query-builder-heading {
+	color: gray;
+}
+.advanced-search-btn {
+	top: 2em;
+}
+.query-name {
+	font-size: 2.5em;
+}
+ .large {
+     font-size: 5em;
+}
+ .medium {
+     font-size: 1.5em;
+}
+ .small {
+     font-size: .75em;
+}
+ .center {
+     text-align: center;
+     display: block;
+}
+ .blue {
+     color: black;
+}
+ .autocomplete-category {
+     font-size: .7em;
+     color: #bf6d6d;
+}
+ .autocomplete-term-parent {
+     font-size: .7em;
+     color: lightblue;
+}
+
+ .autocomplete-term {
+     cursor: pointer;
+ }
+
+.autocomplete-suggestions {
+    overflow-y: auto;;
+    border-bottom: 1px solid lightgrey;
+}
+
+.suggestion-container {
+    border: solid;
+    border-top: 0px;
+    border-color: lightgrey;
+    border-width: 1px;
+    background-color: white;
+    padding: 5px;
+}
+
+.btn:hover {
+    color: #ffffff;
+    background-color: #76a6de;
+}
+.btn-default:hover {
+    color: #ffffff;
+    background-color: #76a6de;
+}
+.btn-default.active:hover {
+    color: #ffffff;
+    background-color: #76a6de;
+}
+ #filter-list {
+     width: 100%;
+}
+ .filter-list-entry {
+     padding: 10px 10px 10px 10px;
+}
+ .filter-row {
+     width: 100%;
+}
+ .filter-search-row {
+     background-color: rgb(223, 238, 255);
+     padding: 10px;
+}
+
+ .filter-search {
+     background-color: rgb(223, 238, 255);
+ }
+
+ .filter-boolean-operator-btn {
+     background-color: #4a90e2;
+     color: white;
+}
+ .search-box-spinner {
+     position: absolute !important;
+     right: 1.5em;
+     left: auto !important;
+}
+ .logo-img {
+     max-height: 90px;
+     max-width: 275px;
+}
+ #pic-sure-instances {
+     width: 100%;
+}
+ #header {
+     color: black;
+     width: 100%;
+     background-color: white;
+}
+ #header-content {
+     width: 80%;
+     height: 80px;
+     overflow: hidden;
+}
+ .header-btn {
+     top: 40px;
+     border-radius: 0px;
+     background-color: light-gray;
+     border: none;
+     color: black;
+}
+
+.search-btn {
+     background-color: #4a90e2;
+     color: white;
+     border-radius: 0px;
+}
+ .header-btn.active {
+     border-bottom: 10px;
+     border-bottom-color: white;
+     border-bottom-style: solid;
+     box-shadow: none;
+     -webkit-box-shadow: none;
+     background-color: light-gray;
+     color: black;
+}
+ .right {
+     text-align: right;
+}
+ .left {
+     text-align: left;
+}
+ .help-btn {
+     background-color: white;
+     border: none;
+     width:5em;
+     border-radius: 0px;
+     float: right;
+     color: black;
+}
+ .spinner {
+     position: absolute;
+     margin-top: 5px;
+     border-radius: 50%;
+     border: 3px solid #f3f3f3;
+     border-top: 3px solid #4e92df;
+     width: 20px;
+     height: 20px;
+     -webkit-animation: spin 0.7s linear infinite;
+     animation: spin 0.7s linear infinite;
+}
+ .spinner-medium {
+     width: 40px;
+     height: 40px;
+}
+ .spinner-large {
+     width: 60px;
+     height: 60px;
+     border-width: 10px;
+     margin-top: 10px;
+}
+ .spinner-center {
+     left: 50%;
+     margin-left: -10px;
+}
+ .spinner-medium-center {
+     left: 50%;
+     margin-left: -20px;
+}
+ .spinner-large-center {
+     left: 50%;
+     margin-left: -30px;
+}
+ @-webkit-keyframes spin {
+     0% {-webkit-transform: rotate(0deg);}
+     100% {-webkit-transform : rotate(360deg);}
+}
+ @keyframes spin {
+     0% {transform: rotate(0deg);}
+     100% {transform : rotate(360deg);}
+}
+
+.picsure-border-frame {
+    border: 2px solid rgb(223, 238, 255);
+    border-top: 0px;
+}
+
+.list-group-item {
+    border: none;
+    /* border-bottom: 1px solid #e0eeff !important; */
+}
+
+.filter-result-entry {
+    padding: 5px 10px;
+}
+
+.node-tree-view .icon {
+    color: #65a1e6;
+}
+
+.treeview .list-group-item {
+    border-top: 1px solid rgb(223, 238, 255);
+    border-radius: 0px !important;
+}
+
+.list-group-item:last-child {
+    margin-bottom: -20px;
+    font-weight: bold;
+}
+
+.tab-row {
+    margin-right: -10px;
+    margin-left: -10px;
+}
+
+.tab-pane {
+    overflow-y: auto;
+    max-height: 300px;
+    background: white;
+    border-bottom: 1px solid rgb(223, 238, 255);
+}
+
+.nav-pills {
+    padding: 10px;
+}
+
+.nav-pills>li {
+    padding-right: 10px;
+}
+
+.nav>li>a {
+    padding: 5px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.filter-saved {
+    display: none;
+}
+
+.saved .filter-saved {
+    display: block !important;
+}
+
+.saved .filter-edit {
+    display: none;
+}
+
+.filter-result-saved {
+    font-size: 1.2em;
+}
+
+.constrain-filter {
+    margin-left: 40px;
+}
+
+.constrain-row {
+    background-color: rgb(193, 222, 254);
+    padding: 10px;
+}
+
+.constrain-filter button {
+    border-radius: 0px;
+    width: 100%;
+}
+
+.constrain-filter input {
+    border-radius: 0px;
+}
+
+.constrain-filter .constrain-filter-btn {
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.constrain-filter .constrain-filter-input {
+    padding: 0px;
+}
+
+.validation-message div {
+    text-align: center;
+}
+
+.field-invalid  {
+    border: 2px solid red;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+#footer-content{	
+    background-image: linear-gradient(white, #ddd);
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+#footer{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+}
+

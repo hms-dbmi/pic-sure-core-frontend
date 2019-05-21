@@ -1,0 +1,20 @@
+<div class="constrain-row row">
+    <div class="col-md-4 constrain-filter-btn">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle value-constraint-genetics-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{#if constrainValueTwo}}{{constrainValueTwo}}{{else}}Homozygous or Heterozygous{{/if}}
+                <span class="glyphicon glyphicon-chevron-down blue"></span>
+            </button>
+            <ul class="constrain-genetics-dropdown-menu dropdown-menu" aria-labelledby="value-constraint-genetics-btn">
+                <li><a class="dropdown-item" href="#">Homozygous or Heterozygous</a></li>
+                <li><a class="dropdown-item" href="#">Homozygous</a></li>
+                <li><a class="dropdown-item" href="#">Heterozygous</a></li>
+                <li><a class="dropdown-item" href="#">Exclude Variant</a></li>
+            </ul>
+        </div>
+    </div>
+     <div class="constrain-search-button col-md-1">
+        <span class="glyphicon glyphicon-ok btn search-btn constrain-apply-btn"></span>
+    </div>
+    <div class="validation-message col-md-12"></div>
+</div>

@@ -1,0 +1,30 @@
+<i class='btn glyphicon glyphicon-info-sign search-tooltip-help-icon' data-toggle="modal" data-target="#search-help-modal"></i>
+<div class="modal fade" id="search-help-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Instructions:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<h2>Welcome to the PIC-SURE UI!</h2>
+      	<p>This app is intended to work as closely as possible to your favorite search engine. You can enter any search term and we will present you with a series of results that can be used to filter subsets of the data. There are many phenotypes in the system, try entering "asthma" and press enter. You will find several tabs of search results.</p>
+
+      	<p>When you select a search result, you will be presented with options to filter your subset using this phenotype or variant INFO column. Phenotype filters apply to study participants directly. If you filter by age less than 50, you will only have participants included in your participants counts and export data that match that filter. Variant INFO columns apply to variants that are used to filter patients. In order for a participants to be included, it must match ALL of the Phenotype filters that you have created as well as have at least one variant that matches ALL of your variant INFO filters.</p>
+
+      	<p>Once you have filtered your subset of participants, you can click the "Select Data for Export" button at which time you will be presented with a data selection tree. Check the boxes you wish to export data for and click the "Prepare Download" button. This will create an export for only the participants that are in your filtered subset with only the variables you have selected. Once the "Download" button appears, click it to receive your data. No matter what checkboxes you click, your results will always include phenotypes that were used in filters as well as the UDN ID of each participant.</p>
+
+      	<p>Phenotype result tabs start with a number and are separated by underscores. Variant INFO result tabs are typically 2 capital letter abbreviations. There is a full listing and explaination of the INFO columns below.</p>
+      	<br>
+        <div>
+        	{{#each this}}<div class="row"><span class="col-md-2">{{key}}</span><span class="col-md-10">{{description}}</span></div><br>{{/each}}</p>
+      	</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

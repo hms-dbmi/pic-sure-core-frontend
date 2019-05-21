@@ -1,0 +1,20 @@
+<div class="constrain-row row">
+    <div class="col-md-4 constrain-filter-btn">
+    </div>
+        <div class="checkbox-list">
+            {{#if metadata.continuous}}
+                <label>Min</label><input class="constrain-value constrain-value-one form-control" value="{{constrainValueOne}}" type="number"></input><span class="value-range-hint">(default : {{metadata.min}})</span><br>
+                <label>Max</label><input class="constrain-value constrain-value-two form-control" value="{{constrainValueTwo}}" type="number"></input><span class="value-range-hint">(default : {{metadata.max}})</span>
+            {{else}}
+                {{#each metadata.values}}
+                    <div class="checkbox wrap-text">
+                        <label><input type="radio" id="{{this}}" name="{{../category}}" value="{{this}}">{{this}}</label>
+                    </div>
+                {{/each}}
+            {{/if}}
+        </div>
+    <div class="constrain-search-button col-md-1">
+        <span class="glyphicon glyphicon-ok btn search-btn constrain-apply-btn"></span>
+    </div>
+    <div class="validation-message col-md-12"></div>
+</div>
