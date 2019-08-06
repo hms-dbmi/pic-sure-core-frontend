@@ -1,12 +1,13 @@
 {
   "resources":[
 		{
-			"id" : "foo",
-			"name" : "bar",
+			"id" : "HPDS",
+			"name" : "HPDS",
 			"basePath" : "/picsure",
 			"findPath" : "/PIC-SURE/search"
 		}
 		],
-  "helpLink": "",
-  "advancedSearchLink": "/transmart"
+  "picSureResourceId":"",
+  "helpLink": "about:blank",
+  "advancedSearchLink": ""
 }
