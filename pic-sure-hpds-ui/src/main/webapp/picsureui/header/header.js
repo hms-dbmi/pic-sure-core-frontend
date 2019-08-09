@@ -14,7 +14,7 @@ define(["backbone","handlebars", "text!header/header.hbs", "overrides/header", "
 		render : function(){
 			this.$el.html(this.template({
 				logoPath: (overrides.logoPath
-					? overrides.logoPath : "/images/PrecisionLinkPortal.png"),
+					? overrides.logoPath : "/images/logo.png"),
 				helpLink: JSON.parse(settings).helpLink
 			}));
 			$.ajax({
