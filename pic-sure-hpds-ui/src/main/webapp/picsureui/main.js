@@ -13,7 +13,8 @@ require.config({
 		treeview: 'webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min',
 		treeviewStyles: 'webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css',
 		Noty: 'webjars/noty/3.1.4/lib/noty',
-		NotyStyles: 'webjars/noty/3.1.4/lib/noty.css'
+		NotyStyles: 'webjars/noty/3.1.4/lib/noty.css',
+		"jstree":"webjars/jstree/3.3.7/jstree"
 	},
 	shim: {
 		"bootstrap": {
@@ -24,6 +25,9 @@ require.config({
 		},
 		"common/startup":{
 			deps:["overrides/main"]
+		},
+		"jstree": {
+			deps: ["jquery"]
 		}
 	}
 });

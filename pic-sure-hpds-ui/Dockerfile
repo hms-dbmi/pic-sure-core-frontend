@@ -20,7 +20,6 @@ RUN sed -i '/^#LoadModule rewrite_module modules\/mod_rewrite.so/s/^#//' ${HTTPD
 RUN sed -i '/^#LoadModule socache_shmcb_module modules\/mod_socache_shmcb.so/s/^#//' ${HTTPD_PREFIX}/conf/httpd.conf
 RUN mkdir /usr/local/apache2/logs/ssl_mutex
 
-COPY target/pic-sure-hpds-ui/webjars/META-INF/resources/webjars /usr/local/apache2/htdocs/webjars
-COPY src/main/picsureui/overrides /usr/local/apache2/htdocs/picsureui/overrides
-COPY /src/main/webapp/picsureui /usr/local/apache2/htdocs/picsureui
+COPY target/webjars/META-INF/resources/webjars /usr/local/apache2/htdocs/picsureui/webjars
+COPY src/main/webapp/picsureui /usr/local/apache2/htdocs/picsureui
 COPY src/main/resources /usr/local/apache2/htdocs/picsureui/settings
