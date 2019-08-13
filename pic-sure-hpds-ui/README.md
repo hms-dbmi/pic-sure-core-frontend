@@ -10,7 +10,7 @@ functionality and styling of the PIC-SURE UI project.
 
 The PIC-SURE UI base project can be seen here:
 
-https://github.com/hms-dbmi/pic-sure-ui
+https://github.com/hms-dbmi/pic-sure-hpds-ui
 
 To run your local development environment you will need the following:
 
@@ -24,7 +24,7 @@ mvn clean install       # this retrieves dependencies
 docker-compose up -d    # this starts an apache httpd server that hosts the app
 
 You can then point your browser at your docker node. You might be using
-docker-machine, you might not this is dependent on your environment. 
+docker-machine, you might not this is dependent on your environment.
 
 Once the app is running, you can edit the files in src/main/javascript
 and src/main/resources and just refresh your browser to see the changes.
@@ -56,5 +56,3 @@ If your changes are applicable to the general use-cases for PIC-SURE UI
 we might want to integrate them into the base project. Also, if you believe
 we could better serve the community by adding more default extension points
 please let us know at: avillach-lab-developers@googlegroups.com
-
-

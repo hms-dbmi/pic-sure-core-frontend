@@ -4,11 +4,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>edu.harvard.hms.dbmi.avillach.picsure</groupId>
+	<groupId>edu.harvard.hms.dbmi.avillach.picsure.hpds</groupId>
 	<artifactId>pic-sure-hpds-ui-libs</artifactId>
 	<version>1.0-SNAPSHOT</version>
 
-	<name>pic-sure-ui-libs</name>
+	<name>pic-sure-hpds-ui-libs</name>
 
 	<dependencies>
 		<dependency>
@@ -70,6 +70,11 @@
 			<groupId>org.webjars.bower</groupId>
 			<artifactId>auth0-lock</artifactId>
 			<version>11.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jstree</artifactId>
+			<version>3.3.7</version>
 		</dependency>
 	</dependencies>
 </project>

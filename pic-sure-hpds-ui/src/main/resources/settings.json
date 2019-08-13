@@ -1,12 +1,13 @@
 {
   "resources":[
 		{
-			"id" : "UDN",
-			"name" : "UDN",
+			"id" : "HPDS",
+			"name" : "HPDS",
 			"basePath" : "/picsure",
 			"findPath" : "/PIC-SURE/search"
 		}
 		],
-  "helpLink": "mailto:udn@hms.harvard.edu",
-  "advancedSearchLink": "/transmart"
+  "picSureResourceId":"",
+  "helpLink": "about:blank",
+  "advancedSearchLink": ""
 }
