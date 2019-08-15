@@ -324,6 +324,11 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
 #footer-content{
     background-image: linear-gradient(white, #ddd);
     padding-top: .5em;

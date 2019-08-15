@@ -1,3 +1,7 @@
+<div class="constrain-row row {{#unless constrainByValue}}hidden{{/unless}}" style="padding-bottom: 0px;padding-top: 4px;">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">value range, min: {{metadata.min}} - max: {{metadata.max}}</div>
+</div>
 <div class="constrain-row row">
     <div class="col-md-3 constrain-filter-btn">
         <div class="dropdown">
@@ -19,9 +23,9 @@
                     <span class="glyphicon glyphicon-chevron-down blue"></span>
                 </button>
                 <ul class="value-dropdown-menu dropdown-menu" aria-labelledby="value-operator-btn">
-                    <li><a class="dropdown-item" href="#" value="LT">Less than</a></li>
+                    <li><a class="dropdown-item" href="#" value="LT">Less than or equal to</a></li>
                     <li><a class="dropdown-item" href="#" value="BETWEEN">Between</a></li>
-                    <li><a class="dropdown-item" href="#" value="GT">Greater than</a></li>
+                    <li><a class="dropdown-item" href="#" value="GT">Greater than or equal to</a></li>
                 </ul>
             </div>
         </div>
@@ -40,5 +44,5 @@
     <div class="constrain-search-button col-md-1">
         <span class="glyphicon glyphicon-ok btn search-btn constrain-apply-btn"></span>
     </div>
-    <div class="validation-message col-md-12"></div>
+    <div class="validation-message col-md-12" style="color:red;"></div>
 </div>

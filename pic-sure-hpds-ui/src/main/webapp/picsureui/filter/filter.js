@@ -238,16 +238,23 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 				var constrainParams = this.model.get("constrainParams");
 				var constrainValueOne = constrainParams.get("constrainValueOne").trim();
 
-				if (constrainValueOne == "" || isNaN(constrainValueOne)) {
+				if (constrainValueOne == "" || isNaN(constrainValueOne)
+					|| !this.isValueInRange(constrainValueOne, this.model.attributes.concept.metadata.min, this.model.attributes.concept.metadata.max)) {
 					$('.constrain-value-one', this.$el).addClass("field-invalid");
 					isValid = false;
 				}
 				if (constrainParams.get("isValueOperatorBetween")) {
 					var constrainValueTwo = constrainParams.get("constrainValueTwo").trim();
-					if (constrainValueTwo == "" || isNaN(constrainValueTwo)) {
-						$('.constrain-value-two', this.$el).addClass("field-invalid")
+					if (constrainValueTwo == "" || isNaN(constrainValueTwo)
+						|| !this.isValueInRange(constrainValueTwo, this.model.attributes.concept.metadata.min, this.model.attributes.concept.metadata.max)) {
+						$('.constrain-value-two', this.$el).addClass("field-invalid");
 						isValid = false;
 					}
+				}
+				if (Number(constrainValueOne) > Number(constrainValueTwo){
+					$('.constrain-value-one', this.$el).addClass("field-invalid");
+					$('.constrain-value-two', this.$el).addClass("field-invalid");
+					isValid = false;
 				}
 			}
 			return isValid;
@@ -278,8 +285,14 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 				$('.constrain-filter', this.$el).html("");
 				this.onSelect(event);
 			} else {
-				notification.showValidationMessage("Value required! Correct invalid fields.", '.validation-message');
+				notification.showValidationMessage("Value invalid! Correct invalid fields.", '.validation-message');
 			}
+		},
+		isValueInRange: function(value, min, max){
+			if (value < min || value > max)
+				return false;
+			else
+				return true;
 		},
 		geneticSelections: function(searchString){
 			if(/\d+,\d+,.*,.*/.test(searchString)||(/\d+:\d+_.*/.test(searchString))){
