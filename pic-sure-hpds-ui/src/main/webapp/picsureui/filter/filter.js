@@ -285,7 +285,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 				$('.constrain-filter', this.$el).html("");
 				this.onSelect(event);
 			} else {
-				notification.showValidationMessage("Value required! Correct invalid fields.", '.validation-message');
+				notification.showValidationMessage("Value invalid! Correct invalid fields.", '.validation-message');
 			}
 		},
 		isValueInRange: function(value, min, max){
