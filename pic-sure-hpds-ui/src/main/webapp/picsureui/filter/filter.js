@@ -251,7 +251,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 						isValid = false;
 					}
 				}
-				if (Number(constrainValueOne) > Number(constrainValueTwo){
+				if (Number(constrainValueOne) > Number(constrainValueTwo)){
 					$('.constrain-value-one', this.$el).addClass("field-invalid");
 					$('.constrain-value-two', this.$el).addClass("field-invalid");
 					isValid = false;
