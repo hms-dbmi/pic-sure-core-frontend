@@ -1,19 +1,41 @@
 define([ "text!../settings/settings.json" ], function(settings){
+
+    var queryTemplate = {
+        categoryFilters: {},
+        numericFilters:{},
+        requiredFields:[],
+        variantInfoFilters:[
+            {
+                categoryVariantInfoFilters:{},
+                numericVariantInfoFilters:{}
+            }
+        ],
+        expectedResultType: "COUNT"
+    };
+
+    $.ajax({
+        url: window.location.origin + "/user/me/queryTemplate/" + JSON.parse(settings).applicationIdForBaseQuery,
+        type: 'GET',
+        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+        contentType: 'application/json',
+        success: function (response) {
+            queryTemplate = response.queryTemplate;
+        }.bind(this),
+        error: function (response) {
+        	if (response.status == 401) {
+                localStorage.clear();
+                window.location = "/";
+			}
+            console.log("Cannot retrieve query template with status: " + response.status);
+            console.log(response);
+        }.bind(this)
+    });
+
+
 	var createQuery = function(filters){
 		var query = {
 			resourceUUID: JSON.parse(settings).picSureResourceId,
-			query:{
-			categoryFilters: {},
-			numericFilters:{},
-			requiredFields:[],
-			variantInfoFilters:[
-				{
-					categoryVariantInfoFilters:{},
-					numericVariantInfoFilters:{}
-				}
-			],
-			expectedResultType: "COUNT"
-		}};
+			query: queryTemplate};
 		var lastFilter = undefined;
 		_.each(filters, function(filter){
 			if(filter.get("searchTerm").trim().length !== 0){
