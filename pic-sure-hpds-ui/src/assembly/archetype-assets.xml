@@ -10,7 +10,7 @@
 		<fileSet>
 			<outputDirectory>src/main/javascript</outputDirectory>
 			<includes>
-				<include>overrides/**</include>
+				<include>**</include>
 			</includes>
 			<directory>src/main/webapp</directory>
 			<lineEnding>keep</lineEnding>

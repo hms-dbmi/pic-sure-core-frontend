@@ -86,7 +86,11 @@ define(["common/spinner", "backbone", "handlebars", "text!filter/searchResult.hb
                     this.filterView.render();
                     this.filterView.$el.addClass("saved");
                 }
+                this.filterView.model.attributes.constrainParams.attributes.constrainByValue=true;
                 this.filterView.updateConstrainFilterMenu();
+                if(this.model.attributes.columnDataType==="CATEGORICAL"){
+                    $('.constrain-apply-btn', this.filterView.$el).click();
+                }
             },
             getValueType : function(dataType)
             {

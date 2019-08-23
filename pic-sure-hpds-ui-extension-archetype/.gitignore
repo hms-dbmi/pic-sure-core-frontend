@@ -19,4 +19,4 @@ target/
 tomcat/build
 
 # These assets are copied in as part of the build to always be up to date
-src/
+src/main/resources/archetype-resources

@@ -99,9 +99,16 @@ define(["text!../settings/settings.json","common/spinner", "output/dataSelection
 					 		dataCallback(response);
 					 	},
 					 	error: function(response){
-							response.responseText = "<h4>There are over 100,000 variants that match your filter, please narrow your criteria by adding new variant filters or adjusting your current ones.</h4>";
-					 		errorCallback(response.responseText);//console.log("error");console.log(response);
-					 	}
+							if (response.status === 401) {
+								localStorage.clear();
+								window.location = "/";
+							} else {
+								response.responseText = "<h4>"
+									+ overides.outputErrorMessage ? overides.outputErrorMessage : "There is something wrong when processing your query, please try it later, if this repeats, please contact admin."
+									+ "</h4>";
+						 		errorCallback(response.responseText);//console.log("error");console.log(response);
+							}
+						}
 					});
 				},
 				render: function(){
