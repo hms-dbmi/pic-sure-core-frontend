@@ -29,9 +29,9 @@ define(["filter/filterList", "header/header", "footer/footer", "text!../settings
 			        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
 			        contentType: 'application/json',
 			        success: function (response) {
-									var session = JSON.parse(sessionStorage.getItem("session"));
+			        	var session = JSON.parse(sessionStorage.getItem("session"));
 			            session.queryTemplate = response.queryTemplate;
-									sessionStorage.setItem("session") = JSON.stringify(session);
+			            sessionStorage.setItem("session", JSON.stringify(session));
 			        }.bind(this),
 			        error: function (response) {
 			        	if (response.status == 401) {
