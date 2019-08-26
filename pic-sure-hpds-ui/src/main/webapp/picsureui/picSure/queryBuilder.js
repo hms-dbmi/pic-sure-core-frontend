@@ -18,10 +18,12 @@ define([ "text!../settings/settings.json" ], function(settings){
     return generateQuery(filters,JSON.parse(JSON.parse(sessionStorage.getItem("session")).queryTemplate));
 	};
 
-	var generateQuery = function(filters, queryTemplate) {
+	var generateQuery = function(filters, template) {
+		if (template === undefined)
+			queryTemplate = queryTemplate;
 		var query = {
 			resourceUUID: JSON.parse(settings).picSureResourceId,
-			query: queryTemplate};
+			query: template};
 		var lastFilter = undefined;
 		_.each(filters, function(filter){
 			if(filter.get("searchTerm").trim().length !== 0){
