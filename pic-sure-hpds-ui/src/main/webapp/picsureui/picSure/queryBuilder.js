@@ -13,26 +13,12 @@ define([ "text!../settings/settings.json" ], function(settings){
         expectedResultType: "COUNT"
     };
 
-    $.ajax({
-        url: window.location.origin + "/user/me/queryTemplate/" + JSON.parse(settings).applicationIdForBaseQuery,
-        type: 'GET',
-        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-        contentType: 'application/json',
-        success: function (response) {
-            queryTemplate = response.queryTemplate;
-        }.bind(this),
-        error: function (response) {
-        	if (response.status == 401) {
-                localStorage.clear();
-                window.location = "/";
-			}
-            console.log("Cannot retrieve query template with status: " + response.status);
-            console.log(response);
-        }.bind(this)
-    });
-
-
 	var createQuery = function(filters){
+
+    return generateQuery(filters,JSON.parse(JSON.parse(sessionStorage.getItem("session")).queryTemplate));
+	};
+
+	var generateQuery = function(filters, queryTemplate) {
 		var query = {
 			resourceUUID: JSON.parse(settings).picSureResourceId,
 			query: queryTemplate};
@@ -89,10 +75,10 @@ define([ "text!../settings/settings.json" ], function(settings){
 			lastFilter = filter;
 		});
 		return query;
-	};
+	}
 
 
 	return {
-		createQuery
+		createQuery:createQuery
 	}
 });
