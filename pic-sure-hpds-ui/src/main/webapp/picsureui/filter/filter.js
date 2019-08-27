@@ -37,6 +37,11 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.constrainFilterMenuVariantInfoTemplate = HBS.compile(constrainFilterMenuVariantInfoTemplate);
 
 			overrides.showSearchResults ? this.showSearchResults = overrides.showSearchResults.bind(this) : this.showSearchResults = this.showSearchResults.bind(this);
+			$('.search-help-tooltip').tooltip();
+			ontology.allInfoColumnsLoaded.then(function(){
+				$('.search-tooltip-help').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
+				$('.search-tooltip-help', this.$el).tooltip();
+			}.bind(this));
 		},
 		tagName: "div",
 		className: "filter-list-entry row",
@@ -311,14 +316,6 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			var model = this.model;
 
 			$('.dropdown-toggle', this.$el).dropdown();
-
-			$('.search-help-tooltip', this.$el).tooltip();
-			var bindSearchInfoHelpTooltip = function(){
-				$('.search-tooltip-help').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
-				$('.search-tooltip-help', this.$el).tooltip();
-			}.bind(this);
-			ontology.allInfoColumnsLoaded.then(bindSearchInfoHelpTooltip);
-			bindSearchInfoHelpTooltip();
 
 			this.delegateEvents();
 		}
