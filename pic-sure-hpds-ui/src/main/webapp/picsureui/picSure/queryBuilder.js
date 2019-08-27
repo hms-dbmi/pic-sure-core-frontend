@@ -17,7 +17,7 @@ define([ "text!../settings/settings.json" ], function(settings){
 		var lastFilter = undefined;
 		_.each(filters, function(filter){
 			if(filter.get("searchTerm").trim().length !== 0){
-				if(filter.attributes.constrainByValue){
+				if(filter.attributes.constrainByValue || filter.get("constrainParams").get("constrainByValue")){
 					if(filter.attributes.valueType==="INFO"){
 						var variantInfoFilter = {};
 						query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category] = filter.attributes.variantInfoConstraints.categoryVariantInfoFitlers[filter.attributes.category];
