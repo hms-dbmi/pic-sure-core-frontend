@@ -40,7 +40,8 @@ define([ "text!../settings/settings.json" ], function(settings){
 								max: max
 						}
 					}else if(filter.attributes.valueType==="STR"){
-						if(filter.get("constrainParams").get("constrainValueOne")==="Any Value"){
+						if(filter.get("constrainParams").get("constrainValueOne")==="Any Value"
+							|| filter.get("constrainParams").get("constrainValueOne")===""){
 							query.query.requiredFields.push(filter.get("searchTerm"));
 						}else{
 							query.query.categoryFilters[filter.get("searchTerm")] = [filter.get("constrainParams").get("constrainValueOne")];
