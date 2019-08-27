@@ -313,10 +313,12 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			$('.dropdown-toggle', this.$el).dropdown();
 
 			$('.search-help-tooltip', this.$el).tooltip();
-			ontology.allInfoColumnsLoaded.then(function(){
+			var bindSearchInfoHelpTooltip = function(){
 				$('.search-tooltip-help').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
 				$('.search-tooltip-help', this.$el).tooltip();
-			}.bind(this));
+			}.bind(this);
+			ontology.allInfoColumnsLoaded.then(bindSearchInfoHelpTooltip);
+			bindSearchInfoHelpTooltip();
 
 			this.delegateEvents();
 		}
