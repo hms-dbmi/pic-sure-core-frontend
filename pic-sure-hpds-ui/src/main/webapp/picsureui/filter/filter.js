@@ -275,7 +275,9 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 				}else{
 					if (this.model.get("constrainParams").get("constrainByValue")){
 						var constrains = this.model.get("constrainParams");
-						var searchParam = constrains.get("valueOperatorLabel")
+						var searchParam = 
+							(constrains.get("constrainValueOne")=="" && constrains.get("constrainValueTwo")=="") ? "" :
+						constrains.get("valueOperatorLabel")
 						+ " "
 						+ constrains.get("constrainValueOne")
 						+ (constrains.get("isValueOperatorBetween") ?
