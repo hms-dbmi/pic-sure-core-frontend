@@ -273,7 +273,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 					this.model.get("constrainParams").set("constrainValueTwo", $(".value-constraint-genetics-btn", this.$el).text());
 					$('.search-value', this.$el).html(this.model.get("constrainParams").get("constrainValueTwo") + " : " + this.model.get("searchTerm"));
 				}else{
-					if (this.model.get("constrainByValue")){
+					if (this.model.get("constrainParams").get("constrainByValue")){
 						var constrains = this.model.get("constrainParams");
 						var searchParam = constrains.get("valueOperatorLabel")
 						+ " "
