@@ -35,6 +35,8 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.constrainFilterMenuCategoriesTemplate = HBS.compile(constrainFilterMenuCategoriesTemplate);
 			this.constrainFilterMenuGeneticsTemplate = HBS.compile(constrainFilterMenuGeneticsTemplate);
 			this.constrainFilterMenuVariantInfoTemplate = HBS.compile(constrainFilterMenuVariantInfoTemplate);
+
+			overrides.showSearchResult ? this.showSearchResults = overrides.showSearchResult.bind(this) : this.showSearchResults = this.showSearchResults.bind(this);
 		},
 		tagName: "div",
 		className: "filter-list-entry row",
