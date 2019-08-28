@@ -15,7 +15,7 @@ define([ "text!../settings/settings.json" ], function(settings){
 
 	var createQuery = function(filters){
 
-    return generateQuery(filters,JSON.parse(JSON.parse(sessionStorage.getItem("session")).queryTemplate));
+        return generateQuery(filters,JSON.parse(JSON.parse(sessionStorage.getItem("session")).queryTemplate));
 	};
 
 	var generateQuery = function(filters, template) {
@@ -77,7 +77,7 @@ define([ "text!../settings/settings.json" ], function(settings){
 			lastFilter = filter;
 		});
 		return query;
-	}
+	};
 
 
 	return {
