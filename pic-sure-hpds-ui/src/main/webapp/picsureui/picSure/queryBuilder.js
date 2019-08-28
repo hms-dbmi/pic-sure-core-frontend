@@ -20,7 +20,7 @@ define([ "text!../settings/settings.json" ], function(settings){
 
 	var generateQuery = function(filters, template) {
 		if (!template)
-			queryTemplate = queryTemplate;
+			template = queryTemplate;
 		var query = {
 			resourceUUID: JSON.parse(settings).picSureResourceId,
 			query: template};
