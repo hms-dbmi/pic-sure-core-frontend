@@ -35,6 +35,13 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.constrainFilterMenuCategoriesTemplate = HBS.compile(constrainFilterMenuCategoriesTemplate);
 			this.constrainFilterMenuGeneticsTemplate = HBS.compile(constrainFilterMenuGeneticsTemplate);
 			this.constrainFilterMenuVariantInfoTemplate = HBS.compile(constrainFilterMenuVariantInfoTemplate);
+
+			overrides.showSearchResults ? this.showSearchResults = overrides.showSearchResults.bind(this) : this.showSearchResults = this.showSearchResults.bind(this);
+			$('.search-help-tooltip').tooltip();
+			ontology.allInfoColumnsLoaded.then(function(){
+				$('.search-tooltip-help').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
+				$('.search-tooltip-help', this.$el).tooltip();
+			}.bind(this));
 		},
 		tagName: "div",
 		className: "filter-list-entry row",
@@ -271,9 +278,11 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 					this.model.get("constrainParams").set("constrainValueTwo", $(".value-constraint-genetics-btn", this.$el).text());
 					$('.search-value', this.$el).html(this.model.get("constrainParams").get("constrainValueTwo") + " : " + this.model.get("searchTerm"));
 				}else{
-					if (this.model.get("constrainByValue")){
+					if (this.model.get("constrainParams").get("constrainByValue")){
 						var constrains = this.model.get("constrainParams");
-						var searchParam = constrains.get("valueOperatorLabel")
+						var searchParam = 
+							(constrains.get("constrainValueOne")=="" && constrains.get("constrainValueTwo")=="") ? "Any value" :
+						constrains.get("valueOperatorLabel")
 						+ " "
 						+ constrains.get("constrainValueOne")
 						+ (constrains.get("isValueOperatorBetween") ?
@@ -307,12 +316,6 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			var model = this.model;
 
 			$('.dropdown-toggle', this.$el).dropdown();
-
-			$('.search-help-tooltip', this.$el).tooltip();
-			ontology.allInfoColumnsLoaded.then(function(){
-				$('.search-tooltip-help').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
-				$('.search-tooltip-help', this.$el).tooltip();
-			}.bind(this));
 
 			this.delegateEvents();
 		}

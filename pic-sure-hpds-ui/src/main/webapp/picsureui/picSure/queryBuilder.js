@@ -27,7 +27,7 @@ define([ "text!../settings/settings.json" ], function(settings){
 		var lastFilter = undefined;
 		_.each(filters, function(filter){
 			if(filter.get("searchTerm").trim().length !== 0){
-				if(filter.attributes.constrainByValue){
+				if(filter.attributes.constrainByValue || filter.get("constrainParams").get("constrainByValue")){
 					if(filter.attributes.valueType==="INFO"){
 						var variantInfoFilter = {};
 						query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category] = filter.attributes.variantInfoConstraints.categoryVariantInfoFitlers[filter.attributes.category];
@@ -50,7 +50,8 @@ define([ "text!../settings/settings.json" ], function(settings){
 								max: max
 						}
 					}else if(filter.attributes.valueType==="STR"){
-						if(filter.get("constrainParams").get("constrainValueOne")==="Any Value"){
+						if(filter.get("constrainParams").get("constrainValueOne")==="Any Value"
+							|| filter.get("constrainParams").get("constrainValueOne")===""){
 							query.query.requiredFields.push(filter.get("searchTerm"));
 						}else{
 							query.query.categoryFilters[filter.get("searchTerm")] = [filter.get("constrainParams").get("constrainValueOne")];
