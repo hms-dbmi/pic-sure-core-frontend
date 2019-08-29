@@ -35,7 +35,7 @@ define(["filter/filterList", "header/header", "footer/footer", "text!../settings
 			        }.bind(this),
 			        error: function (response) {
 			        	if (response.status == 401) {
-			             localStorage.clear();
+			             sessionStorage.clear();
 			             window.location = redirection_url;
 								}
 			          console.log("Cannot retrieve query template with status: " + response.status);
@@ -57,7 +57,7 @@ define(["filter/filterList", "header/header", "footer/footer", "text!../settings
 				},
 				error: function(jqXhr){
 					if(jqXhr.status === 401){
-						localStorage.clear();
+						sessionStorage.clear();
 						window.location = redirection_url;
 					}else{
 						console.log("ERROR in startup.js!!!");
