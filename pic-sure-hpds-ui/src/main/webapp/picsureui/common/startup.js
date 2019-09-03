@@ -22,6 +22,27 @@ define(["filter/filterList", "header/header", "footer/footer", "text!../settings
 							window.location = redirection_url;
 						}
 					});
+
+					$.ajax({
+			        url: window.location.origin + "/psama/user/me/queryTemplate/" + JSON.parse(settings).applicationIdForBaseQuery,
+			        type: 'GET',
+			        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+			        contentType: 'application/json',
+			        success: function (response) {
+			        	var session = JSON.parse(sessionStorage.getItem("session"));
+			            session.queryTemplate = response.queryTemplate;
+			            sessionStorage.setItem("session", JSON.stringify(session));
+			        }.bind(this),
+			        error: function (response) {
+			        	if (response.status == 401) {
+			             sessionStorage.clear();
+			             window.location = redirection_url;
+								}
+			          console.log("Cannot retrieve query template with status: " + response.status);
+			          console.log(response);
+			        }.bind(this)
+			    });
+
 					$('body').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
 					var headerView = header.View;
 					headerView.render();
@@ -36,6 +57,7 @@ define(["filter/filterList", "header/header", "footer/footer", "text!../settings
 				},
 				error: function(jqXhr){
 					if(jqXhr.status === 401){
+						sessionStorage.clear();
 						window.location = redirection_url;
 					}else{
 						console.log("ERROR in startup.js!!!");

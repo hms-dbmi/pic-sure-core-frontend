@@ -1,19 +1,29 @@
 define([ "text!../settings/settings.json" ], function(settings){
+
+    var queryTemplate = {
+        categoryFilters: {},
+        numericFilters:{},
+        requiredFields:[],
+        variantInfoFilters:[
+            {
+                categoryVariantInfoFilters:{},
+                numericVariantInfoFilters:{}
+            }
+        ],
+        expectedResultType: "COUNT"
+    };
+
 	var createQuery = function(filters){
+
+        return generateQuery(filters,JSON.parse(JSON.parse(sessionStorage.getItem("session")).queryTemplate));
+	};
+
+	var generateQuery = function(filters, template) {
+		if (!template)
+			template = queryTemplate;
 		var query = {
 			resourceUUID: JSON.parse(settings).picSureResourceId,
-			query:{
-			categoryFilters: {},
-			numericFilters:{},
-			requiredFields:[],
-			variantInfoFilters:[
-				{
-					categoryVariantInfoFilters:{},
-					numericVariantInfoFilters:{}
-				}
-			],
-			expectedResultType: "COUNT"
-		}};
+			query: template};
 		var lastFilter = undefined;
 		_.each(filters, function(filter){
 			if(filter.get("searchTerm").trim().length !== 0){
@@ -72,6 +82,6 @@ define([ "text!../settings/settings.json" ], function(settings){
 
 
 	return {
-		createQuery
+		createQuery:createQuery
 	}
 });
