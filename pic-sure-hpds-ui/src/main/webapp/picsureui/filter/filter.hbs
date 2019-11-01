@@ -4,6 +4,7 @@
             <div class="filter-qualifier col-md-3">
             </div>
             <div class="filter-search-box col-md-7">
+		<i class="btn glyphicon glyphicon-info-sign search-tooltip-help-icon" data-toggle="modal" data-target="#search-help-modal"></i>
                 <div class="spinner-div"></div>
                 <input class="search-box form-control" placeholder="Search..." value="{{searchValue}}"></input>
             </div>
@@ -12,22 +13,29 @@
             </div-->
         </div>
         <div class="filter-saved">
-            <div class="filter-qualifier col-md-9">
-                <div class="filter-result-entry filter-result-saved">
-                    <span class="autocomplete-category">{{#if category}}{{category}}{{else}}Variant{{/if}}</span>
-                    <br></br>
-                    <div>
-                        <span class="search-value">{{searchValue}}</span>
-                    </div>
-                </div>
-            </div>
-                <div class="delete btn btn-default col-md-2">
-                    <a href="#">delete</a>
-                </div>
-                <div class="edit btn btn-default col-md-1">
-                    <a href="#">edit</a>
-                </div>
-        </div>
+		{{#unless anyRecordCategories}}
+		<div class="edit btn btn-default col-md-1">
+		    edit
+		</div>
+		{{/unless}}
+		<div class="change-constraint btn btn-default col-md-2">
+		    change
+		</div>
+		<div class="delete btn btn-default col-md-2">
+		    delete
+		</div>
+
+		<div class="filter-qualifier">
+		    <div class="filter-result-entry filter-result-saved">
+			<span class="autocomplete-category">{{#if category}}{{category}}{{else}}Variant{{/if}}</span>
+			<br></br>
+			<div>
+		<span class="search-value">{{#if anyRecordCategories}}Any record with an observation in the category {{/if}}<b>{{searchValue}}</b></span>
+			</div>
+		    </div>
+		</div>
+	    </div>
+	    <div class="category-valueof-div"></div>
     </div>
     <div class="constrain-filter"></div>
 	<div class="search-tabs"></div>

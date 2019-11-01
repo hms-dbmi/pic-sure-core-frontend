@@ -1,13 +1,16 @@
 <div class="filter-search row">
     <ul class="nav nav-pills">
         {{#each this}}
-	        <li data-toggle="tooltip" title="{{description}}"><a href="#{{this}}" data-label="{{this}}" data-toggle="tab" aria-expanded="true">{{this}}</a></li>
+	        <li data-toggle="tooltip" title="{{description}}"><a href="#{{this}}" data-toggle="tab" aria-expanded="true">{{this}}</a></li>
         {{/each}}
     </ul>
 
     <div class="tab-content">
 	    	{{#each this}}
-			<div class="tab-pane" id="{{this}}"></div>
+			<div class="tab-pane" id="{{this}}">
+				<div class="result-subcategories-div"></div>
+				<div class="search-result-list"></div>
+			</div>
 		{{/each}}
 	</div>
 

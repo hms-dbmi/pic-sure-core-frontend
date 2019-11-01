@@ -12,10 +12,12 @@ define(["backbone","handlebars", "text!header/header.hbs", "overrides/header", "
 			window.location = '/psamaui?redirection_url=/picsureui';
 		},
 		render : function(){
+			jsonSettings = JSON.parse(settings);
 			this.$el.html(this.template({
 				logoPath: (overrides.logoPath
 					? overrides.logoPath : "/images/logo.png"),
-				helpLink: JSON.parse(settings).helpLink
+				helpLink: jsonSettings.helpLink,
+				pdfLink: jsonSettings.pdfLink
 			}));
 			$.ajax({
 				url: window.location.origin + "/psama/user/me",
