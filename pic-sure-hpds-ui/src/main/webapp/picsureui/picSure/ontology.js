@@ -75,9 +75,7 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
             //			return indexOfTerm == 0 ? indexOfTerm + differenceInLength : indexOfTerm;
             return (indexOfTerm * 1000) + differenceInLength;
         }))),function(element){return queryScope.length>0 ? queryScope.includes(element.category):true});
-        if (result.length > 1000) {
-            result = result.slice(0, 999);
-        }
+       
         return result;
     };
 

@@ -4,13 +4,11 @@
             <div class="filter-qualifier col-md-3">
             </div>
             <div class="filter-search-box col-md-7">
-		<i class="btn glyphicon glyphicon-info-sign search-tooltip-help-icon" data-toggle="modal" data-target="#search-help-modal"></i>
-                <div class="spinner-div"></div>
+			<i class="btn glyphicon glyphicon-info-sign search-tooltip-help-icon" data-toggle="modal" data-target="#search-help-modal"></i>
                 <input class="search-box form-control" placeholder="Search..." value="{{searchValue}}"></input>
+                
             </div>
-            <!--div class="search-button col-md-2">
-                <span class="glyphicon glyphicon-search btn search-btn"></span>
-            </div-->
+            <div class="spinner-div" id="spinner-div"></div>
         </div>
         <div class="filter-saved">
 		{{#unless anyRecordCategories}}
@@ -18,11 +16,11 @@
 		    edit
 		</div>
 		{{/unless}}
-		<div class="change-constraint btn btn-default col-md-2">
-		    change
-		</div>
 		<div class="delete btn btn-default col-md-2">
 		    delete
+		</div>
+		<div class="back-btn btn btn-default col-md-1">
+		    back
 		</div>
 
 		<div class="filter-qualifier">

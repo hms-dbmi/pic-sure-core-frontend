@@ -98,6 +98,11 @@
      background-color: #4a90e2;
      color: white;
 }
+
+.spinner-div {
+	float:right	
+}
+
  .search-box-spinner {
      position: absolute !important;
      right: 1.5em;
@@ -126,12 +131,6 @@
      background-color: light-gray;
      border: none;
      color: black;
-}
-
-.search-btn {
-     background-color: #4a90e2;
-     color: white;
-     border-radius: 0px;
 }
  .header-btn.active {
      border-bottom: 10px;
@@ -500,11 +499,18 @@ body {
 .constrain-filter-btn {
     min-width: 160px;
 }
-
+.back-btn {
+	float: right;
+}
 .constrain-range-separator {
     width: unset;
     top: 10px;
     float:left;
+}
+.constrain-apply-btn {
+	background-color: #4a90e2;
+    color: white;
+    border-radius: 0px;
 }
 
 .value-type-select, .constrain-type-select {

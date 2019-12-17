@@ -29,6 +29,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.template = HBS.compile(filterTemplate);
 			this.suggestionTemplate = HBS.compile(suggestionTemplate);
 			this.queryCallback = opts.queryCallback;
+			this.restoreSearchResults = this.restoreSearchResults.bind(this);
 			this.showSearchResults = this.showSearchResults.bind(this);
 			this.removeFilter = opts.removeFilter;
 			this.constrainFilterMenuTemplate = HBS.compile(constrainFilterMenuTemplate);
@@ -36,8 +37,11 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.constrainFilterMenuGeneticsTemplate = HBS.compile(constrainFilterMenuGeneticsTemplate);
 			// this.constrainFilterMenuVariantInfoTemplate = HBS.compile(constrainFilterMenuVariantInfoTemplate);
 			this.constrainFilterMenuAnyRecordOfTemplate = HBS.compile(constrainFilterMenuAnyRecordOfTemplate);			
-
-			overrides.showSearchResults ? this.showSearchResults = overrides.showSearchResults.bind(this) : this.showSearchResults = this.showSearchResults.bind(this);
+			
+			this.showSearchResults  = overrides.showSearchResults ? overrides.showSearchResults.bind(this) : this.showSearchResults.bind(this);
+			this.onSelect = overrides.onSelect ? overrides.onSelect.bind(this) : this.onSelect.bind(this);
+			this.render = overrides.render ? overrides.render.bind(this) : this.render.bind(this);
+			
 			$('.search-help-tooltip').tooltip();
 			ontology.allInfoColumnsLoaded.then(function(){
 				$('.search-tooltip-help').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
@@ -53,12 +57,11 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			"click .delete": "destroyFilter",
 			"click .change-constraint": "changeConstraint",
 			"click .edit": "editFilter",
-			"click .search-btn": "searchBtnHandler",
+			"click .back-btn" : "restoreSearchResults",
 			"keyup input.search-box" : "enterButtonEventHandler",
 			"change .constrain-type-select" : "onConstrainTypeSelect", 
 			"click .selectable-category-item" : "onConstrainCategorySelect",
 			"click .constrain-genetics-dropdown-menu li a" : "onConstrainGeneticsSelect",
-			// "click .constrain-info-dropdown-menu li a" : "onConstrainVariantInfoSelect",
 			"change .value-type-select" : "onValueTypeSelect",
 			"focusout .constrain-value" : "onConstrainValuesChange",
 			"click .constrain-apply-btn" : "onConstrainApplyButtonClick",
@@ -80,9 +83,6 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.model.clear().set(this.model.defaults);
 			this.model.set("constrainParams", new valueConstrainModel());
 		},
-		searchBtnHandler : function(event){
-//			this.searchTerm($('.search-box', this.$el).val());
-		},
 		enterButtonEventHandler : function(event){
 			$('.constrain-filter').hide();
 			if(event.keyCode == 13){
@@ -100,7 +100,10 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			if((/rs[0-9]+.*/.test(term))||(/\d+:\d+_.*/.test(term))||(/\d+,\d+,.*/.test(term))){
 				this.showGeneticSelectionOptions(term);
 			}else{
+				
 				var deferredSearchResults = $.Deferred();
+				
+				spinner.small(deferredSearchResults, "#spinner-div", "download-spinner")
 				ontology.autocomplete(term, deferredSearchResults.resolve);
 				$.when(deferredSearchResults).then(this.showSearchResults);
 			}
@@ -116,6 +119,19 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.model.attributes.concept={columnDataType:"VARIANT"};
 			this.updateConstrainFilterMenu();
 		},
+		restoreSearchResults: function(event){
+			this.$el.removeClass("saved");
+			this.model.set("searchTerm", this.originalSearchTerm);
+			
+			$(".search-box", this.$el).val(this.originalSearchTerm);
+			
+			catDiv = $(".category-valueof-div", this.$el);
+			if(catDiv){
+				catDiv.html('');
+			}
+			
+			this.searchTerm(this.originalSearchTerm);
+		},
 		showSearchResults : function(result) {
 			$('.autocomplete-suggestions').hide();
 			this.model.set('searching', false);
@@ -126,6 +142,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 				var categorySearchResultList = JSON.parse(settings).categorySearchResultList;
 				var searchResultObject = {};
 
+				//inject these category names first so that the results are in a pre-set order
 				_.each(categorySearchResultList, function(item){
 					searchResultObject[item] = [];
 				});
@@ -139,6 +156,8 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 						searchResultObject[key] = [item];
 					};
 				});
+				
+				//we might not have entries for all our predetermined categories; clean them up!
 				_.each(_.keys(searchResultObject), function(key){
 					if(searchResultObject[key].length === 0){
 						delete searchResultObject[key];
@@ -182,7 +201,6 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			$('.search-tabs', this.$el).html('');
 		},
 		editFilter : function(){
-	//		this.$el.removeClass("saved");
 			this.updateConstrainFilterMenu();
 		},
 		changeConstraint : function (){
@@ -229,24 +247,6 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.model.attributes.valueType="VARIANT";
 			this.updateConstrainFilterMenu();
 		},
-		// onConstrainVariantInfoSelect: function(event) {
-		// 	var constrainByValue = true;
-		// 	// update both models
-		// 	this.$el.addClass("variant-info-filter");
-		// 	this.model.set("constrainByValue", constrainByValue)
-		// 	this.model.get("constrainParams").set("constrainByValue", constrainByValue);
-		// 	if(!this.model.attributes.concept.metadata.continuous){
-		// 		this.model.get("constrainParams").set("constrainValueOne", "Variants matching");
-		// 		this.model.get("constrainParams").set("constrainValueTwo", _.pluck(_.filter($("input[type=radio]", this.$el), {checked:true}), "value"));
-		// 		this.model.get("variantInfoConstraints").categoryVariantInfoFitlers[this.model.attributes.concept.category]=this.model.get("constrainParams").get("constrainValueTwo");
-		// 	}else{
-		// 		this.model.get("constrainParams").set("constrainValueOne", $("input", event.target.parentElement.parentElement)[0].value);
-		// 		this.model.get("constrainParams").set("constrainValueTwo", $("input", event.target.parentElement.parentElement)[1].value);
-		// 		this.model.get("variantInfoConstraints").numericVariantInfoFilters[this.model.attributes.concept.category]={min: $("input", event.target.parentElement.parentElement)[0].value, max:  $("input", event.target.parentElement.parentElement)[1].value};
-		// 	}
-		// 	this.model.attributes.valueType="INFO";
-		// 	this.updateConstrainFilterMenu();
-		// },
 		updateCategoryFilterVisibility: function (event){
 			if( $(".category-filter-restriction", this.$el).val() == "RESTRICT"){
 				$(".category-filter-lists", this.$el).removeClass("hidden");
@@ -544,8 +544,6 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			if(this.model.attributes.valueType ==="ANYRECORDOF"){
 				$(".category-valueof-div", this.$el).html(this.constrainFilterMenuAnyRecordOfTemplate(this.model.attributes.anyRecordCategories));
 			}
-
-			var spinnerSelector = this.$el.find(".spinner-div");
 
 			var model = this.model;
 
