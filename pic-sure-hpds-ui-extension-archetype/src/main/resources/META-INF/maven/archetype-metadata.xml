@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archetype-descriptor name="basic">
   <fileSets>
-    <fileSet filtered="true" packaged="true">
+    <fileSet filtered="false" packaged="false">
       <directory>src/main</directory>
+      <includes>
+        <include>**</include>
+      </includes>
+    </fileSet>
+    <fileSet filtered="false" packaged="false">
+      <directory>src/test</directory>
       <includes>
         <include>**</include>
       </includes>
