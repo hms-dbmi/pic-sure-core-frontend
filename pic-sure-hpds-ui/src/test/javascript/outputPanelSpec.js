@@ -1,6 +1,6 @@
-define(["output/outputPanel", "jquery", "text!../settings/settings.json", "underscore"], function(outputPanel, $, settings, _){
+define(["output/outputPanel", "jquery", "text!../settings/settings.json", "underscore"], function(outputPanel, $, settingsJson, _){
 	jasmine.pp = function(obj){return JSON.stringify(obj, undefined, 2);};
-	
+	var settings = JSON.parse(settingsJson);
 	describe("outputPanel", function(){
 		
 		describe("as a module", function(){
@@ -14,28 +14,12 @@ define(["output/outputPanel", "jquery", "text!../settings/settings.json", "under
 		describe("renders", function(){
 			beforeEach(function(){
 				outputPanel.View.render();
-			});
-			
-//			it("displays < 10 for a main patient count.", function(){
-//				expect($('#patient-count', outputPanel.View.$el).text()).toBe("< 10");
-//			});
+			})
 			
 			it("provides a main spinner", function(){
 				expect($('#spinner-total', outputPanel.View.$el).html()).toBeDefined();
 			});
 			
-			describe("displays one sub-count for each defined resource", function(){
-				_.each(JSON.parse(settings.resources), function(resource){
-					
-					it("displays a sub-count for resource " + resource.name, function(){
-						expect($('#patient-count-' + resource.id, outputPanel.View.$el).html()).toBeDefined();						
-					});
-			
-					it("provides a spinner for resource " + resource.name, function(){
-						expect($('#spinner-' + resource.id, outputPanel.View.$el).html()).toBeDefined();
-					});
-				});
-			});
 		});
 	});
 });

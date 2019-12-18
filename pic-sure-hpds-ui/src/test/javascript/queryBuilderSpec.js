@@ -7,112 +7,28 @@ define(["picSure/queryBuilder", "filter/filter", "jquery"],  function(queryBuild
 			});
 		});
 		
-		it("generates a properly formed query when a single pui is selected and is not a negation", function() {
+		it("generates a properly formed simple query", function() {
 			var expectedQuery = 
 			{
-					"where": [
-						{
-							"field": {
-								"pui": "Asthma",
-								"dataType": "STRING"
-							},
-							"logicalOperator": "AND",
-							"predicate": "CONTAINS",
-							"fields": {
-								"ENCOUNTER": "YES"
-							}
-						}
-					]
+					resourceUUID: "02e23f52-f354-4e8b-992c-d37c8b9ba140"
+					    query: {
+					  "categoryFilters": {},
+					  "numericFilters": {},
+					  "requiredFields": [
+					    "Asthma"
+					  ],
+					  "anyRecordOf": [],
+					  "variantInfoFilters": [
+					    {
+					      "categoryVariantInfoFilters": {},
+					      "numericVariantInfoFilters": {}
+					    }
+					  ],
+					  "expectedResultType": "COUNT"
+					}
 			}
 			expect(queryBuilder.createQuery([new filter.Model({inclusive:true, searchTerm: "Asthma", and: false,theList:null})])).toEqual(expectedQuery);
 		});
 		
-		it("generates a properly formed query when a single pui is selected and is a negation", function() {
-			var expectedQuery = 
-			{
-					"where": [
-						{
-							"field": {
-								"pui": "Asthma",
-								"dataType": "STRING"
-							},
-							"logicalOperator": "NOT",
-							"predicate": "CONTAINS",
-							"fields": {
-								"ENCOUNTER": "YES"
-							}
-						}
-					]
-			}
-			expect(queryBuilder.createQuery([new filter.Model({inclusive:false, searchTerm: "Asthma", and: false,theList:null})])).toEqual(expectedQuery);
-		});
-		
-		it("generates a properly formed query when two puis are or'd and the first one is a negation", function() {
-			var expectedQuery = 
-			{
-					"where": [
-						{
-							"field": {
-								"pui": "Asthma",
-								"dataType": "STRING"
-							},
-							"logicalOperator": "NOT",
-							"predicate": "CONTAINS",
-							"fields": {
-								"ENCOUNTER": "YES"
-							}
-						},
-						{
-							"field": {
-								"pui": "Epilepsy",
-								"dataType": "STRING"
-							},
-							"logicalOperator": "OR",
-							"predicate": "CONTAINS",
-							"fields": {
-								"ENCOUNTER": "YES"
-							}
-						}
-					]
-			}
-			expect(queryBuilder.createQuery([
-				new filter.Model({inclusive:false, searchTerm: "Asthma", and: false,theList:null}),
-				new filter.Model({inclusive:true, searchTerm: "Epilepsy", and: true,theList:null})
-			])).toEqual(expectedQuery);
-		});		
-		
-		it("generates a properly formed query when two puis are or'd and neither is a negation", function() {
-			var expectedQuery = 
-			{
-					"where": [
-						{
-							"field": {
-								"pui": "Asthma",
-								"dataType": "STRING"
-							},
-							"logicalOperator": "AND",
-							"predicate": "CONTAINS",
-							"fields": {
-								"ENCOUNTER": "YES"
-							}
-						},
-						{
-							"field": {
-								"pui": "Epilepsy",
-								"dataType": "STRING"
-							},
-							"logicalOperator": "OR",
-							"predicate": "CONTAINS",
-							"fields": {
-								"ENCOUNTER": "YES"
-							}
-						}
-					]
-			}
-			expect(queryBuilder.createQuery([
-				new filter.Model({inclusive:true, searchTerm: "Asthma", and: false,theList:null}),
-				new filter.Model({inclusive:true, searchTerm: "Epilepsy", and: true,theList:null})
-			])).toEqual(expectedQuery);
-		});
 	});
 });
