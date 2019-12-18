@@ -10,7 +10,7 @@ define(["picSure/queryBuilder", "filter/filter", "jquery"],  function(queryBuild
 		it("generates a properly formed simple query", function() {
 			var expectedQuery = 
 			{
-					resourceUUID: "02e23f52-f354-4e8b-992c-d37c8b9ba140"
+					resourceUUID: "02e23f52-f354-4e8b-992c-d37c8b9ba140",
 					    query: {
 					  "categoryFilters": {},
 					  "numericFilters": {},
