@@ -120,16 +120,13 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.updateConstrainFilterMenu();
 		},
 		restoreSearchResults: function(event){
-			this.$el.removeClass("saved");
+			//reset search value
 			this.model.set("searchTerm", this.originalSearchTerm);
-			
 			$(".search-box", this.$el).val(this.originalSearchTerm);
 			
-			catDiv = $(".category-valueof-div", this.$el);
-			if(catDiv){
-				catDiv.html('');
-			}
-			
+			//update UI - restore the input box, hide the buttons, hide any categorical selections, hide other elements.
+			this.$el.removeClass("saved");
+			$('.constrain-filter', this.$el).html('');
 			this.searchTerm(this.originalSearchTerm);
 		},
 		showSearchResults : function(result) {
@@ -202,6 +199,10 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 		},
 		editFilter : function(){
 			this.updateConstrainFilterMenu();
+			if (this.model.attributes.concept.columnDataType==="INFO" || 
+					this.model.attributes.concept.columnDataType==="CATEGORICAL"){
+				$(".category-filter-restriction", this.$el).select("RESTRICT");
+			}
 		},
 		changeConstraint : function (){
 			//need to remove the 'anyRecordOf' panel if we are changing constraints
