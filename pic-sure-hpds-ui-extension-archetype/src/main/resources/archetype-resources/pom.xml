@@ -4,19 +4,17 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>edu.harvard.hms.dbmi.avillach.picsure.hpds</groupId>
-	<artifactId>pic-sure-hpds-ui</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<groupId>${groupId}</groupId>
+	<artifactId>${artifactId}</artifactId>
+	<version>${version}</version>
 
-	<packaging>jar</packaging>
-
-	<name>pic-sure-hpds-ui</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>edu.harvard.hms.dbmi.avillach.picsure.hpds</groupId>
-			<artifactId>pic-sure-hpds-ui-libs</artifactId>
+			<artifactId>pic-sure-hpds-ui</artifactId>
 			<version>1.0-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -25,7 +23,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<build>
+		<build>
 		<finalName>pic-sure-hpds-ui</finalName>
 		<plugins>
 			<plugin>
@@ -34,6 +32,7 @@
 				<version>3.0-alpha-01</version>
 				<executions>
 					<execution>
+					    <phase>verify</phase>
 						<goals>
 							<goal>test</goal>
 						</goals>
@@ -46,7 +45,13 @@
 						<source>webjars/requirejs/2.3.5/require.min.js</source>
 					</preloadSources>
 					<srcDirectoryName>/picsureui</srcDirectoryName>
-					<jsSrcDir>src/main/webapp/picsureui</jsSrcDir>
+					<jsSrcDir>target/pic-sure-hpds-ui/picsureui</jsSrcDir>
+					<additionalContexts>
+					<additionalContext>
+					<contextRoot>/picsureui/overrides</contextRoot>
+					<directory>src/main/webapp/picsureui/overrides</directory>
+					</additionalContext>
+					</additionalContexts>
 				</configuration>
 				<dependencies>
 					<dependency>
@@ -59,8 +64,27 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.8</version>
 				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>package</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>edu.harvard.hms.dbmi.avillach.picsure.hpds</groupId>
+									<artifactId>pic-sure-hpds-ui</artifactId>
+									<version>1.0-SNAPSHOT</version>
+									<type>zip</type>
+									<classifier>webapp</classifier>
+									<overWrite>false</overWrite>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
 					<execution>
 						<id>unpack-dependencies</id>
 						<phase>generate-sources</phase>
@@ -68,30 +92,10 @@
 							<goal>unpack-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/webjars</outputDirectory>
+							<outputDirectory>${project.build.directory}/picsureui</outputDirectory>
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>src/assembly/webapp-zip.xml</descriptor>
-						<descriptor>src/assembly/archetype-assets.xml</descriptor>
-					</descriptors>
-					<attach>true</attach>
-					<outputDirectory>target</outputDirectory>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
 					</execution>
 				</executions>
 			</plugin>
