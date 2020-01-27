@@ -100,7 +100,7 @@ define(["text!../settings/settings.json","common/spinner", "output/dataSelection
 					 	},
 					 	error: function(response){
 							if (response.status === 401) {
-								localStorage.clear();
+								sessionStorage.clear();
 								window.location = "/";
 							} else {
 								response.responseText = "<h4>"
