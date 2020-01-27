@@ -65,6 +65,26 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-archetype-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>update-local-catalog</id>
+						<phase>post-install</phase>
+						<goals>
+							<goal>update-local-catalog</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>crawl</id>
+						<phase>install</phase>
+						<goals>
+							<goal>crawl</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>
