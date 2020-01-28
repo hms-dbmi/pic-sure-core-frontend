@@ -124,7 +124,7 @@ define(["common/spinner", "backbone", "handlebars", "text!filter/searchResult.hb
                 if(this.model.attributes.columnDataType==="CATEGORICAL"){
                     jsonSettings = JSON.parse(settings);
 
-                    if(jsonSettings.defaultValues[this.model.attributes.category]){
+                    if(jsonSettings.defaultValues && jsonSettings.defaultValues[this.model.attributes.category]){
                         this.filterView.model.get("constrainParams").set("valueOperatorLabel","");
                         this.filterView.model.get("constrainParams").set("constrainValueOne", jsonSettings.defaultValues[this.model.attributes.category]);
                         $(".category-filter-restriction", this.filterView.$el).val("RESTRICT")
