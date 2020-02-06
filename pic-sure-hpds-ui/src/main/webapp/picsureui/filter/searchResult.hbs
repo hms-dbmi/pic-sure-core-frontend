@@ -5,7 +5,7 @@
   <span class="autocomplete-term-parent">{{parent}}</span>
   <br></br>
   <div>
-    <span class="autocomplete-term">{{value}}</span>
+    <span class="autocomplete-term">{{value}}{{#if preSelection}}: {{preSelection}}{{/if}}{{#if targetCategory}} <b>(Category)</b>{{/if}}</span>
   </div>
 </div>
 <div class="node-tree-view" style="display: none"></div>

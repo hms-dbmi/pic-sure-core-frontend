@@ -136,6 +136,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 				alert("Result error");
 			} else {
 				$('.search-tabs', this.$el).html('');
+				this.originalSearchTerm = this.model.get("searchTerm")
 				var categorySearchResultList = JSON.parse(settings).categorySearchResultList;
 				var searchResultObject = {};
 

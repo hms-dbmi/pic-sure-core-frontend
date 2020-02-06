@@ -1,4 +1,16 @@
 
+{{#if analyticsId}}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{analyticsId}}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '{{analyticsId}}');
+</script>
+{{/if}}
+
 	<div id="header" class="blue-bg-white-text">
 		<div id="header-content" class="container"></div>
 	</div>
@@ -9,11 +21,10 @@
 			</div>
 			<div class="row">
 				<span class="query-name col-md-11">&nbsp;&nbsp;</span>
-				<!--a href="{{advancedSearchLink}}" target="_blank" class="advanced-search-btn col-md-4 right">Advanced Search</a-->
+				{{#if advancedSearchLink}}<a href="{{advancedSearchLink}}" target="_blank" class="advanced-search-btn right">Advanced Search</a>{{/if}}
 				<div class="search-tooltip-help col-md-1">
-	            </div>
 			</div>
-            
+            </div>
 			<ul class="container" id="filter-list"></ul>
 		</div>
 		<div id="query-results" class="col-md-4"></div>
