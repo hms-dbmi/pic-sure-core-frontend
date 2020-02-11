@@ -1,5 +1,5 @@
-define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputPanel", "overrides/filter", "common/spinner", "backbone", "handlebars", "text!filter/filter.hbs", "text!filter/suggestion.hbs", "filter/searchResults", "picSure/queryCache", "text!filter/constrainFilterMenu.hbs", "text!filter/constrainFilterMenuCategories.hbs", "text!filter/constrainFilterMenuGenetics.hbs", "text!filter/constrainFilterMenuAnyRecordOf.hbs", "text!settings/settings.json", "autocomplete", "bootstrap"],
-		function(ontology, searchHelpTooltipTemplate, outputPanel, overrides, spinner, BB, HBS, filterTemplate, suggestionTemplate, searchResults, queryCache, constrainFilterMenuTemplate, constrainFilterMenuCategoriesTemplate, constrainFilterMenuGeneticsTemplate, constrainFilterMenuAnyRecordOfTemplate, settings){
+define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputPanel", "overrides/filter", "common/spinner", "backbone", "handlebars", "text!filter/filter.hbs", "text!filter/suggestion.hbs", "text!filter/noResults.hbs", "filter/searchResults", "picSure/queryCache", "text!filter/constrainFilterMenu.hbs", "text!filter/constrainFilterMenuCategories.hbs", "text!filter/constrainFilterMenuGenetics.hbs", "text!filter/constrainFilterMenuAnyRecordOf.hbs", "text!settings/settings.json", "autocomplete", "bootstrap"],
+		function(ontology, searchHelpTooltipTemplate, outputPanel, overrides, spinner, BB, HBS, filterTemplate, suggestionTemplate, noResultsTemplate, searchResults, queryCache, constrainFilterMenuTemplate, constrainFilterMenuCategoriesTemplate, constrainFilterMenuGeneticsTemplate, constrainFilterMenuAnyRecordOfTemplate, settings){
 	var valueConstrainModel = BB.Model.extend({
 		defaults:{
 			constrainByValue: false,
@@ -41,6 +41,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.showSearchResults  = overrides.showSearchResults ? overrides.showSearchResults.bind(this) : this.showSearchResults.bind(this);
 			this.onSelect = overrides.onSelect ? overrides.onSelect.bind(this) : this.onSelect.bind(this);
 			this.render = overrides.render ? overrides.render.bind(this) : this.render.bind(this);
+			this.noResultsTemplate = HBS.compile(noResultsTemplate);
 			
 			$('.search-help-tooltip').tooltip();
 			ontology.allInfoColumnsLoaded.then(function(){
@@ -100,7 +101,6 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			if((/rs[0-9]+.*/.test(term))||(/\d+:\d+_.*/.test(term))||(/\d+,\d+,.*/.test(term))){
 				this.showGeneticSelectionOptions(term);
 			}else{
-				
 				var deferredSearchResults = $.Deferred();
 				
 				spinner.small(deferredSearchResults, "#spinner-div", "download-spinner")
@@ -134,7 +134,10 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.model.set('searching', false);
 			if(result == undefined) {
 				alert("Result error");
-			} else {
+			} else if( result.suggestions.length == 0 ){
+				$('.search-tabs', this.$el).html(this.noResultsTemplate());
+			} else { 
+				//clear out any old data
 				$('.search-tabs', this.$el).html('');
 				this.originalSearchTerm = this.model.get("searchTerm")
 				var categorySearchResultList = JSON.parse(settings).categorySearchResultList;

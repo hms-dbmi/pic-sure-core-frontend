@@ -183,8 +183,8 @@ define(["common/spinner", "backbone", "handlebars", "text!output/dataSelection.h
 							}.bind(this));
 							_.delay(function(){$('.jstree-node[aria-level=1] > .jstree-icon').click();}, 1000);
 						}.bind(this))
-					, "#select-spinner"
-					, "select-spinner"
+					, "#download-spinner"
+					, "download-spinner"
 				);
 			}
 		});

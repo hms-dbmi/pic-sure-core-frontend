@@ -14,10 +14,10 @@ define(["output/outputPanel","picSure/queryBuilder", "filter/searchResult", "han
 		var settingsJson = JSON.parse(settings);
 		var getAliasName = function(key){
 			if(settingsJson.categoryAliases && settingsJson.categoryAliases[key]){
-                                return settingsJson.categoryAliases[key];
-                        } else {
-                                return key;
-                        }
+                return settingsJson.categoryAliases[key];
+            } else {
+                return key;
+            }
 		}
 		var keys = _.keys(data);
 		var aliases = [];
