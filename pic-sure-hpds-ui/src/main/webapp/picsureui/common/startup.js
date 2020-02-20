@@ -34,6 +34,21 @@ define(["filter/filterList", "header/header", "footer/footer", "text!../settings
 			        	var session = JSON.parse(sessionStorage.getItem("session"));
 			            session.queryTemplate = response.queryTemplate;
 			            sessionStorage.setItem("session", JSON.stringify(session));
+
+						$('body').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
+						var headerView = header.View;
+						headerView.render();
+						$('#header-content').append(headerView.$el);
+						var footerView = footer.View;
+						footerView.render();
+						$('#footer-content').append(footerView.$el);
+						filterList.init();
+						var outputPanel = output.View;
+						outputPanel.render();
+						$('#query-results').append(outputPanel.$el);
+						
+						var query = queryBuilder.createQuery({});
+						outputPanel.update(query);
 			        }.bind(this),
 			        error: function (response) {
 			        	if (response.status == 401) {
@@ -45,20 +60,6 @@ define(["filter/filterList", "header/header", "footer/footer", "text!../settings
 			        }.bind(this)
 			    });
 
-					$('body').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
-					var headerView = header.View;
-					headerView.render();
-					$('#header-content').append(headerView.$el);
-					var footerView = footer.View;
-					footerView.render();
-					$('#footer-content').append(footerView.$el);
-					filterList.init();
-					var outputPanel = output.View;
-					outputPanel.render();
-					$('#query-results').append(outputPanel.$el);
-					
-					var query = queryBuilder.createQuery({});
-					outputPanel.update(query);
 				},
 				error: function(jqXhr){
 					if(jqXhr.status === 401){
