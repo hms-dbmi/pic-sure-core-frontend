@@ -6,6 +6,7 @@ define(["text!../settings/settings.json","common/spinner", "output/dataSelection
 			spinning: false,
 			resources : {}
 	};
+	
 	_.each(resourceMeta, (resource) => {
 		outputModelDefaults.resources[resource.id] = {
 				id: resource.id,
@@ -47,10 +48,13 @@ define(["text!../settings/settings.json","common/spinner", "output/dataSelection
 					"click #select-btn": "select"
 				},
 				select: function(event){
+					
+					this.model.set('spinning', true);
 					if(!this.dataSelection){
 						var query = JSON.parse(JSON.stringify(this.model.get("query")));
 						this.dataSelection = new dataSelection({query:query});
 						$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
+						this.model.set("spinning", false);
 						this.dataSelection.render();
 					}
 				},
@@ -88,7 +92,6 @@ define(["text!../settings/settings.json","common/spinner", "output/dataSelection
 						$("#patient-count").html(message);
 					}.bind(this);
 
-					console.log("Skipping query line 84 of outputPanel.js");
 					$.ajax({
 					 	url: window.location.origin + "/picsure/query/sync",
 					 	type: 'POST',
@@ -104,7 +107,7 @@ define(["text!../settings/settings.json","common/spinner", "output/dataSelection
 								window.location = "/";
 							} else {
 								response.responseText = "<h4>"
-									+ overides.outputErrorMessage ? overides.outputErrorMessage : "There is something wrong when processing your query, please try it later, if this repeats, please contact admin."
+									+ overrides.outputErrorMessage ? overrides.outputErrorMessage : "There is something wrong when processing your query, please try it later, if this repeats, please contact admin."
 									+ "</h4>";
 						 		errorCallback(response.responseText);//console.log("error");console.log(response);
 							}

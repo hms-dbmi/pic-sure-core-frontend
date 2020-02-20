@@ -1,5 +1,5 @@
-define(["filter/filterList", "header/header", "footer/footer", "text!../settings/settings.json", "output/outputPanel", "picSure/resourceMeta", "jquery", "handlebars", "text!common/mainLayout.hbs", "treeview", "common/styles"],
-	function(filterList, header, footer, settings, output, resourceMeta, $, HBS, layoutTemplate){
+define(["filter/filterList", "header/header", "footer/footer", "text!../settings/settings.json", "output/outputPanel", "picSure/resourceMeta", "jquery", "handlebars", "text!common/mainLayout.hbs", "picSure/queryBuilder", "treeview", "common/styles"],
+	function(filterList, header, footer, settings, output, resourceMeta, $, HBS, layoutTemplate, queryBuilder){
 		var redirection_url = "/psamaui/login?redirection_url=" + "/picsureui/";
 		return function(){
 			if(window.location.pathname !== "/picsureui/"){
@@ -18,8 +18,10 @@ define(["filter/filterList", "header/header", "footer/footer", "text!../settings
 					console.log("login successful");
 					$.ajaxSetup({
 						error: function(event, jqxhr){
-							console.log(jqxhr);
-							window.location = redirection_url;
+							console.log(jqxhr + ": " + event.status);
+							if(event.status == 401) {
+								window.location = redirection_url;
+							}
 						}
 					});
 
@@ -54,6 +56,9 @@ define(["filter/filterList", "header/header", "footer/footer", "text!../settings
 					var outputPanel = output.View;
 					outputPanel.render();
 					$('#query-results').append(outputPanel.$el);
+					
+					var query = queryBuilder.createQuery({});
+					outputPanel.update(query);
 				},
 				error: function(jqXhr){
 					if(jqXhr.status === 401){

@@ -1,7 +1,7 @@
 <div class="filter-search row">
     <ul class="nav nav-pills">
         {{#each this}}
-	        <li data-toggle="tooltip" title="{{description}}"><a href="#{{this}}" data-toggle="tab" aria-expanded="true">{{this}}</a></li>
+	        <li data-toggle="tooltip" title="{{description}}" id="{{this}}-pill"><a href="#{{this}}" data-toggle="tab" aria-expanded="true">{{this}}</a></li>
         {{/each}}
     </ul>
 

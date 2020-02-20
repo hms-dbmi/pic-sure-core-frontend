@@ -10,28 +10,27 @@
 	 <div class="constrain-search-button">
             <span class="btn constrain-apply-btn">Run</span>
          </div>
-
     </div>
 
     <div class="category-filter-lists {{#unless constrainValueOne.length}}hidden{{/unless}}">
 	    <div class="col-md-3 constrain-filter-btn resizable-select-div">
-		<div class="constrain-filter-label">Available Values</div>
-		<input  class="form-control category-filter" placeholder="Filter..." value="" ></input>
-		<select class="form-control available-categories multi-select-box"    multiple="" >
-			{{#if metadata.categoryValues}}
-				{{#each metadata.categoryValues}}	    
-			<option class="selectable-category-item" >{{this}}</option>
-				{{/each}}
-			{{else}}
-				{{#each metadata.values}}	    
-			<option class="selectable-category-item" >{{this}}</option>
-				{{/each}}
-			{{/if}}
-		
-		</select>
-		<div class="select-all btn btn-default">
-			    <a>Select All <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
-		</div>
+			<div class="constrain-filter-label">Available Values</div>
+			<input  class="form-control category-filter" placeholder="Filter..." value="" ></input>
+			<select class="form-control available-categories multi-select-box"    multiple="" >
+				{{#if metadata.categoryValues}}
+					{{#each metadata.categoryValues}}	    
+				<option class="selectable-category-item" >{{this}}</option>
+					{{/each}}
+				{{else}}
+					{{#each metadata.values}}	    
+				<option class="selectable-category-item" >{{this}}</option>
+					{{/each}}
+				{{/if}}
+			
+			</select>
+			<div class="select-all btn btn-default">
+				    <a>Select All <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+			</div>
 	    </div>
 	    <div class="col-md-3 constrain-filter-btn resizable-select-div">
 		<div class="constrain-filter-label">Selected Values</div>

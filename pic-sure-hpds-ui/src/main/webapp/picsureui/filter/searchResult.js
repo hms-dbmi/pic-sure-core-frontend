@@ -9,6 +9,7 @@ define(["common/spinner", "backbone", "handlebars", "text!filter/searchResult.hb
                 this.filterView = opts.filterView;
                 this.queryCallback = opts.queryCallback;
 		this.updateAnyRecordFilter = this.updateAnyRecordFilter.bind(this);
+                this.preSelection = opts.preSelection;
             },
             tagName: "div",
             className: "picsure-border-frame",
@@ -121,46 +122,65 @@ define(["common/spinner", "backbone", "handlebars", "text!filter/searchResult.hb
                 this.filterView.model.attributes.constrainParams.attributes.constrainByValue=true;
                 
                 //automatically run an 'any value' query for categorical filters, or whatever default the settings provide is.
-                if(this.model.attributes.columnDataType==="CATEGORICAL"){
-                    jsonSettings = JSON.parse(settings);
-
-                    if(jsonSettings.defaultValues[this.model.attributes.category]){
-                        this.filterView.model.get("constrainParams").set("valueOperatorLabel","");
-                        this.filterView.model.get("constrainParams").set("constrainValueOne", jsonSettings.defaultValues[this.model.attributes.category]);
-                        $(".category-filter-restriction", this.filterView.$el).val("RESTRICT")
-                    }
-                    this.filterView.updateConstrainFilterMenu();
-                    $('.constrain-apply-btn', this.filterView.$el).click();
-                } else {
-                    //if not categorical, just update the UI
-                    this.filterView.updateConstrainFilterMenu();
-                }
-            },
-            getValueType : function(dataType)
-            {
-                var ValueTypes = {};
-                /* Start Configuration. Note: be careful to keep trailing commas after each parameter */
-                ValueTypes.type = {
-                    "PosFloat": "NUMBER",
-                    "PosInteger": "NUMBER",
-                    "Float": "NUMBER",
-                    "Integer": "NUMBER",
-                    "String": "STR",
-                    "largestring": "LRGSTR",
-                    "Enum": "ENUM",
-                    "DEFAULT": "NUMBER"
-                }
-
-                if(!ValueTypes.type.hasOwnProperty(dataType)) {
-                    var valuetype = ValueTypes.type["DEFAULT"];
-                } else {
-                    var valueType = ValueTypes.type[dataType];
-                }
-                return valueType;
-            },
-            render: function(){
-                this.$el.html(template(this.model.attributes));
-            }
+	            if(this.model.attributes.columnDataType==="CATEGORICAL" || this.model.attributes.columnDataType==="INFO"){
+	                jsonSettings = JSON.parse(settings);
+	                
+	                // if we have a 'pre selected' or default value set that on the filter
+	                var selectedValue = this.model.get("preSelection");
+	                //preselected value takes precedence over a configured default
+	                if(!selectedValue){
+	                	 var partialPath = '';
+	                	 _.each(this.model.get("data").split("\\"), function(segment){
+	                		 partialPath += segment;
+	                		 if(jsonSettings.defaultValues && jsonSettings.defaultValues[partialPath]){
+	                			 //don't break out of the loop here; we want more specific defaults to override higher level ones
+	                			 selectedValue = jsonSettings.defaultValues[partialPath];
+	                		 }
+	                		 partialPath += "\\";
+	                	 });
+	                }
+	                
+	                if(selectedValue){
+	                	this.filterView.model.get("constrainParams").set("valueOperatorLabel","");
+	                    this.filterView.model.get("constrainParams").set("constrainValueOne", selectedValue);
+	                    $(".category-filter-restriction", this.filterView.$el).val("RESTRICT")
+	                }
+	                
+	                //always update the UI
+	                this.filterView.updateConstrainFilterMenu();
+	                //but only auto-run the filter if there is a selected value (or it's a category)
+	                if(selectedValue || this.model.attributes.columnDataType==="CATEGORICAL"){
+	                	$('.constrain-apply-btn', this.filterView.$el).click();
+	                }
+	            } else {
+	                //if not categorical, just update the UI
+	                this.filterView.updateConstrainFilterMenu();
+	            }
+	        },
+	        getValueType : function(dataType) {
+	            var ValueTypes = {};
+	            /* Start Configuration. Note: be careful to keep trailing commas after each parameter */
+	            ValueTypes.type = {
+	                "PosFloat": "NUMBER",
+	                "PosInteger": "NUMBER",
+	                "Float": "NUMBER",
+	                "Integer": "NUMBER",
+	                "String": "STR",
+	                "largestring": "LRGSTR",
+	                "Enum": "ENUM",
+	                "DEFAULT": "NUMBER"
+	            }
+	
+	            if(!ValueTypes.type.hasOwnProperty(dataType)) {
+	                var valuetype = ValueTypes.type["DEFAULT"];
+	            } else {
+	                var valueType = ValueTypes.type[dataType];
+	            }
+	            return valueType;
+	        },
+	        render: function(){
+	            this.$el.html(template(this.model.attributes));
+	        }
         });
         return {
             View : searchResultView,

@@ -417,6 +417,7 @@ body {
     padding: 5px;
     min-height: 175px;
     width: 40%;
+/*    display: table-cell;  */
     display: flex;
     flex-direction: column;
 }
@@ -541,4 +542,34 @@ body {
     border-radius: 5px;
 }
 
+.picsure-result-id, .picsure-result-id-label  {
+    text-align: center;
+}
 
+.query-result-container{
+	width: 90%;
+}
+
+.spinner-small {
+     width: 26px;
+     height: 26px;
+}
+
+ .spinner-small-center {
+     left: 50%;
+     margin-left: -13px;
+}
+
+.copy-button-span {
+	text-align: center;
+}
+
+.copy-button {
+	margin-left: auto;
+    margin-right: auto;
+}
+
+.advanced-search-btn {
+	float:right;
+	margin-right: 100px;
+}
