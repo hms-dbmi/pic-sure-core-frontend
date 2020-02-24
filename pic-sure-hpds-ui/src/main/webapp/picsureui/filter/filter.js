@@ -383,7 +383,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
                     $('.constrain-range-separator', this.$el).hide();
             }
 
-            if( valueOperator == "LT" ){
+            if( valueOperator == "LT" || valueOperator == "GT" ){
                     $('.constrain-value-one', this.$el).removeClass("hidden");
                     $('.constrain-value-one', this.$el).show();
 
@@ -391,14 +391,6 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 					$('.constrain-value-two', this.$el).val("");
 					this.model.get("constrainParams").set("constrainValueOne", $('.constrain-value-one', this.$el).val());
 					this.model.get("constrainParams").set("constrainValueTwo", "");
-            } else if ( valueOperator == "GT" ){
-                    $('.constrain-value-one', this.$el).hide();
-					$('.constrain-value-one', this.$el).val("");
-
-                    $('.constrain-value-two', this.$el).removeClass("hidden");
-                    $('.constrain-value-two', this.$el).show();
-					this.model.get("constrainParams").set("constrainValueTwo", $('.constrain-value-two', this.$el).val());
-					this.model.get("constrainParams").set("constrainValueOne", "");
             }
 
 		},
@@ -445,14 +437,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 				var constrainValueOne = constrainParams.get("constrainValueOne").trim();
 				var constrainValueTwo = constrainParams.get("constrainValueTwo").trim();
 
-				//now we use a different field for GT and LT values;
-				if (constrainParams.get("valueOperator") == "GT") {
-					if (constrainValueTwo == "" || isNaN(constrainValueTwo)
-						|| !this.isValueInRange(constrainValueTwo, this.model.attributes.concept.metadata.min, this.model.attributes.concept.metadata.max)) {
-						$('.constrain-value-two', this.$el).addClass("field-invalid");
-						isValid = false;
-					}
-				} else if (constrainParams.get("valueOperator") == "LT") {
+				if (constrainParams.get("valueOperator") == "LT" || constrainParams.get("valueOperator") == "GT") {
 					if (constrainValueOne == "" || isNaN(constrainValueOne)
 						|| !this.isValueInRange(constrainValueOne, this.model.attributes.concept.metadata.min, this.model.attributes.concept.metadata.max)) {
 							$('.constrain-value-one', this.$el).addClass("field-invalid");
