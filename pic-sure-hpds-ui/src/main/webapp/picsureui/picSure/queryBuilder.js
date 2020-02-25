@@ -4,7 +4,7 @@ define([ "text!../settings/settings.json" ], function(settings){
         categoryFilters: {},
         numericFilters:{},
         requiredFields:[],
-	anyRecordOf:[],
+        anyRecordOf:[],
         variantInfoFilters:[
             {
                 categoryVariantInfoFilters:{},
@@ -35,8 +35,12 @@ define([ "text!../settings/settings.json" ], function(settings){
 		_.each(filters, function(filter){
 			if(filter.get("searchTerm").trim().length !== 0){
 				if ( filter.attributes.valueType === "ANYRECORDOF" ){
-                                                //any record of filter should just pull the list of observations  and stuff them in the list.
-                                                query.query.anyRecordOf = filter.get("anyRecordCategories");
+                    //any record of filter should just pull the list of observations  and stuff them in the list.
+					if(query.query.anyRecordOf){
+						query.query.anyRecordOf = query.query.anyRecordOf.concat(filter.get("anyRecordCategories"))
+					} else {
+						query.query.anyRecordOf = filter.get("anyRecordCategories");
+					}
 				} else if(filter.attributes.constrainByValue || filter.get("constrainParams").get("constrainByValue")){
 					if(filter.attributes.valueType==="INFO"){
 						var variantInfoFilter = {};
