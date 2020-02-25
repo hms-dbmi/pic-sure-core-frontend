@@ -148,8 +148,8 @@ define(["common/spinner", "backbone", "handlebars", "text!filter/searchResult.hb
 	                
 	                //always update the UI
 	                this.filterView.updateConstrainFilterMenu();
-	                //but only auto-run the filter if there is a selected value (or it's a category)
-	                if(selectedValue || this.model.attributes.columnDataType==="CATEGORICAL"){
+	                //but only auto-run the filter if there is a selected value
+	                if(selectedValue){
 	                	$('.constrain-apply-btn', this.filterView.$el).click();
 	                }
 	            } else {

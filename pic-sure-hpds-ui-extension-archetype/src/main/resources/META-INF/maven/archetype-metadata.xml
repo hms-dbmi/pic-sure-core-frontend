@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archetype-descriptor name="basic">
   <fileSets>
-    <fileSet filtered="false" packaged="false">
+    <fileSet filtered="false" packaged="true">
       <directory>src/main</directory>
       <includes>
         <include>**</include>
