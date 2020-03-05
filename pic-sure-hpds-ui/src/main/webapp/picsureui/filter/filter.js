@@ -419,9 +419,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 					}
                 }); 
                 //this should show the multi-select boxes.  the template should automatically have 'RESTRICT' by value selected.
-                if(this.model.attributes.concept.columnDataType == "INFO"){
-                	this.updateCategoryFilterVisibility();
-                }
+               	this.updateCategoryFilterVisibility();
 			}
 
 			filterEl.show();
