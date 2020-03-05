@@ -37,13 +37,8 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
                     metadata: entry,
                     parent: extractParentFromPui(puiSegments)
                 };
-        }).sort(function(a, b) {
-            var indexOfTerm = a.value.toLowerCase().indexOf(query) - b.value.toLowerCase().indexOf(query);
-            var differenceInLength = a.value.length - b.value.length;
-            //                      return indexOfTerm == 0 ? indexOfTerm + differenceInLength : indexOfTerm;
-            return (indexOfTerm * 1000) + differenceInLength;
         }).concat(_.map(response.genes, entry => {
-            var puiSegments = ["Genes", entry.name]; //entry.name.split("\\").filter(function(seg){return seg.length > 0;});
+//            var puiSegments = ["Genes", entry.name]; //entry.name.split("\\").filter(function(seg){return seg.length > 0;});
             return {
                 value: entry.name,
                 data: entry.name,
@@ -53,11 +48,6 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
                 metadata: entry,
                 parent: "Chromosome " + entry.chr
             };
-        }).sort(function(a, b) {
-            var indexOfTerm = a.value.toLowerCase().indexOf(query) - b.value.toLowerCase().indexOf(query);
-            var differenceInLength = a.value.length - b.value.length;
-            //			return indexOfTerm == 0 ? indexOfTerm + differenceInLength : indexOfTerm;
-            return (indexOfTerm * 1000) + differenceInLength;
         })).concat(_.map(_.keys(response.info), key => {
             var entry = response.info[key];
             return {
@@ -69,12 +59,20 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
                 metadata: entry,
                 parent: "Variant Info"
             };
-        }).sort(function(a, b) {
+        })).sort(function(a, b) {
             var indexOfTerm = a.value.toLowerCase().indexOf(query) - b.value.toLowerCase().indexOf(query);
             var differenceInLength = a.value.length - b.value.length;
-            //			return indexOfTerm == 0 ? indexOfTerm + differenceInLength : indexOfTerm;
             return (indexOfTerm * 1000) + differenceInLength;
-        }))),function(element){return queryScope.length>0 ? queryScope.includes(element.category):true});
+        })),function(element){
+        	if(queryScope.length == 0) {
+        		return true;
+        	}
+    		var scopeMatches = function(value){
+    			return element.metadata.name.startsWith(value);
+    		}
+    		//Check to see if element name (aka path) starts with any value defined in the query scope
+    		return _.some(queryScope, scopeMatches);
+    	});
        
         return result;
     };
