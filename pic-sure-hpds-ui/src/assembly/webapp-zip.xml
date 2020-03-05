@@ -19,7 +19,7 @@
 			<filtered>false</filtered>
 		</fileSet>
 		<fileSet>
-			<outputDirectory>/webjars</outputDirectory>
+			<outputDirectory>/picsureui/webjars</outputDirectory>
 			<excludes>
 				<exclude>**/META-INF/**</exclude>
 				<exclude>**/WEB-INF/**</exclude>

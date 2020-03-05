@@ -1,48 +1,28 @@
-<div class="constrain-row row {{#unless constrainByValue}}hidden{{/unless}}" style="padding-bottom: 0px;padding-top: 4px;">
-    <div class="col-md-3"></div>
-    <div class="col-md-6">value range, min: {{metadata.min}} - max: {{metadata.max}}</div>
+<div class="constrain-row row value-operator-range-row" style="padding-bottom: 0px;padding-top: 4px;">
+    <div class="col-md-6  value-operator-range-label {{#unless constrainByValue}}hidden{{/unless}}">value range, min: {{metadata.min}} - max: {{metadata.max}}</div>
+
+ <div class="constrain-search-button col-md-1">
+        <span class="btn constrain-apply-btn">Run</span>
+    </div>
 </div>
+
 <div class="constrain-row row">
-    <div class="col-md-3 constrain-filter-btn">
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle value-constraint-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{#if constrainByValue}}By numeric value{{else}}No value{{/if}}
-                <span class="glyphicon glyphicon-chevron-down blue"></span>
-            </button>
-            <ul class="constrain-dropdown-menu dropdown-menu" aria-labelledby="value-constraint-btn">
-                <li><a class="dropdown-item" href="#">No value</a></li>
-                <li><a class="dropdown-item" href="#">By numeric value</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="value-operator {{#unless constrainByValue}}hidden{{/unless}}">
-        <div class="col-md-4 constrain-filter-btn">
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle value-operator-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    {{{valueOperatorLabel}}}
-                    <span class="glyphicon glyphicon-chevron-down blue"></span>
-                </button>
-                <ul class="value-dropdown-menu dropdown-menu" aria-labelledby="value-operator-btn">
-                    <li><a class="dropdown-item" href="#" value="LT">Less than or equal to</a></li>
-                    <li><a class="dropdown-item" href="#" value="BETWEEN">Between</a></li>
-                    <li><a class="dropdown-item" href="#" value="GT">Greater than or equal to</a></li>
-                </ul>
-            </div>
-        </div>
+    <div class="constrain-filter-btn">
+	  <select class="form-control constrain-type-select" >
+	    <option  {{#unless constrainByValue}}selected{{/unless}} >No value</option>
+	    <option {{#if constrainByValue}}selected{{/if}}>By numeric value</option>
+	  </select>
+          <select class="form-control value-type-select value-operator  {{#unless constrainByValue}}hidden{{/unless}}" >
+            <option value="LT" {{#if constrainValueOne}}{{#unless constrainValueTwo}}selected{{/unless}}{{/if}}  >Less than or equal to</option>
+            <option value="BETWEEN" {{#if constrainValueOne}}{{#if constrainValueTwo}}selected{{/if}}{{/if}} >Between</option>
+	    <option value="GT" {{#if constrainValueTwo}}{{#unless constrainValueOne}}selected{{/unless}}{{/if}}  >Greater than or equal to</option>
+          </select>
         <div class="col-md-1 constrain-filter-input">
-            <input class="constrain-value constrain-value-one form-control" value="{{constrainValueOne}}" type="number"></input>
+            <input class="constrain-value constrain-value-one form-control value-operator {{#unless constrainByValue}}hidden{{/unless}} {{#if constrainValueTwo}}{{#unless constrainValueOne}}hidden{{/unless}}{{/if}}" " value="{{constrainValueOne}}" type="number"></input>
         </div>
-        <div class="{{#unless isValueOperatorBetween}}hidden{{/unless}}">
-            <div class="col-md-1 constrain-filter-input" style="width: 5%; text-align: center;">
-                <span class="glyphicon glyphicon-minus" style="margin-top: 25%;"></span>
-            </div>
-            <div class="col-md-1 constrain-filter-input">
-                <input class="constrain-value constrain-value-two form-control" value="{{constrainValueTwo}}" type="number"></input>
-            </div>
+        <span class="glyphicon glyphicon-minus constrain-range-separator value-operator {{#unless constrainValueOne}}hidden{{/unless}} {{#unless constrainValueTwo}}hidden{{/unless}}  {{#unless constrainByValue}}hidden{{/unless}}"></span>
+        <div class="col-md-1 constrain-filter-input">
+            <input class="constrain-value constrain-value-two form-control value-operator {{#unless constrainValueTwo}}hidden{{/unless}}" value="{{constrainValueTwo}}" type="number"></input>
         </div>
-    </div>
-    <div class="constrain-search-button col-md-1">
-        <span class="btn search-btn constrain-apply-btn">Run</span>
-    </div>
     <div class="validation-message col-md-12" style="color:red;"></div>
 </div>

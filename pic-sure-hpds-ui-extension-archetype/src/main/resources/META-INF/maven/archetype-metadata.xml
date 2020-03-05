@@ -7,5 +7,11 @@
         <include>**</include>
       </includes>
     </fileSet>
+    <fileSet filtered="false" packaged="false">
+      <directory>src/test</directory>
+      <includes>
+        <include>**</include>
+      </includes>
+    </fileSet>
   </fileSets>
 </archetype-descriptor>

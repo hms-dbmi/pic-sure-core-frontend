@@ -8,11 +8,11 @@
 	<includeBaseDirectory>false</includeBaseDirectory>
 	<fileSets>
 		<fileSet>
-			<outputDirectory>src/main/javascript</outputDirectory>
+			<outputDirectory>src/main/webapp</outputDirectory>
 			<includes>
-				<include>**</include>
+				<include>picsureui/overrides/**</include>
 			</includes>
-			<directory>src/main/webapp</directory>
+			<directory>src/main/webapp/</directory>
 			<lineEnding>keep</lineEnding>
 			<filtered>false</filtered>
 		</fileSet>

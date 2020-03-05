@@ -1,20 +1,45 @@
 <div class="constrain-row row">
-    <div class="col-md-3 constrain-filter-btn">
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle value-constraint-category-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{#if constrainValueOne}}{{constrainValueOne}}{{else}}Any Value{{/if}}
-                <span class="glyphicon glyphicon-chevron-down blue"></span>
-            </button>
-            <ul class="constrain-category-dropdown-menu dropdown-menu" aria-labelledby="value-constraint-category-btn">
-                <li><a class="dropdown-item" href="#">Any Value</a></li>
-                {{#each metadata.categoryValues}}
-                    <li><a class="dropdown-item" href="#" value="{{this}}">{{this}}</a></li>
-               	{{/each}}
-            </ul>
-        </div>
+    <div class="category-restriction-type-row">
+	<div class="category-filter-restriction-container">
+		<select type="radio" class="form-control category-filter-restriction">
+			<option value="ANY">Allow Any Value (exclude missing data)</option>
+			<option value="RESTRICT" {{#if constrainValueOne.length}}selected{{/if}} {{#if metadata.values}}selected{{/if}}>Restrict By Value</option>
+
+		</select>
+	</div>
+	 <div class="constrain-search-button">
+            <span class="btn constrain-apply-btn">Run</span>
+         </div>
     </div>
-     <div class="constrain-search-button col-md-1">
-        <span class="btn search-btn constrain-apply-btn">Run</span>
+
+    <div class="category-filter-lists {{#unless constrainValueOne.length}}hidden{{/unless}}">
+	    <div class="col-md-3 constrain-filter-btn resizable-select-div">
+			<div class="constrain-filter-label">Available Values</div>
+			<input  class="form-control category-filter" placeholder="Filter..." value="" ></input>
+			<select class="form-control available-categories multi-select-box"    multiple="" >
+				{{#if metadata.categoryValues}}
+					{{#each metadata.categoryValues}}	    
+				<option class="selectable-category-item" >{{this}}</option>
+					{{/each}}
+				{{else}}
+					{{#each metadata.values}}	    
+				<option class="selectable-category-item" >{{this}}</option>
+					{{/each}}
+				{{/if}}
+			
+			</select>
+			<div class="select-all btn btn-default">
+				    <a>Select All <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+			</div>
+	    </div>
+	    <div class="col-md-3 constrain-filter-btn resizable-select-div">
+		<div class="constrain-filter-label">Selected Values</div>
+		<select class="form-control selected-categories multi-select-box" multiple="">
+		
+		</select>
+		<div class="select-none btn btn-default">
+			    <a><i class="fa fa-angle-double-left" aria-hidden="true"></i> Select None</a>
+		</div>
+	    </div>
     </div>
-    <div class="validation-message col-md-12"></div>
 </div>
