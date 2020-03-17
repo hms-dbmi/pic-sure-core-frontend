@@ -157,6 +157,14 @@
      float: right;
      color: black;
 }
+
+.dropdown.header-btn {
+	padding: 0px 0px;
+}
+.dropdown-toggle {
+    padding: 6px 12px;
+    display: inline-block;
+}
  .spinner {
      position: absolute;
      margin-top: 5px;
