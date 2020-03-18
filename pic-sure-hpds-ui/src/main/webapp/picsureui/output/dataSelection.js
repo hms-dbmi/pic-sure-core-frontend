@@ -214,6 +214,7 @@ define(["common/spinner", "backbone", "handlebars", "text!output/dataSelection.h
 							
 							return (catIndex == undefined ? 999 : catIndex)  + entry.text;
 						});
+
 						var conceptTree = $("#concept-tree", this.$el).jstree({
 							core:{
 								data:tree,
@@ -223,6 +224,12 @@ define(["common/spinner", "backbone", "handlebars", "text!output/dataSelection.h
 							},
 							"plugins":["checkbox"]
 						});
+
+						$("#concept-tree", this.$el).on("loaded.jstree", function(event, data){
+							//disable the manual expansion for the root tree node (will open when it loads)
+							$("#concept-tree", this.$el).jstree(true).get_node("#", true).find(".jstree-ocl:first").css("width", "0px");
+						});
+
 							$("#concept-tree", this.$el).on("before_open.jstree", function(event, data){
 								var query = {};
 								query = JSON.parse(JSON.stringify(this.query));
