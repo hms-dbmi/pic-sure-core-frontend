@@ -1,5 +1,6 @@
 <div id="concept-tree"></div>
-<a class="center btn btn-default hidden" id="prepare-btn">Prepare Data Export</a>
+<a class="center btn btn-default hidden" id="prepare-btn">{{#if queryButtonLabel}}{{queryButtonLabel}}{{else}}Prepare Data Export{{/if}}</a>
 <a class="center btn btn-default hidden" download="data.csv" id="download-btn">Download</a>
+<a class="center btn btn-default hidden" id="copy-queryid-btn">Copy query ID to clipboard</a>
 <div id="download-spinner"></div>
 <div id="resource-id-display"></div>
