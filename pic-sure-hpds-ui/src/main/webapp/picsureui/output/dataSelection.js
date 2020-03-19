@@ -20,7 +20,7 @@ define(["common/spinner", "backbone", "handlebars", "text!output/dataSelection.h
 					.concat(_.keys(query.query.numericFilters)));
 			},
 			prepare: function(){
-				$("#download-btn", this.$el).attr("href", "");
+				$("#download-btn", this.$el).removeAttr("href");
 				$("#download-btn", this.$el).addClass('hidden');
 				var query = {};
 				query = JSON.parse(JSON.stringify(this.query));
