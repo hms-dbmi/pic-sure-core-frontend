@@ -581,3 +581,11 @@ body {
 	float:right;
 	margin-right: 100px;
 }
+
+.results-div {
+    position: sticky;
+    bottom: 25;
+    padding: 5;
+    padding-bottom: 25;
+    background-color: #f4f4f6;
+}
