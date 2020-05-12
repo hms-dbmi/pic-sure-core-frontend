@@ -236,6 +236,8 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			 }  else {
 				$('.value-operator').hide();
 				$('.value-operator-range-label', this.$el).hide();
+				$('.constrain-value-two', this.$el).hide();
+				$('.constrain-value-one', this.$el).hide();
 			}
 
 		},
@@ -392,6 +394,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 					this.model.get("constrainParams").set("constrainValueOne", $('.constrain-value-one', this.$el).val());
 					this.model.get("constrainParams").set("constrainValueTwo", "");
             }
+            $(".value-type-select").val(valueOperator);
 
 		},
 		updateConstrainFilterMenu : function() {
@@ -403,6 +406,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 				filterEl.html('');
 			}else if(this.model.attributes.concept.columnDataType==="CONTINUOUS"){
 				filterEl.html(this.constrainFilterMenuTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
+				this.updateConstrainValueVisibility(this.model.attributes.constrainParams.attributes.valueOperator);
 			}else if (this.model.attributes.concept.columnDataType==="VARIANT"){
 				filterEl.html(this.constrainFilterMenuGeneticsTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
 				filterEl.show();
@@ -473,6 +477,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 					this.model.get("constrainParams").set("constrainValueOne", selectedCategories);
 				} else {
 					this.model.get("constrainParams").set("constrainValueOne",[]);
+					this.model.get("constrainParams").set("constrainValueTwo",[]);
 				}
 			}	
 
@@ -495,16 +500,16 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 					this.model.get("constrainParams").set("constrainValueTwo", $(".value-constraint-genetics-btn", this.$el).text());
 					$('.search-value', this.$el).html(this.model.get("constrainParams").get("constrainValueTwo") + " : " + this.model.get("searchTerm"));
 				}else{
-					if (this.model.get("constrainParams").get("constrainByValue")){
-						var constrains = this.model.get("constrainParams");
-						var searchParam = 
-							(constrains.get("constrainValueOne")=="" && constrains.get("constrainValueTwo")=="") ? "Any value" :
-						constrains.get("valueOperatorLabel")
-						+ " "
+					var constrains = this.model.get("constrainParams");
+					if (constrains.get("constrainByValue") && 
+					!(constrains.get("constrainValueOne")=="" && constrains.get("constrainValueTwo")=="") ){
+						var searchParam = constrains.get("valueOperatorLabel") + " "
 						+ (Array.isArray(constrains.get("constrainValueOne")) ? Array.prototype.join.call(constrains.get("constrainValueOne", ', ')) : constrains.get("constrainValueOne")) 
 						+ (constrains.get("isValueOperatorBetween") ? " - " : "")
 						+ constrains.get("constrainValueTwo");
 						$('.search-value', this.$el).html(this.model.get("searchValue") + ', ' + searchParam);
+					} else {
+						$('.search-value', this.$el).html(this.model.get("searchValue") + ", Any Value");
 					}
 				}
 				this.$el.addClass("saved");
