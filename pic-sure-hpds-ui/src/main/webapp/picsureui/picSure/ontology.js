@@ -16,6 +16,8 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
     };
 
     var mapResponseToResult = function(query, response, incomingQueryScope) {
+    	//lowercase for consistent comparisons
+    	query = query.toLowerCase();
         var queryScope = [];
         if (incomingQueryScope && incomingQueryScope.length > 0) {
             queryScope = incomingQueryScope;
