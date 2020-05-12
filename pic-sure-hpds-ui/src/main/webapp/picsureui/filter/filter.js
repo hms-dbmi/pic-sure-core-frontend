@@ -237,7 +237,13 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 				$('.value-operator').hide();
 				$('.value-operator-range-label', this.$el).hide();
 				$('.constrain-value-two', this.$el).hide();
+				$('.constrain-value-two', this.$el).val("");
 				$('.constrain-value-one', this.$el).hide();
+				$('.constrain-value-one', this.$el).val("");
+				$('.validation-message', this.$el).text("");
+				
+				//update model
+				this.onConstrainValuesChange();
 			}
 
 		},
@@ -374,6 +380,8 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 		},
 		updateConstrainValueVisibility : function(valueOperator) {
 
+			
+			
            if( valueOperator == "BETWEEN" ){
                     $('.constrain-range-separator', this.$el).removeClass("hidden")
                     $('.constrain-range-separator', this.$el).show();
@@ -406,7 +414,9 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 				filterEl.html('');
 			}else if(this.model.attributes.concept.columnDataType==="CONTINUOUS"){
 				filterEl.html(this.constrainFilterMenuTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
-				this.updateConstrainValueVisibility(this.model.attributes.constrainParams.attributes.valueOperator);
+				if(this.model.attributes.constrainParams.attributes.constrainByValue){
+					this.updateConstrainValueVisibility(this.model.attributes.constrainParams.attributes.valueOperator);
+				}
 			}else if (this.model.attributes.concept.columnDataType==="VARIANT"){
 				filterEl.html(this.constrainFilterMenuGeneticsTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
 				filterEl.show();
