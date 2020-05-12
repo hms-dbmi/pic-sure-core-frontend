@@ -205,7 +205,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.updateConstrainFilterMenu();
 			if (this.model.attributes.concept.columnDataType==="INFO" || 
 					this.model.attributes.concept.columnDataType==="CATEGORICAL"){
-				$(".category-filter-restriction", this.$el).select("RESTRICT");
+				$(".category-filter-restriction", this.$el).val("RESTRICT");
 			}
 		},
 		changeConstraint : function (){
@@ -418,8 +418,9 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 				//Move the selected items to the right box
 				var selectedCategories = this.model.get("constrainParams").get("constrainValueOne"); 
 				$(".available-categories > option").each(function() {
-                    if(selectedCategories.includes(this.text)){
-						$(".selected-categories", this.$el).append(this);
+					if((Array.isArray(selectedCategories) && selectedCategories.includes(this.text))
+							|| selectedCategories == this.text){
+							$(".selected-categories", this.$el).append(this);
 					}
                 }); 
                 //this should show the multi-select boxes.  the template should automatically have 'RESTRICT' by value selected.
@@ -504,7 +505,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 					if (constrains.get("constrainByValue") && 
 					!(constrains.get("constrainValueOne")=="" && constrains.get("constrainValueTwo")=="") ){
 						var searchParam = constrains.get("valueOperatorLabel") + " "
-						+ (Array.isArray(constrains.get("constrainValueOne")) ? Array.prototype.join.call(constrains.get("constrainValueOne", ', ')) : constrains.get("constrainValueOne")) 
+						+ (Array.isArray(constrains.get("constrainValueOne")) ? Array.prototype.join.call(constrains.get("constrainValueOne"), ', ') : constrains.get("constrainValueOne")) 
 						+ (constrains.get("isValueOperatorBetween") ? " - " : "")
 						+ constrains.get("constrainValueTwo");
 						$('.search-value', this.$el).html(this.model.get("searchValue") + ', ' + searchParam);
