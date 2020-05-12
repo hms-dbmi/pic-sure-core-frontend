@@ -501,7 +501,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 							(constrains.get("constrainValueOne")=="" && constrains.get("constrainValueTwo")=="") ? "Any value" :
 						constrains.get("valueOperatorLabel")
 						+ " "
-						+ constrains.get("constrainValueOne")
+						+ (Array.isArray(constrains.get("constrainValueOne")) ? Array.prototype.join.call(constrains.get("constrainValueOne", ', ')) : constrains.get("constrainValueOne")) 
 						+ (constrains.get("isValueOperatorBetween") ? " - " : "")
 						+ constrains.get("constrainValueTwo");
 						$('.search-value', this.$el).html(this.model.get("searchValue") + ', ' + searchParam);
