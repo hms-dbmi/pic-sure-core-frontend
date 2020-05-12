@@ -32,25 +32,25 @@ define(["output/outputPanel","picSure/queryBuilder", "filter/searchResult", "han
 			var categorySearchResultViews = [];
 			_.each(data[key], function(value){
 				var matchedSelections = [];
-					// For categorical or INFO columns, we want to render a search result for each value that matches the search term
-					if(value.columnDataType == "INFO"){
-						_.each(value.metadata.values, function(categoryValue){
-							//use unshift here to make sure exact matches are ranked higher than partial matches
-							if(categoryValue.toLowerCase() == searchTerm){
-								matchedSelections.unshift(categoryValue);
-							} else if (categoryValue.toLowerCase().includes(searchTerm)){
-								matchedSelections.push(categoryValue);
-							}
-						});
-					} else if ( value.columnDataType == "CATEGORICAL"	 ) {
-						_.each(value.metadata.categoryValues, function(categoryValue){
-							if(categoryValue.toLowerCase() == searchTerm){
-								matchedSelections.unshift(categoryValue);
-							} else if (categoryValue.toLowerCase().includes(searchTerm)){
-								matchedSelections.push(categoryValue);
-							}
-						});
-					}
+				// For categorical or INFO columns, we want to render a search result for each value that matches the search term
+				if(value.columnDataType == "INFO"){
+					_.each(value.metadata.values, function(categoryValue){
+						//use unshift here to make sure exact matches are ranked higher than partial matches
+						if(categoryValue.toLowerCase() == searchTerm){
+							matchedSelections.unshift(categoryValue);
+						} else if (categoryValue.toLowerCase().includes(searchTerm)){
+							matchedSelections.push(categoryValue);
+						}
+					});
+				} else if ( value.columnDataType == "CATEGORICAL"	 ) {
+					_.each(value.metadata.categoryValues, function(categoryValue){
+						if(categoryValue.toLowerCase() == searchTerm){
+							matchedSelections.unshift(categoryValue);
+						} else if (categoryValue.toLowerCase().includes(searchTerm)){
+							matchedSelections.push(categoryValue);
+						}
+					});
+				}
 				//now build the objects (View/Model) for the results
 				if(matchedSelections.length > 0){
 					//generate an individual search result for categorical values matching the search term.
@@ -62,8 +62,7 @@ define(["output/outputPanel","picSure/queryBuilder", "filter/searchResult", "han
 							filterView: filterView,
 						}));
 					} );
-
-          } else {			
+				} else {			
 					categorySearchResultViews.push( new searchResult.View({
 						queryCallback : queryCallback,
 						model : new searchResult.Model(value),
@@ -133,10 +132,7 @@ define(["output/outputPanel","picSure/queryBuilder", "filter/searchResult", "han
 				});
 			}
 
-
 			$(".search-result-list", tabPane).append(_.pluck(categorySearchResultViews, "$el"));
-
-			
 
 		});
 
