@@ -45,8 +45,8 @@ define(["output/outputPanel","picSure/queryBuilder", "filter/filter"],
 				_.pluck(this.filters, "model"));
 		outputPanel.View.update(query);
 		if(_.countBy(this.filters, function(filter){
-			return filter.model.get("searchTerm").trim() === "" ? "empty" : "notEmpty";
-		}).empty == undefined) {
+			return $(".search-box", filter.$el).is(":visible") ? "visible" : "hidden";
+		}).visible == undefined) {
             this.addFilter();
         }
 	}.bind(filterList);

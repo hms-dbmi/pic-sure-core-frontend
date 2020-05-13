@@ -89,8 +89,8 @@ define([ "text!../settings/settings.json" ], function(settings){
 							zygosities.push("0/0");
 						}
 					}
-				}else{
-					query.query.requiredFields.push(filter.get("searchTerm"));
+//				}else{
+//					query.query.requiredFields.push(filter.get("searchTerm"));
 				}
 
 			}
