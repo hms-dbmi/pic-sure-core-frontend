@@ -61,13 +61,16 @@ define(["text!../settings/settings.json", "output/dataSelection", "text!output/o
 		select: function(event){
 			
 			this.model.set('spinning', true);
+			var query = JSON.parse(JSON.stringify(this.model.get("query")));
 			if(!this.dataSelection){
-				var query = JSON.parse(JSON.stringify(this.model.get("query")));
 				this.dataSelection = new dataSelection({query:query});
 				$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
-				this.model.set("spinning", false);
-				this.dataSelection.render();
+			} else {
+				this.dataSelection.updateQuery(query);
 			}
+			
+			this.model.set("spinning", false);
+			this.dataSelection.render();
 		},
 //			totalCount: 0,
 //			tagName: "div",
@@ -96,9 +99,11 @@ define(["text!../settings/settings.json", "output/dataSelection", "text!output/o
 				query.resourceUUID = JSON.parse(settings).picSureResourceId;
 				query.resourceCredentials = {};
 				query.query.expectedResultType="COUNT";
-				this.model.set("query", query);
-
-  				if(resource.additionalPui) {
+				
+				//if this is the base resource, we should update the model
+  				if(resource.additionalPui == undefined) {
+  					this.model.set("query", query);
+  				} else {
   					query.query.requiredFields.push(resource.additionalPui);
   				}
 				
@@ -174,6 +179,9 @@ define(["text!../settings/settings.json", "output/dataSelection", "text!output/o
 					}
 				});
 			}.bind(this));
+			
+			//then update the data selection if present
+			this.select();
 		},
 		copyToken: function(){
             var sel = getSelection();
