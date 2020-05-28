@@ -58,7 +58,7 @@ define(["text!../settings/settings.json", "output/dataSelection", "text!output/o
 			"click #select-btn": "select",
 			"click .copy-button": "copyToken"
 		},
-		select: function(event){
+		select: overrides.selectOverride ? overrides.selectOverride : function(event){
 			
 			this.model.set('spinning', true);
 			var query = JSON.parse(JSON.stringify(this.model.get("query")));
@@ -133,6 +133,11 @@ define(["text!../settings/settings.json", "output/dataSelection", "text!output/o
 	                }
 	                
 	                this.render();
+	                
+	                if(resource.additionalPui == undefined){
+		            	//then update the data selection if present (but only do this once)
+		    			this.select();
+	                }
   				}.bind(this);
 
   				var errorCallback = function(message){
@@ -180,8 +185,7 @@ define(["text!../settings/settings.json", "output/dataSelection", "text!output/o
 				});
 			}.bind(this));
 			
-			//then update the data selection if present
-			this.select();
+		
 		},
 		copyToken: function(){
             var sel = getSelection();
