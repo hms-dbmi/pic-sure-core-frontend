@@ -43,7 +43,13 @@ define([ "text!../settings/settings.json" ], function(settings){
 					}
 				} else if(filter.attributes.constrainByValue || filter.get("constrainParams").get("constrainByValue")){
 					if(filter.attributes.valueType==="INFO"){
-						var variantInfoFilter = {};
+						if ( ! query.query.variantInfoFilters[0] ){
+							query.query.variantInfoFilters.push({
+								categoryVariantInfoFilters:{},
+								numericVariantInfoFilters:{}
+							    });
+						}
+
 						query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category] = filter.get("constrainParams").get("constrainValueOne");
 						query.query.variantInfoFilters[0].numericVariantInfoFilters[filter.attributes.category] = filter.attributes.variantInfoConstraints.numericVariantInfoFilters[filter.attributes.category];
 					} else if(filter.attributes.valueType==="NUMBER"){
