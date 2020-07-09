@@ -1,4 +1,5 @@
-define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"], function(_, settings, resourceMeta) {
+define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta"], 
+		function($, _, settings, resourceMeta) {
     /*
      * A function that takes a PUI that is already split on forward slash and returns
      * the category value for that PUI.

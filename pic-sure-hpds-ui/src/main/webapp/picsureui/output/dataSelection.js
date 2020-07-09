@@ -1,5 +1,6 @@
-define(["common/spinner", "backbone", "handlebars", "text!output/dataSelection.hbs", "jstree", "picSure/ontology", "picSure/queryCache", "text!../settings/settings.json" ], 
-	function(spinner, BB, HBS, template, jstree, ontology, queryCache, settings){
+define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataSelection.hbs", "jstree", "picSure/ontology", "text!../settings/settings.json" ], 
+		function($, spinner, BB, HBS, template, jstree, ontology, settings){
+			//don't need to reference jstree, just need to load it.
 		return BB.View.extend({
 			template: HBS.compile(template),
 			settings: JSON.parse(settings),

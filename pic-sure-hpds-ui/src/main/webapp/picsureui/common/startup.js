@@ -1,5 +1,5 @@
-define(["filter/filterList", "header/header", "footer/footer", "text!../settings/settings.json", "output/outputPanel", "picSure/resourceMeta", "jquery", "handlebars", "text!common/mainLayout.hbs", "picSure/queryBuilder", "treeview", "common/styles"],
-	function(filterList, header, footer, settings, output, resourceMeta, $, HBS, layoutTemplate, queryBuilder){
+define(["jquery", "filter/filterList", "header/header", "footer/footer", "text!../settings/settings.json", "output/outputPanel", "handlebars", "text!common/mainLayout.hbs", "picSure/queryBuilder", "treeview", "common/styles"],
+	function($, filterList, header, footer, settings, output, HBS, layoutTemplate, queryBuilder){
 		var redirection_url = "/psamaui/login?redirection_url=" + "/picsureui/";
 		return function(){
 			if(window.location.pathname !== "/picsureui/"){

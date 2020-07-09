@@ -1,4 +1,4 @@
-define(["handlebars", "backbone"], function(HBS, BB){
+define(["jquery", "handlebars", "backbone"], function($, HBS, BB){
 	return {
 		/*
 		 * This should be a function that returns the name of a Handlebars partial

@@ -1,4 +1,5 @@
-define(['picSure/ontology', 'jquery','underscore'], function(ontology, $, _){
+define(["jquery", 'underscore'], 
+		function($,  _){
 
     var runningQueryIds = {};
 

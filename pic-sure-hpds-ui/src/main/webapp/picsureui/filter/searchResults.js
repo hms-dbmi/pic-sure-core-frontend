@@ -1,5 +1,5 @@
-define(["output/outputPanel","picSure/queryBuilder", "filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs", "text!filter/searchResultSubCategories.hbs", "text!../settings/settings.json"],
-		function(outputPanel, queryBuilder, searchResult, HBS, searchResultTabsTemplate, searchSubCatTemplate, settings){
+define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs", "text!filter/searchResultSubCategories.hbs", "text!../settings/settings.json"],
+		function($, searchResult, HBS, searchResultTabsTemplate, searchSubCatTemplate, settings){
 	var searchResults = {
 			init : function(data, view, callback){
 				this.searchResultTabs = HBS.compile(searchResultTabsTemplate);

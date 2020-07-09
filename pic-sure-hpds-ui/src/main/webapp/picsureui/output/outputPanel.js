@@ -1,5 +1,5 @@
-define(["text!../settings/settings.json","common/spinner", "output/dataSelection", "text!output/outputPanel.hbs","picSure/resourceMeta", "picSure/ontology", "picSure/queryCache", "backbone", "handlebars", "overrides/outputPanel"],
-		function(settings, spinner, dataSelection, outputTemplate, resourceMeta, ontology, queryCache, BB, HBS, overrides){
+define(["jquery", "text!../settings/settings.json", "output/dataSelection", "text!output/outputPanel.hbs","picSure/resourceMeta", "picSure/ontology", "backbone", "handlebars", "overrides/outputPanel"],
+		function($, settings, dataSelection, outputTemplate, resourceMeta, ontology, BB, HBS, overrides){
 	var outputModelDefaults = {
 			totalPatients : 0,
 			spinnerClasses: "spinner-medium spinner-medium-center ",

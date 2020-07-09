@@ -1,5 +1,5 @@
-define(["backbone","handlebars", "text!header/header.hbs", "overrides/header", "text!../settings/settings.json"],
-		function(BB, HBS, template, overrides, settings){
+define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/header", "text!../settings/settings.json"],
+		function($, BB, HBS, template, overrides, settings){
 	var headerView = BB.View.extend({
 		initialize : function(){
 			this.template = HBS.compile(template);

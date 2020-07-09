@@ -1,5 +1,5 @@
-define(["jstree", "underscore", "handlebars", "text!picklist/pickList.hbs", "picSure/ontology"],
-		function(jstree, _, HBS, template, ontology){
+define(["jquery", "jstree", "underscore", "handlebars", "text!picklist/pickList.hbs", "picSure/ontology"],
+		function($, jstree, _, HBS, template, ontology){
 
 	var suggestionsToTree = function(suggestions, depth){
 		var tree = _.groupBy(suggestions, function(suggestion){

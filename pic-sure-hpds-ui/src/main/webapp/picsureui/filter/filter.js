@@ -1,5 +1,5 @@
-define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputPanel", "overrides/filter", "common/spinner", "backbone", "handlebars", "text!filter/filter.hbs", "text!filter/suggestion.hbs", "text!filter/noResults.hbs", "filter/searchResults", "picSure/queryCache", "text!filter/constrainFilterMenu.hbs", "text!filter/constrainFilterMenuCategories.hbs", "text!filter/constrainFilterMenuGenetics.hbs", "text!filter/constrainFilterMenuAnyRecordOf.hbs", "text!settings/settings.json", "autocomplete", "bootstrap"],
-		function(ontology, searchHelpTooltipTemplate, outputPanel, overrides, spinner, BB, HBS, filterTemplate, suggestionTemplate, noResultsTemplate, searchResults, queryCache, constrainFilterMenuTemplate, constrainFilterMenuCategoriesTemplate, constrainFilterMenuGeneticsTemplate, constrainFilterMenuAnyRecordOfTemplate, settings){
+define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "overrides/filter", "common/spinner", "backbone", "handlebars", "text!filter/filter.hbs", "text!filter/suggestion.hbs", "text!filter/noResults.hbs", "filter/searchResults", "text!filter/constrainFilterMenu.hbs", "text!filter/constrainFilterMenuCategories.hbs", "text!filter/constrainFilterMenuGenetics.hbs", "text!filter/constrainFilterMenuAnyRecordOf.hbs", "text!settings/settings.json", "autocomplete", "bootstrap"],
+		function($, ontology, searchHelpTooltipTemplate, overrides, spinner, BB, HBS, filterTemplate, suggestionTemplate, noResultsTemplate, searchResults, constrainFilterMenuTemplate, constrainFilterMenuCategoriesTemplate, constrainFilterMenuGeneticsTemplate, constrainFilterMenuAnyRecordOfTemplate, settings){
 	var valueConstrainModel = BB.Model.extend({
 		defaults:{
 			constrainByValue: false,
@@ -221,7 +221,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 		},
 		onConstrainTypeSelect: function (event) {
 		
-			var constrainByValue = event.target.value != "No value";
+			var constrainByValue = event.target.value != "Any value";
 			// update both models
 			this.model.set("constrainByValue", constrainByValue)
 			this.model.get("constrainParams").set("constrainByValue", constrainByValue);

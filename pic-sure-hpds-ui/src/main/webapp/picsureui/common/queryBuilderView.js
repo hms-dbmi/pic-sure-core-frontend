@@ -1,5 +1,5 @@
-define(["filter/filterList", "output/outputPanel", "header/header", "text!common/mainLayout.hbs"], 
-		function(filterList, output, header, mainLayoutTemplate){
+define(["jquery", "filter/filterList", "output/outputPanel", "header/header", "text!common/mainLayout.hbs"], 
+		function($, filterList, output, header, mainLayoutTemplate){
 	var queryBuilderView = function(){
 		$('body').html(HBS.compile(layoutTemplate)(JSON.parse(settings)));
 		var headerView = header.View;

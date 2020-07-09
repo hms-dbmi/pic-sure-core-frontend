@@ -1,5 +1,5 @@
-define(["output/outputPanel","picSure/queryBuilder", "filter/filter"],
-		function(outputPanel, queryBuilder, filter){
+define(["jquery", "output/outputPanel","picSure/queryBuilder", "filter/filter"],
+		function($, outputPanel, queryBuilder, filter){
 	var filterList = {
 		init : function(){
 			$('#filter-list').html();

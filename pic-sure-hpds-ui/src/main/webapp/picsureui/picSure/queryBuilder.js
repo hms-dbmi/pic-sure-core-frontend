@@ -1,4 +1,5 @@
-define([ "text!../settings/settings.json" ], function(settings){
+define(["underscore", "text!../settings/settings.json" ], 
+		function(_, settings){
 
     var queryTemplate = {
         categoryFilters: {},
@@ -31,7 +32,6 @@ define([ "text!../settings/settings.json" ], function(settings){
 			resourceUUID: JSON.parse(settings).picSureResourceId,
 			query: template};
 
-		var lastFilter = undefined;
 		_.each(filters, function(filter){
 			if(filter.get("searchTerm").trim().length !== 0){
 				if ( filter.attributes.valueType === "ANYRECORDOF" ){
@@ -100,7 +100,6 @@ define([ "text!../settings/settings.json" ], function(settings){
 				}
 
 			}
-			lastFilter = filter;
 		});
 		return query;
 	};
