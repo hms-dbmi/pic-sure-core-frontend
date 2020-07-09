@@ -205,7 +205,7 @@ define(["picSure/ontology", "text!filter/searchHelpTooltip.hbs", "output/outputP
 			this.updateConstrainFilterMenu();
 			if (this.model.attributes.concept.columnDataType==="INFO" || 
 					this.model.attributes.concept.columnDataType==="CATEGORICAL"){
-				$(".category-filter-restriction", this.$el).select("RESTRICT");
+				$(".category-filter-restriction", this.$el).val("RESTRICT");
 			}
 		},
 		changeConstraint : function (){
