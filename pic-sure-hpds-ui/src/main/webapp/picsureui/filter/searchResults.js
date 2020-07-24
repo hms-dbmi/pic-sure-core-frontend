@@ -26,6 +26,7 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 		});
 		
 		var compiledSubCategoryTemplate = this.searchSubCategories;
+		filterView.$el.hide();
 		$('.search-tabs', filterView.$el).append(this.searchResultTabs(aliases));
 		keys.forEach((key) => {
 			var subCategories = [];
@@ -116,6 +117,7 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 					$(event.target.parentElement).addClass("active")
 					$(event.target.parentElement).siblings().removeClass("active");
 					
+					$('.tab-pane.active').hide();
 					if(event.target.text == "All Results"){
 						_.each(categorySearchResultViews, function(result){
 							result.$el.show();
@@ -130,6 +132,7 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 							}
 						});
 					}
+					$('.tab-pane.active').show();
 				});
 			}
 
@@ -150,6 +153,7 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 			//dont forget to show the cats again if we update!
 			$(".filter-search > .nav-pills").hide();
 		}
+		filterView.$el.show();
 	}.bind(searchResults);
 
 	return searchResults;
