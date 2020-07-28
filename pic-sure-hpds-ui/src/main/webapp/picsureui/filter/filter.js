@@ -265,12 +265,12 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
                         
             //handle special case where no items in 'selected' control; no logic needed
             if(existingItems.length == 0){
-                    $(".selected-categories").append($(".available-categories > option"));
+                    $(".selected-categories").append($(".available-categories > option:visible"));
                     return;
             }
             
             var currentItem = existingItems.first();
-            $(".available-categories > option").each(function() {
+            $(".available-categories > option:visible").each(function() {
                 //comparing text, but one is a func because jquery.each() is different than first()/next()
                 
                 if(this.text < currentItem.text()){
