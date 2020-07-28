@@ -5,7 +5,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			constrainByValue: false,
 			isValueOperatorBetween: false,
 			valueOperator: "LT",
-			valueOperatorLabel: "Less than",
+			valueOperatorLabel: "Less than or equal to",
 			constrainValueOne: "",
 			constrainValueTwo: ""
 		}
