@@ -465,6 +465,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			if(this.model.attributes.concept.columnDataType == "CATEGORICAL" || 
 				this.model.attributes.concept.columnDataType == "INFO"){
 				if($(".category-filter-restriction").val() == "RESTRICT"){
+				    this.model.get("constrainParams").set("valueOperatorLabel", $(".category-filter-restriction option:selected", this.$el).text());
 					var selectedCategories = [];
 					$(".selected-categories > option").each(function() {
 						selectedCategories.push(this.text);
@@ -499,7 +500,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 						var constrains = this.model.get("constrainParams");
 						var searchParam = 
 							(constrains.get("constrainValueOne")=="" && constrains.get("constrainValueTwo")=="") ? "Any value" :
-                        $(".category-filter-restriction option:selected").text()
+                        constrains.get("valueOperatorLabel")
 						+ " "
 						+ constrains.get("constrainValueOne")
 						+ (constrains.get("isValueOperatorBetween") ? " - " : "")
