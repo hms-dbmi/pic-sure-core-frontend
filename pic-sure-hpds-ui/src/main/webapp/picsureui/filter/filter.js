@@ -529,6 +529,13 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 		render: function(){
 			this.$el.html(this.template(this.model.attributes));
 
+			// show "AND" if we have more than one filter applied
+            if ($("#filter-list .filter-list-entry").length > 1) {
+                if ($(this.$el).closest(".filter-list-entry")[0].nextSibling !== null) {
+                    $(".filter-boolean-operator", this.$el).removeClass("hidden")
+                }
+            }
+
 			if(this.model.attributes.valueType ==="ANYRECORDOF"){
 				$(".category-valueof-div", this.$el).html(this.constrainFilterMenuAnyRecordOfTemplate(this.model.attributes.anyRecordCategories));
 			}
