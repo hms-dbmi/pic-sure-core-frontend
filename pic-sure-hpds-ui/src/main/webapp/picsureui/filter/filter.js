@@ -499,7 +499,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 						var constrains = this.model.get("constrainParams");
 						var searchParam = 
 							(constrains.get("constrainValueOne")=="" && constrains.get("constrainValueTwo")=="") ? "Any value" :
-						constrains.get("valueOperatorLabel")
+                        $(".category-filter-restriction option:selected").text()
 						+ " "
 						+ constrains.get("constrainValueOne")
 						+ (constrains.get("isValueOperatorBetween") ? " - " : "")
