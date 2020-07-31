@@ -5,7 +5,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			constrainByValue: false,
 			isValueOperatorBetween: false,
 			valueOperator: "LT",
-			valueOperatorLabel: "Less than",
+			valueOperatorLabel: "Less than or equal to",
 			constrainValueOne: "",
 			constrainValueTwo: ""
 		}
@@ -371,7 +371,8 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.model.get("constrainParams").set("constrainValueTwo", $('.constrain-value-two', this.$el).val());
 		},
 		updateConstrainValueVisibility : function(valueOperator) {
-
+		   $('.field-invalid').removeClass('field-invalid');
+		   $('.validation-message', this.$el).text("");
            if( valueOperator == "BETWEEN" ){
                     $('.constrain-range-separator', this.$el).removeClass("hidden")
                     $('.constrain-range-separator', this.$el).show();
