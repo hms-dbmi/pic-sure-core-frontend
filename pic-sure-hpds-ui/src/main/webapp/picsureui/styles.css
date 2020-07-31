@@ -478,6 +478,10 @@ body {
     border-bottom: 1px solid rgb(223, 238, 255);
 }
 
+.search-value {
+    word-break: break-all;
+}
+
 .filter-list-entry {
     margin-left: 0;
     margin-right: 0;
