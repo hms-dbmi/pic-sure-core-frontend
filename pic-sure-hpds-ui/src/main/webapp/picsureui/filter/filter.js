@@ -5,7 +5,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			constrainByValue: false,
 			isValueOperatorBetween: false,
 			valueOperator: "LT",
-			valueOperatorLabel: "Less than",
+			valueOperatorLabel: "Less than or equal to",
 			constrainValueOne: "",
 			constrainValueTwo: ""
 		}
@@ -265,12 +265,12 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
                         
             //handle special case where no items in 'selected' control; no logic needed
             if(existingItems.length == 0){
-                    $(".selected-categories").append($(".available-categories > option"));
+                    $(".selected-categories").append($(".available-categories > option:visible"));
                     return;
             }
             
             var currentItem = existingItems.first();
-            $(".available-categories > option").each(function() {
+            $(".available-categories > option:visible").each(function() {
                 //comparing text, but one is a func because jquery.each() is different than first()/next()
                 
                 if(this.text < currentItem.text()){
@@ -371,7 +371,8 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.model.get("constrainParams").set("constrainValueTwo", $('.constrain-value-two', this.$el).val());
 		},
 		updateConstrainValueVisibility : function(valueOperator) {
-
+		   $('.field-invalid').removeClass('field-invalid');
+		   $('.validation-message', this.$el).text("");
            if( valueOperator == "BETWEEN" ){
                     $('.constrain-range-separator', this.$el).removeClass("hidden")
                     $('.constrain-range-separator', this.$el).show();
