@@ -11,6 +11,8 @@
      border-style: solid;
      border-color: lightgrey;
      padding: 40px 0px;
+     background-color: rgb(223, 238, 255);
+     border-radius: 4px;
 }
 .query-builder-heading {
 	color: gray;
@@ -432,11 +434,6 @@ body {
 
 .multi-select-box {
     flex: 1;
-}
-
-#patient-count-box {
-    background-color: rgb(223, 238, 255);
-    border-radius: 4px;
 }
 
 #pic-sure-instances {
