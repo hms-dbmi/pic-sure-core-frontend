@@ -578,3 +578,12 @@ body {
 	float:right;
 	margin-right: 100px;
 }
+
+.numeric-label {
+	padding-top: 10px;
+}
+
+.numeric-separator {
+	width: 100%;	
+    text-align: center;
+}

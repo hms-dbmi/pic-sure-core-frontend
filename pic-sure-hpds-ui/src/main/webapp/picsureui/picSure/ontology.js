@@ -213,15 +213,17 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
         contentType: 'application/json',
         success: function(meResponse){
             var scopes = meResponse.queryScopes;
-            scopes.forEach(function(item, index) {
-                if ( item.length < 2 ) {
-                    scope.push(item);
-                } else if(item.length < 3){
-                    scope.push(item.substr(1,2));
-                } else {
-                    scope.push(item.substr(1,item.length - 2));
-                };
-            });
+            if(scopes != undefined){
+	            scopes.forEach(function(item, index) {
+	                if ( item.length < 2 ) {
+	                    scope.push(item);
+	                } else if(item.length < 3){
+	                    scope.push(item.substr(1,2));
+	                } else {
+	                    scope.push(item.substr(1,item.length - 2));
+	                };
+	            });
+            }
         }.bind(this),
         error: function(response){
             console.log("error retrieving user info");
