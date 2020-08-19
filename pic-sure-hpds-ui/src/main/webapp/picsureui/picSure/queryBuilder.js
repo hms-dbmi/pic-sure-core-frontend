@@ -50,8 +50,16 @@ define(["underscore", "text!../settings/settings.json" ],
 							    });
 						}
 
-						query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category] = filter.get("constrainParams").get("constrainValueOne");
-						query.query.variantInfoFilters[0].numericVariantInfoFilters[filter.attributes.category] = filter.attributes.variantInfoConstraints.numericVariantInfoFilters[filter.attributes.category];
+						if( filter.get("constrainParams").get("metadata").continuous){
+							query.query.variantInfoFilters[0].numericVariantInfoFilters[filter.attributes.category] =
+							{
+									min: filter.attributes.constrainParams.attributes.constrainValueOne,
+									max: filter.attributes.constrainParams.attributes.constrainValueTwo
+							}
+						} else {
+							query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category] = filter.get("constrainParams").get("constrainValueOne");
+							
+						}
 					} else if(filter.attributes.valueType==="NUMBER"){
 						var one = filter.attributes.constrainParams.attributes.constrainValueOne;
 						var two = filter.attributes.constrainParams.attributes.constrainValueTwo;

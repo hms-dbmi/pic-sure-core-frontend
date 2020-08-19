@@ -1,5 +1,5 @@
-define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "overrides/filter", "common/spinner", "backbone", "handlebars", "text!filter/filter.hbs", "text!filter/suggestion.hbs", "text!filter/noResults.hbs", "filter/searchResults", "text!filter/constrainFilterMenu.hbs", "text!filter/constrainFilterMenuCategories.hbs", "text!filter/constrainFilterMenuGenetics.hbs", "text!filter/constrainFilterMenuAnyRecordOf.hbs", "text!settings/settings.json", "autocomplete", "bootstrap"],
-		function($, ontology, searchHelpTooltipTemplate, overrides, spinner, BB, HBS, filterTemplate, suggestionTemplate, noResultsTemplate, searchResults, constrainFilterMenuTemplate, constrainFilterMenuCategoriesTemplate, constrainFilterMenuGeneticsTemplate, constrainFilterMenuAnyRecordOfTemplate, settings){
+define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "overrides/filter", "common/spinner", "backbone", "handlebars", "text!filter/filter.hbs", "text!filter/suggestion.hbs", "text!filter/noResults.hbs", "filter/searchResults", "text!filter/constrainFilterMenu.hbs", "text!filter/constrainFilterMenuCategories.hbs", "text!filter/constrainFilterMenuGenetics.hbs", "text!filter/constrainFilterMenuVariantInfoNumeric.hbs", "text!filter/constrainFilterMenuAnyRecordOf.hbs", "text!settings/settings.json", "autocomplete", "bootstrap"],
+		function($, ontology, searchHelpTooltipTemplate, overrides, spinner, BB, HBS, filterTemplate, suggestionTemplate, noResultsTemplate, searchResults, constrainFilterMenuTemplate, constrainFilterMenuCategoriesTemplate, constrainFilterMenuGeneticsTemplate, constrainFilterMenuVariantInfoNumericTemplate, constrainFilterMenuAnyRecordOfTemplate, settings){
 	var valueConstrainModel = BB.Model.extend({
 		defaults:{
 			constrainByValue: false,
@@ -35,7 +35,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.constrainFilterMenuTemplate = HBS.compile(constrainFilterMenuTemplate);
 			this.constrainFilterMenuCategoriesTemplate = HBS.compile(constrainFilterMenuCategoriesTemplate);
 			this.constrainFilterMenuGeneticsTemplate = HBS.compile(constrainFilterMenuGeneticsTemplate);
-			// this.constrainFilterMenuVariantInfoTemplate = HBS.compile(constrainFilterMenuVariantInfoTemplate);
+			this.constrainFilterMenuVariantInfoNumericTemplate= HBS.compile(constrainFilterMenuVariantInfoNumericTemplate);
 			this.constrainFilterMenuAnyRecordOfTemplate = HBS.compile(constrainFilterMenuAnyRecordOfTemplate);			
 			
 			this.showSearchResults  = overrides.showSearchResults ? overrides.showSearchResults.bind(this) : this.showSearchResults.bind(this);
@@ -408,8 +408,9 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 				filterEl.html(this.constrainFilterMenuGeneticsTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
 				filterEl.show();
 			//don't need this extra condition any more; INFO are handled mostly the same way as categorical.
-			// }else if (this.model.attributes.concept.columnDataType==="INFO"){
-			// 	filterEl.html(this.constrainFilterMenuCategoriesTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
+			 }else if (this.model.attributes.concept.columnDataType==="INFO" && this.model.attributes.concept.metadata.continuous){
+//			 	filterEl.html(this.constrainFilterMenuCategoriesTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
+				 filterEl.html(this.constrainFilterMenuVariantInfoNumericTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
 			}else {
 				filterEl.html(this.constrainFilterMenuCategoriesTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
 				//Move the selected items to the right box
@@ -463,8 +464,8 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 		updateModel : function () {
 			console.log(this.model.attributes.concept.columnDataType);
 			//iterate over all selected elements and turn them into an array
-			if(this.model.attributes.concept.columnDataType == "CATEGORICAL" || 
-				this.model.attributes.concept.columnDataType == "INFO"){
+			if(this.model.get("concept").columnDataType == "CATEGORICAL" || 
+				(this.model.get("concept").columnDataType == "INFO" && !this.model.get("concept").metadata.continuous )){
 				if($(".category-filter-restriction").val() == "RESTRICT"){
 				    this.model.get("constrainParams").set("valueOperatorLabel", $(".category-filter-restriction option:selected", this.$el).text());
 					var selectedCategories = [];
@@ -476,7 +477,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 				} else {
 					this.model.get("constrainParams").set("constrainValueOne",[]);
 				}
-			}	
+			}
 
 		},
 		onConstrainApplyButtonClick : function (event) {
