@@ -45,8 +45,16 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			
 			$('.search-help-tooltip').tooltip();
 			ontology.allInfoColumnsLoaded.then(function(){
-				$('.search-tooltip-help').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
-				$('.search-tooltip-help', this.$el).tooltip();
+				
+				$('.show-help-modal').click(function() {
+					$('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
+					$('#modal-window', this.$el).tooltip();
+					$(".close").click(function(){
+			            $("#search-help-modal").hide();
+					});
+	                $("#search-help-modal").show();
+				});
+				
 			}.bind(this));
 		},
 		tagName: "div",
