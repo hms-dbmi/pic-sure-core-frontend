@@ -591,3 +591,12 @@ body {
 	width: 100%;	
     text-align: center;
 }
+
+.modal {
+	max-height: 100%;
+	overflow-y: auto;
+}
+
+.modal-body {
+	overflow-x: scroll;
+}
