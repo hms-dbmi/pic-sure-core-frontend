@@ -5,7 +5,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			constrainByValue: false,
 			isValueOperatorBetween: false,
 			valueOperator: "LT",
-			valueOperatorLabel: "Less than",
+			valueOperatorLabel: "Less than or equal to",
 			constrainValueOne: "",
 			constrainValueTwo: ""
 		}
@@ -265,12 +265,12 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
                         
             //handle special case where no items in 'selected' control; no logic needed
             if(existingItems.length == 0){
-                    $(".selected-categories").append($(".available-categories > option"));
+                    $(".selected-categories").append($(".available-categories > option:visible"));
                     return;
             }
             
             var currentItem = existingItems.first();
-            $(".available-categories > option").each(function() {
+            $(".available-categories > option:visible").each(function() {
                 //comparing text, but one is a func because jquery.each() is different than first()/next()
                 
                 if(this.text < currentItem.text()){
@@ -371,7 +371,8 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.model.get("constrainParams").set("constrainValueTwo", $('.constrain-value-two', this.$el).val());
 		},
 		updateConstrainValueVisibility : function(valueOperator) {
-
+		   $('.field-invalid').removeClass('field-invalid');
+		   $('.validation-message', this.$el).text("");
            if( valueOperator == "BETWEEN" ){
                     $('.constrain-range-separator', this.$el).removeClass("hidden")
                     $('.constrain-range-separator', this.$el).show();
@@ -466,6 +467,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			if(this.model.get("concept").columnDataType == "CATEGORICAL" || 
 				(this.model.get("concept").columnDataType == "INFO" && !this.model.get("concept").metadata.continuous )){
 				if($(".category-filter-restriction").val() == "RESTRICT"){
+				    this.model.get("constrainParams").set("valueOperatorLabel", $(".category-filter-restriction option:selected", this.$el).text());
 					var selectedCategories = [];
 					$(".selected-categories > option").each(function() {
 						selectedCategories.push(this.text);
@@ -500,7 +502,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 						var constrains = this.model.get("constrainParams");
 						var searchParam = 
 							(constrains.get("constrainValueOne")=="" && constrains.get("constrainValueTwo")=="") ? "Any value" :
-						constrains.get("valueOperatorLabel")
+                        constrains.get("valueOperatorLabel")
 						+ " "
 						+ constrains.get("constrainValueOne")
 						+ (constrains.get("isValueOperatorBetween") ? " - " : "")
@@ -529,6 +531,13 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 		},
 		render: function(){
 			this.$el.html(this.template(this.model.attributes));
+
+			// show "AND" if we have more than one filter applied
+            if ($("#filter-list .filter-list-entry").length > 1) {
+                if ($(this.$el).closest(".filter-list-entry")[0].nextSibling !== null) {
+                    $(".filter-boolean-operator", this.$el).removeClass("hidden")
+                }
+            }
 
 			if(this.model.attributes.valueType ==="ANYRECORDOF"){
 				$(".category-valueof-div", this.$el).html(this.constrainFilterMenuAnyRecordOfTemplate(this.model.attributes.anyRecordCategories));
