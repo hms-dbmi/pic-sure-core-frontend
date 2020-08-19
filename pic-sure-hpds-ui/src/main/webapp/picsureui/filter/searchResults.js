@@ -28,7 +28,11 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 		
 		var compiledSubCategoryTemplate = this.searchSubCategories;
 		filterView.$el.hide();
-		$('.search-tabs', filterView.$el).append(this.searchResultTabs(aliases));
+ 		$('.search-tabs', filterView.$el).append(this.searchResultTabs(
+ 				{filterId: filterView.model.attributes.filterId,
+ 				 aliases: aliases}	));
+		
+		
 		keys.forEach((key) => {
 			var subCategories = [];
 			var categorySearchResultViews = [];
