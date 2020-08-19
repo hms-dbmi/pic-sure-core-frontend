@@ -470,7 +470,6 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			return isValid;
 		},
 		updateModel : function () {
-			console.log(this.model.attributes.concept.columnDataType);
 			//iterate over all selected elements and turn them into an array
 			if(this.model.get("concept").columnDataType == "CATEGORICAL" || 
 				(this.model.get("concept").columnDataType == "INFO" && !this.model.get("concept").metadata.continuous )){
@@ -486,7 +485,6 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 					this.model.get("constrainParams").set("constrainValueOne",[]);
 				}
 			}
-
 		},
 		onConstrainApplyButtonClick : function (event) {
 
@@ -495,8 +493,6 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			if (this.validateConstrainFilterFields()) {
 				$('.validation-message', this.$el).text("");
 				if(this.model.attributes.concept.columnDataType==="INFO"){
-					//this.onConstrainVariantInfoSelect(event);
-					//I don't think we need to call the above function anymore, but we still do need to set the valueType
 					this.model.attributes.valueType="INFO";
 					$('.search-value', this.$el).html("Variant Info Column " + this.model.get("category") + ': ' + this.model.get("constrainParams").get("constrainValueOne"));
 						// (this.model.get("constrainParams").get("constrainValueOne")?this.model.get("constrainParams").get("constrainValueOne"):this.model.attributes.concept.metadata.min)
