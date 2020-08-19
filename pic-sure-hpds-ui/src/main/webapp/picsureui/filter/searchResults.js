@@ -1,5 +1,5 @@
-define(["filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs", "text!filter/searchResultSubCategories.hbs", "text!../settings/settings.json"],
-		function( searchResult, HBS, searchResultTabsTemplate, searchSubCatTemplate, settings){
+define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs", "text!filter/searchResultSubCategories.hbs", "text!../settings/settings.json"],
+		function($, searchResult, HBS, searchResultTabsTemplate, searchSubCatTemplate, settings){
 	var searchResults = {
 			init : function(data, view, callback){
 				this.searchResultTabs = HBS.compile(searchResultTabsTemplate);
@@ -27,9 +27,8 @@ define(["filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs",
 		
 		
 		var compiledSubCategoryTemplate = this.searchSubCategories;
-		$('.search-tabs', filterView.$el).append(this.searchResultTabs(
-				{filterId: filterView.model.attributes.filterId,
-				 aliases: aliases}	));
+		filterView.$el.hide();
+		$('.search-tabs', filterView.$el).append(this.searchResultTabs(aliases));
 		keys.forEach((key) => {
 			var subCategories = [];
 			var categorySearchResultViews = [];
@@ -118,6 +117,7 @@ define(["filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs",
 					$(event.target.parentElement).addClass("active")
 					$(event.target.parentElement).siblings().removeClass("active");
 					
+					$('.tab-pane.active').hide();
 					if(event.target.text == "All Results"){
 						_.each(categorySearchResultViews, function(result){
 							result.$el.show();
@@ -132,6 +132,7 @@ define(["filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs",
 							}
 						});
 					}
+					$('.tab-pane.active').show();
 				});
 			}
 
@@ -149,6 +150,7 @@ define(["filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs",
 			//dont forget to show the cats again if we update!
 			$(".filter-search > .nav-pills").hide();
 		}
+		filterView.$el.show();
 	}.bind(searchResults);
 
 	return searchResults;

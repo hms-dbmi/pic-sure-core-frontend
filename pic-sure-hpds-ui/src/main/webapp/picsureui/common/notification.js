@@ -1,5 +1,5 @@
-define(["Noty"],
-        function(Noty, HBS, confirmationDialog){
+define(["jquery", "Noty"],
+        function($, Noty){
     var notification = {
         init: function () {
 

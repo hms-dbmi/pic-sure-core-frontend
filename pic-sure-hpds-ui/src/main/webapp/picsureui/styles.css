@@ -11,6 +11,8 @@
      border-style: solid;
      border-color: lightgrey;
      padding: 40px 0px;
+     background-color: rgb(223, 238, 255);
+     border-radius: 4px;
 }
 .query-builder-heading {
 	color: gray;
@@ -434,11 +436,6 @@ body {
     flex: 1;
 }
 
-#patient-count-box {
-    background-color: rgb(223, 238, 255);
-    border-radius: 4px;
-}
-
 #pic-sure-instances {
     width: 90%;
 }
@@ -476,6 +473,10 @@ body {
     overflow-y: auto;
     max-height: 300px;
     border-bottom: 1px solid rgb(223, 238, 255);
+}
+
+.search-value {
+    word-break: break-all;
 }
 
 .filter-list-entry {
@@ -588,4 +589,21 @@ body {
     padding: 5;
     padding-bottom: 25;
     background-color: #f4f4f6;
+}
+.numeric-label {
+	padding-top: 10px;
+}
+
+.numeric-separator {
+	width: 100%;	
+    text-align: center;
+}
+
+.modal {
+	max-height: 100%;
+	overflow-y: auto;
+}
+
+.modal-body {
+	overflow-x: scroll;
 }

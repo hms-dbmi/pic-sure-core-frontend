@@ -1,5 +1,5 @@
-define(["text!settings/settings.json","common/searchParser", "header/header", "backbone", "auth/login", "common/queryBuilderView"],
-        function(settings, searchParser, header, Backbone, login, queryBuilderView){
+define(["jquery", "backbone", "auth/login", "common/queryBuilderView"],
+        function($, Backbone, login, queryBuilderView){
     var Router = Backbone.Router.extend({
         routes: {
             "queryBuilder" : "displayQueryBuilder",

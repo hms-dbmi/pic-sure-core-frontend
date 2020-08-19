@@ -1,4 +1,4 @@
-define(["handlebars", "backbone"], function(HBS, BB){
+define(["jquery", "handlebars", "backbone"], function($, HBS, BB){
 	return {
 		/*
 		 * Sometimes you may want to do some validation or other logic prior

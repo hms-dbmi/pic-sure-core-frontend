@@ -1,5 +1,5 @@
-define(["text!../settings/settings.json","common/spinner", "output/dataSelection", "text!output/outputPanel.hbs","picSure/resourceMeta", "picSure/ontology", "picSure/queryCache", "backbone", "handlebars", "overrides/outputPanel", "text!options/modal.hbs"],
-		function(settings, spinner, dataSelection, outputTemplate, resourceMeta, ontology, queryCache, BB, HBS, overrides, modalTemplate){
+define(["jquery", "text!../settings/settings.json", "output/dataSelection", "text!output/outputPanel.hbs","picSure/resourceMeta", "picSure/ontology", "backbone", "handlebars", "overrides/outputPanel"],
+		function($, settings, dataSelection, outputTemplate, resourceMeta, ontology, BB, HBS, overrides){
 	var outputModelDefaults = {
 			totalPatients : 0,
 			spinnerClasses: "spinner-medium spinner-medium-center ",
@@ -23,12 +23,6 @@ define(["text!../settings/settings.json","common/spinner", "output/dataSelection
 			this.set('queryRan', false);
 		}
 	});
-
-	var mapPuiForResource = (typeof overrides.mapPuiForResource == 'function') ?
-		overrides.mapPuiForResource
-		: function(pui, picsureInstance){
-			return pui.replace(/(\/[\w-]+){4}/, picsureInstance.basePui);
-		};
 
 	var outputView = overrides.viewOverride ? overrides.viewOverride : 
 		BB.View.extend({

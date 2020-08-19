@@ -1,4 +1,5 @@
-define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"], function(_, settings, resourceMeta) {
+define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta"], 
+		function($, _, settings, resourceMeta) {
     /*
      * A function that takes a PUI that is already split on forward slash and returns
      * the category value for that PUI.
@@ -203,11 +204,46 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
 
     var cachedTree;
 
+    // build query scope 
+    // scope filters export tree to authorized root nodes for applications using the the query scope feature.
+    var scope = [];
+
+    $.ajax({
+        url: window.location.origin + "/psama/user/me",
+        type: 'GET',
+        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+        contentType: 'application/json',
+        success: function(meResponse){
+            var scopes = meResponse.queryScopes;
+            if(scopes != undefined){
+	            scopes.forEach(function(item, index) {
+	                if ( item.length < 2 ) {
+	                    scope.push(item);
+	                } else if(item.length < 3){
+	                    scope.push(item.substr(1,2));
+	                } else {
+	                    scope.push(item.substr(1,item.length - 2));
+	                };
+	            });
+            }
+        }.bind(this),
+        error: function(response){
+            console.log("error retrieving user info");
+            console.log(response);
+            if (response.status === 401) {
+                sessionStorage.clear();
+                window.locaion = "/";
+            }
+        }.bind(this)
+    });
+    
     var tree = function(consumer, crossCounts) {
         if (cachedTree) {
             counts(cachedTree, allConcepts, crossCounts);
             consumer(cachedTree);
         } else {
+            
+
             allConceptsLoaded.then(function() {
                 var tree = {
                     text: "data",
@@ -217,25 +253,39 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
                     },
                     children: []
                 };
-                _.each(_.keys(allConcepts.results.phenotypes), function(concept) {
+
+		      _.each(_.keys(allConcepts.results.phenotypes), function(concept) {
                     var segments = concept.split("\\");
-                    var currentNode = tree;
-                    for (var x = 1; x < segments.length - 1; x++) {
-                        if (currentNode.children[_.findIndex(currentNode.children, function(child) {
-                            return child.text.includes(segments[x])
-                        })] === undefined) {
-                            var newNode = {
-                                id: segments.slice(0, x + 1).join("\\") + "\\",
-                                text: segments[x],
-                                children: []
-                            };
-                            currentNode.children.push(newNode);
-                        }
-                        currentNode = currentNode.children[_.findIndex(currentNode.children, function(child) {
-                            return child.text.includes(segments[x])
-                        })];
+                    var currentNode =  tree;
+                    
+                    if(segments.length > 0) {
+                        // if criteria:
+                        // 1.  currently the business rule for query scope is if untrue we will show all nodes
+                        // 2.  if using scope check if root node is in queryScope for user
+                        // 3.  all nodes starting with an underscore are also shown.
+                        if(scope || scope.includes(segments[1]) || segments[1].startsWith("_")) {
+
+                            for (var x = 1; x < segments.length - 1; x++) {
+                                var index_of_child = _.findIndex(currentNode.children, function(child) {
+                                    return child.text === segments[x];
+                                })
+                                if (currentNode.children[index_of_child] === undefined) {
+                                    var newNode = {
+                                        id: segments.slice(0, x + 1).join("\\") + "\\",
+                                        text: segments[x],
+                                        children: []
+                                    };
+                                    currentNode.children.push(newNode);
+                                }
+                                currentNode = currentNode.children[(index_of_child===-1) ? currentNode.children.length-1 : index_of_child];
+                            }
+
+                        } 
+                       
+
                     }
-                });
+
+               });
 
                 counts(tree, allConcepts, crossCounts);
                 consumer(tree);
