@@ -127,8 +127,8 @@ define(["text!../settings/settings.json", "output/dataSelection", "text!output/o
   						this.model.get("resources")[resource.id].spinning = false;
   					}
   					
-  					//allow UI overrides the opportunity to customize results
-	                if(overrides.dataCallback && resource.additionalPui != undefined) {
+  					//allow UI overrides the opportunity to customize results (once, not for each sub query)
+	                if(overrides.dataCallback && resource.additionalPui == undefined) {
 	                	overrides.dataCallback(query, resultId, this.model);
 	                }
 	                
