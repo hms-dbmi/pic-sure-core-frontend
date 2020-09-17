@@ -70,7 +70,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
         		return true;
         	}
     		var scopeMatches = function(value){
-    			return element.metadata.name.startsWith(value);
+    			return element.metadata.name.startsWith(value) || element.category.startsWith(value);
     		}
     		//Check to see if element name (aka path) starts with any value defined in the query scope
     		return _.some(queryScope, scopeMatches);
