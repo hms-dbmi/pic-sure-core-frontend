@@ -128,7 +128,7 @@ define(["text!../settings/settings.json", "output/dataSelection", "text!output/o
   					}
   					
   					//allow UI overrides the opportunity to customize results
-	                if(overrides.dataCallback) {
+	                if(overrides.dataCallback && resource.additionalPui != undefined) {
 	                	overrides.dataCallback(query, resultId, this.model);
 	                }
 	                
