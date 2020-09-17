@@ -51,7 +51,8 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
             };
         })).concat(_.map(_.keys(response.info), key => {
             var entry = response.info[key];
-            return {
+            entry.name = entry.description;
+	    return {
                 value: entry.description,
                 data: entry.description,
                 category: key,
