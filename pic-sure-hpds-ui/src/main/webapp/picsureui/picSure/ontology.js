@@ -53,7 +53,8 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
             };
         })).concat(_.map(_.keys(response.info), key => {
             var entry = response.info[key];
-            return {
+            entry.name = entry.description;
+	    return {
                 value: entry.description,
                 data: entry.description,
                 category: key,
@@ -71,7 +72,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
         		return true;
         	}
     		var scopeMatches = function(value){
-    			return element.metadata.name.startsWith(value);
+    			return element.metadata.name.startsWith(value) || element.category.startsWith(value);
     		}
     		//Check to see if element name (aka path) starts with any value defined in the query scope
     		return _.some(queryScope, scopeMatches);
