@@ -17,7 +17,8 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 				logoPath: (overrides.logoPath
 					? overrides.logoPath : "/images/logo.png"),
 				helpLink: jsonSettings.helpLink,
-				pdfLink: jsonSettings.pdfLink
+				pdfLink: jsonSettings.pdfLink,
+				videoLink: jsonSettings.videoLink
 			}));
 			$.ajax({
 				url: window.location.origin + "/psama/user/me",
