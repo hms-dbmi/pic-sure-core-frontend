@@ -1,5 +1,9 @@
-define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta"], 
-		function($, _, settings, resourceMeta) {
+define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "overrides/ontology"], 
+		function($, _, settings, resourceMeta, overrides) {
+	
+    var allConcepts;
+    var allInfoColumns;
+
     /*
      * A function that takes a PUI that is already split on forward slash and returns
      * the category value for that PUI.
@@ -15,6 +19,50 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
     var extractParentFromPui = function(puiSegments) {
         return puiSegments[puiSegments.length - 2];
     };
+    
+    var loadAllConceptsDeferred = function(){
+    	allConceptsDeferred = $.Deferred();
+	    dictionary("\\", function(allConceptsRetrieved) {
+	        allConcepts = allConceptsRetrieved;
+	        allConceptsDeferred.resolve();
+	    });
+	    return allConceptsDeferred;
+    }
+    
+    var loadAllInfoColumnsDeferred = function() {
+    	var allInfoColumnsQuery = {
+            resourceUUID: JSON.parse(settings).picSureResourceId,
+            query: {
+                expectedResultType: "INFO_COLUMN_LISTING"
+            }
+        };
+
+    	allinfoColumnsDeferred = $.Deferred();
+        $.ajax({
+            url: window.location.origin + "/picsure/query/sync",
+            type: 'POST',
+            headers: {
+                "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
+            },
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(allInfoColumnsQuery),
+            success: function(response) {
+                allInfoColumns = response;
+                allinfoColumnsDeferred.resolve();
+            }.bind(this),
+            error: function(response) {
+                console.log("error retrieving info columns");
+                console.log(response);
+            }.bind(this)
+        });
+        
+        return allinfoColumnsDeferred;
+    }
+    
+    var allConceptsLoaded = overrides.loadAllConceptsDeferred ? overrides.loadAllConceptsDeferred() : loadAllConceptsDeferred();
+    var allInfoColumnsLoaded = overrides.loadAllInfoColumnsDeferred ? overrides.loadAllInfoColumnsDeferred() : loadAllInfoColumnsDeferred();
+    
 
     var mapResponseToResult = function(query, response, incomingQueryScope) {
     	//lowercase for consistent comparisons
@@ -164,44 +212,9 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
         resourceMeta: resourceMeta
     });
 
-    var allConcepts;
-    var allInfoColumns;
 
-    var allConceptsLoaded = $.Deferred();
 
-    var allInfoColumnsLoaded = $.Deferred();
 
-    dictionary("\\", function(allConceptsRetrieved) {
-        allConcepts = allConceptsRetrieved;
-        allConceptsLoaded.resolve();
-    });
-
-    var allInfoColumnsQuery = {
-        resourceUUID: JSON.parse(settings).picSureResourceId,
-        query: {
-
-            expectedResultType: "INFO_COLUMN_LISTING"
-        }
-    };
-
-    $.ajax({
-        url: window.location.origin + "/picsure/query/sync",
-        type: 'POST',
-        headers: {
-            "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
-        },
-        contentType: 'application/json',
-        dataType: 'json',
-        data: JSON.stringify(allInfoColumnsQuery),
-        success: function(response) {
-            allInfoColumns = response;
-            allInfoColumnsLoaded.resolve();
-        }.bind(this),
-        error: function(response) {
-            console.log("error retrieving info columns");
-            console.log(response);
-        }.bind(this)
-    });
 
     var cachedTree;
 
