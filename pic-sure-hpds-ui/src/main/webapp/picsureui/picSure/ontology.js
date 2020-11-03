@@ -20,50 +20,6 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
         return puiSegments[puiSegments.length - 2];
     };
     
-    var loadAllConceptsDeferred = function(){
-    	allConceptsDeferred = $.Deferred();
-	    dictionary("\\", function(allConceptsRetrieved) {
-	        allConcepts = allConceptsRetrieved;
-	        allConceptsDeferred.resolve();
-	    });
-	    return allConceptsDeferred;
-    }
-    
-    var loadAllInfoColumnsDeferred = function() {
-    	var allInfoColumnsQuery = {
-            resourceUUID: JSON.parse(settings).picSureResourceId,
-            query: {
-                expectedResultType: "INFO_COLUMN_LISTING"
-            }
-        };
-
-    	allinfoColumnsDeferred = $.Deferred();
-        $.ajax({
-            url: window.location.origin + "/picsure/query/sync",
-            type: 'POST',
-            headers: {
-                "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
-            },
-            contentType: 'application/json',
-            dataType: 'json',
-            data: JSON.stringify(allInfoColumnsQuery),
-            success: function(response) {
-                allInfoColumns = response;
-                allinfoColumnsDeferred.resolve();
-            }.bind(this),
-            error: function(response) {
-                console.log("error retrieving info columns");
-                console.log(response);
-            }.bind(this)
-        });
-        
-        return allinfoColumnsDeferred;
-    }
-    
-    var allConceptsLoaded = overrides.loadAllConceptsDeferred ? overrides.loadAllConceptsDeferred() : loadAllConceptsDeferred();
-    var allInfoColumnsLoaded = overrides.loadAllInfoColumnsDeferred ? overrides.loadAllInfoColumnsDeferred() : loadAllInfoColumnsDeferred();
-    
-
     var mapResponseToResult = function(query, response, incomingQueryScope) {
     	//lowercase for consistent comparisons
     	query = query.toLowerCase();
@@ -213,6 +169,49 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
     });
 
 
+    var loadAllConceptsDeferred = function(){
+    	allConceptsDeferred = $.Deferred();
+	    dictionary("\\", function(allConceptsRetrieved) {
+	        allConcepts = allConceptsRetrieved;
+	        allConceptsDeferred.resolve();
+	    });
+	    return allConceptsDeferred;
+    }
+    
+    var loadAllInfoColumnsDeferred = function() {
+    	var allInfoColumnsQuery = {
+            resourceUUID: JSON.parse(settings).picSureResourceId,
+            query: {
+                expectedResultType: "INFO_COLUMN_LISTING"
+            }
+        };
+
+    	allinfoColumnsDeferred = $.Deferred();
+        $.ajax({
+            url: window.location.origin + "/picsure/query/sync",
+            type: 'POST',
+            headers: {
+                "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
+            },
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(allInfoColumnsQuery),
+            success: function(response) {
+                allInfoColumns = response;
+                allinfoColumnsDeferred.resolve();
+            }.bind(this),
+            error: function(response) {
+                console.log("error retrieving info columns");
+                console.log(response);
+            }.bind(this)
+        });
+        
+        return allinfoColumnsDeferred;
+    }
+    
+    var allConceptsLoaded = overrides.loadAllConceptsDeferred ? overrides.loadAllConceptsDeferred() : loadAllConceptsDeferred();
+    var allInfoColumnsLoaded = overrides.loadAllInfoColumnsDeferred ? overrides.loadAllInfoColumnsDeferred() : loadAllInfoColumnsDeferred();
+    
 
 
 
