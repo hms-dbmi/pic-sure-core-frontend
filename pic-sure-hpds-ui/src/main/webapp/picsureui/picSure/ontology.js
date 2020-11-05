@@ -230,7 +230,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
             var scopes = meResponse.queryScopes;
             if(scopes != undefined){
 	            scopes.forEach(function(item, index) {
-	                if ( item.length < 2 ) {
+	                if ( item.length < 2 || !item.startsWith("\\")) {
 	                    scope.push(item);
 	                } else if(item.length < 3){
 	                    scope.push(item.substr(1,2));
@@ -276,7 +276,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
                         // 1.  currently the business rule for query scope is if untrue we will show all nodes
                         // 2.  if using scope check if root node is in queryScope for user
                         // 3.  all nodes starting with an underscore are also shown.
-                        if(scope || scope.includes(segments[1]) || segments[1].startsWith("_")) {
+                        if(!scope || scope.includes(segments[1]) || segments[1].startsWith("_")) {
 
                             for (var x = 1; x < segments.length - 1; x++) {
                                 var index_of_child = _.findIndex(currentNode.children, function(child) {
