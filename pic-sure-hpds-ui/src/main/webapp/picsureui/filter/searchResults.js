@@ -22,7 +22,10 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 		var keys = _.keys(data);
 		var aliases = [];
 		keys.forEach((key) => {
-			aliases.push(getAliasName(key));
+			var alias = getAliasName(key)
+			if(aliases.indexOf(alias) == -1){
+				aliases.push(alias);
+			}
 		});
 		
 		
