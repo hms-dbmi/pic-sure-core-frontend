@@ -1,5 +1,5 @@
-define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataSelection.hbs", "jstree", "picSure/ontology", "text!../settings/settings.json" ], 
-		function($, spinner, BB, HBS, template, jstree, ontology, settings){
+define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataSelection.hbs", "jstree", "picSure/ontology", "text!../settings/settings.json", "common/transportErrors" ],
+		function($, spinner, BB, HBS, template, jstree, ontology, settings, transportErrors){
 			//don't need to reference jstree, just need to load it.
 		return BB.View.extend({
 			template: HBS.compile(template),
@@ -73,7 +73,8 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 	  						}.bind(this),
 	  						error: function(response){
 	  							console.log("error preparing download : ");
-	  							console.log(response);
+	  							console.dir(response);
+                                transportErrors.handleAll(response);
 	  						}.bind(this)
 	  					})
 	  					, "#download-spinner"
@@ -123,7 +124,7 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
   						error: function(response){
   							$('#resource-id-display', this.$el).html("Error running query, Please see logs");
   							console.log("error preparing async download: ");
-  							console.log(response);
+  							console.dir(response);
   						}
   					});
   				}());
@@ -146,7 +147,7 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 					}.bind(this),
 					error: function(response){
 						console.log("error preparing download : ");
-						console.log(response);
+						console.dir(response);
 					}.bind(this)
 				})
 			}.bind(this),
@@ -185,7 +186,9 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 								$('#concept-tree', this.$el).jstree().redraw_node(child);
 							}.bind(this));
 						}.bind(this),
-						error: console.log
+						error: function(response) {
+						    console.dir(response);
+                        }
 					});
 				}.bind(this));
 				$("#concept-tree", this.$el).on("check_node.jstree", function(node, selected, event){

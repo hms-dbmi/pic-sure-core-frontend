@@ -1,5 +1,5 @@
-define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/header", "text!../settings/settings.json"],
-		function($, BB, HBS, template, overrides, settings){
+define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/header", "text!../settings/settings.json", "common/transportErrors"],
+		function($, BB, HBS, template, overrides, settings, transportErrors){
 	var headerView = BB.View.extend({
 		initialize : function(){
 			this.template = HBS.compile(template);
@@ -35,6 +35,7 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 				error: function(response){
 					console.log("error retrieving user info");
 					console.log(response);
+                    transportErrors.handleAll(response);
 				}.bind(this)
 			});
 		}

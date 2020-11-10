@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta"], 
-		function($, _, settings, resourceMeta) {
+define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "common/transportErrors"],
+		function($, _, settings, resourceMeta, transportErrors) {
     /*
      * A function that takes a PUI that is already split on forward slash and returns
      * the category value for that PUI.
@@ -139,21 +139,15 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
                     }.bind(this),
                     error: function(response){
                         console.log("error retrieving user info");
-                        console.log(response);
-                        if (response.status === 401) {
-                            sessionStorage.clear();
-                            window.locaion = "/";
-                        }
+                        console.dir(response);
+                        transportErrors.handleAll(response);
                     }.bind(this)
                 });
             }.bind({
                 done: done
             }),
             function(response) {
-                if (response.status === 401) {
-                    sessionStorage.clear();
-                    window.location = "/";
-                } else {
+                if (!transportErrors.handle401(response)) {
                     searchCache[query.toLowerCase()] = [];
                     done({
                         suggestions: []
@@ -199,7 +193,8 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
         }.bind(this),
         error: function(response) {
             console.log("error retrieving info columns");
-            console.log(response);
+            console.dir(response);
+            transportErrors.handleAll(response);
         }.bind(this)
     });
 
@@ -231,10 +226,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
         error: function(response){
             console.log("error retrieving user info");
             console.log(response);
-            if (response.status === 401) {
-                sessionStorage.clear();
-                window.locaion = "/";
-            }
+            transportErrors.handleAll(response);
         }.bind(this)
     });
     

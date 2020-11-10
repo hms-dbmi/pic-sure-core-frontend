@@ -8,7 +8,7 @@ define(["jquery", "backbone", "handlebars", "text!filter/searchResult.hbs", "pic
             initialize: function(opts){
                 this.filterView = opts.filterView;
                 this.queryCallback = opts.queryCallback;
-		this.updateAnyRecordFilter = this.updateAnyRecordFilter.bind(this);
+                this.updateAnyRecordFilter = this.updateAnyRecordFilter.bind(this);
                 this.preSelection = opts.preSelection;
             },
             tagName: "div",

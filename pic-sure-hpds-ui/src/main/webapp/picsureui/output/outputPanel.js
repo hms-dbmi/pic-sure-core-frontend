@@ -1,5 +1,5 @@
-define(["jquery", "text!../settings/settings.json", "output/dataSelection", "text!output/outputPanel.hbs","picSure/resourceMeta", "picSure/ontology", "backbone", "handlebars", "overrides/outputPanel"],
-		function($, settings, dataSelection, outputTemplate, resourceMeta, ontology, BB, HBS, overrides){
+define(["jquery", "text!../settings/settings.json", "output/dataSelection", "text!output/outputPanel.hbs","picSure/resourceMeta", "picSure/ontology", "backbone", "handlebars", "overrides/outputPanel", "common/transportErrors"],
+		function($, settings, dataSelection, outputTemplate, resourceMeta, ontology, BB, HBS, overrides, transportErrors){
 	var outputModelDefaults = {
 			totalPatients : 0,
 			spinnerClasses: "spinner-medium spinner-medium-center ",
@@ -97,10 +97,7 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 				 		dataCallback(response);
 				 	},
 				 	error: function(response){
-						if (response.status === 401) {
-							sessionStorage.clear();
-							window.location = "/";
-						} else {
+						if (!transportErrors.handle401(response)) {
 							response.responseText = "<h4>"
 								+ overrides.outputErrorMessage ? overrides.outputErrorMessage : "There is something wrong when processing your query, please try it later, if this repeats, please contact admin."
 								+ "</h4>";
