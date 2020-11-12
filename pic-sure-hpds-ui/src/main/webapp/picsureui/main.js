@@ -33,10 +33,11 @@ require.config({
 });
 
 if(sessionStorage.getItem("session")){
-	require(["common/startup"], function(startup){
-		startup();
-
-	});
-}else{
-		window.location = "/psamaui/login?redirection_url=/picsureui/";
-	};
+    require(["common/startup"], function(startup){
+       startup();
+    });
+} else {
+    require(["common/transportErrors"],function(transportErrors){
+        window.location = transportErrors.redirectionUrl;
+    });
+}

@@ -1,5 +1,5 @@
-define(["jquery", 'underscore'], 
-		function($,  _){
+define(["jquery", 'underscore', "common/transportErrors"],
+		function($,  _, transportErrors){
 
     var runningQueryIds = {};
 
@@ -39,7 +39,7 @@ define(["jquery", 'underscore'],
                                         dataCallback(result);
                                     },
                                     failure : function(data){
-                                        console.log(data);
+                                        transportErrors.handleAll(data, "failure on AVAILABLE status");
                                     }
                                 });
                                 break;
