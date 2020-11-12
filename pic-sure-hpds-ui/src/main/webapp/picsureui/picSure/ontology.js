@@ -1,5 +1,8 @@
-define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "common/transportErrors"],
-		function($, _, settings, resourceMeta, transportErrors) {
+define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "overrides/ontology", "common/transportErrors"],
+		function($, _, settings, resourceMeta, overrides, transportErrors) {
+    var allConcepts;
+    var allInfoColumns;
+
     /*
      * A function that takes a PUI that is already split on forward slash and returns
      * the category value for that PUI.
@@ -15,7 +18,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
     var extractParentFromPui = function(puiSegments) {
         return puiSegments[puiSegments.length - 2];
     };
-
+    
     var mapResponseToResult = function(query, response, incomingQueryScope) {
     	//lowercase for consistent comparisons
     	query = query.toLowerCase();
@@ -156,25 +159,51 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
         resourceMeta: resourceMeta
     });
 
-    var allConcepts;
-    var allInfoColumns;
 
-    var allConceptsLoaded = $.Deferred();
+    var loadAllConceptsDeferred = function(){
+    	allConceptsDeferred = $.Deferred();
+	    dictionary("\\", function(allConceptsRetrieved) {
+	        allConcepts = allConceptsRetrieved;
+	        allConceptsDeferred.resolve();
+	    });
+	    return allConceptsDeferred;
+    }
+    
+    var loadAllInfoColumnsDeferred = function() {
+    	var allInfoColumnsQuery = {
+            resourceUUID: JSON.parse(settings).picSureResourceId,
+            query: {
+                expectedResultType: "INFO_COLUMN_LISTING"
+            }
+        };
 
-    var allInfoColumnsLoaded = $.Deferred();
+    	allinfoColumnsDeferred = $.Deferred();
+        $.ajax({
+            url: window.location.origin + "/picsure/query/sync",
+            type: 'POST',
+            headers: {
+                "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
+            },
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(allInfoColumnsQuery),
+            success: function(response) {
+                allInfoColumns = response;
+                allinfoColumnsDeferred.resolve();
+            }.bind(this),
+            error: function(response) {
+                console.log("error retrieving info columns");
+                console.log(response);
+            }.bind(this)
+        });
+        
+        return allinfoColumnsDeferred;
+    }
+    
+    var allConceptsLoaded = overrides.loadAllConceptsDeferred ? overrides.loadAllConceptsDeferred() : loadAllConceptsDeferred();
+    var allInfoColumnsLoaded = overrides.loadAllInfoColumnsDeferred ? overrides.loadAllInfoColumnsDeferred() : loadAllInfoColumnsDeferred();
+    
 
-    dictionary("\\", function(allConceptsRetrieved) {
-        allConcepts = allConceptsRetrieved;
-        allConceptsLoaded.resolve();
-    });
-
-    var allInfoColumnsQuery = {
-        resourceUUID: JSON.parse(settings).picSureResourceId,
-        query: {
-
-            expectedResultType: "INFO_COLUMN_LISTING"
-        }
-    };
 
     $.ajax({
         url: window.location.origin + "/picsure/query/sync",
@@ -209,7 +238,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
             var scopes = meResponse.queryScopes;
             if(scopes != undefined){
 	            scopes.forEach(function(item, index) {
-	                if ( item.length < 2 ) {
+	                if ( item.length < 2 || !item.startsWith("\\")) {
 	                    scope.push(item);
 	                } else if(item.length < 3){
 	                    scope.push(item.substr(1,2));
@@ -250,7 +279,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
                         // 1.  currently the business rule for query scope is if untrue we will show all nodes
                         // 2.  if using scope check if root node is in queryScope for user
                         // 3.  all nodes starting with an underscore are also shown.
-                        if(scope || scope.includes(segments[1]) || segments[1].startsWith("_")) {
+                        if(!scope || scope.includes(segments[1]) || segments[1].startsWith("_")) {
 
                             for (var x = 1; x < segments.length - 1; x++) {
                                 var index_of_child = _.findIndex(currentNode.children, function(child) {
