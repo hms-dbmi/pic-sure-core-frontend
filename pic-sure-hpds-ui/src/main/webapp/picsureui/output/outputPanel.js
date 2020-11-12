@@ -97,7 +97,7 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 				 		dataCallback(response);
 				 	},
 				 	error: function(response){
-						if (!transportErrors.handle401(response)) {
+						if (!transportErrors.handleAll(response, "Error while processing query")) {
 							response.responseText = "<h4>"
 								+ overrides.outputErrorMessage ? overrides.outputErrorMessage : "There is something wrong when processing your query, please try it later, if this repeats, please contact admin."
 								+ "</h4>";

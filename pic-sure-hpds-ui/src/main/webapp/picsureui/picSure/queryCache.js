@@ -39,8 +39,7 @@ define(["jquery", 'underscore', "common/transportErrors"],
                                         dataCallback(result);
                                     },
                                     failure : function(data){
-                                        console.dir(data);
-                                        transportErrors.handleAll(data);
+                                        transportErrors.handleAll(data, "failure on AVAILABLE status");
                                     }
                                 });
                                 break;

@@ -6,7 +6,7 @@ define(["jquery", "common/transportErrors", "filter/filterList", "header/header"
 			}
 			var session = JSON.parse(sessionStorage.getItem("session"));
 			if(!session || !session.token){
-			    transportErrors.handle401({status: 401});
+			    transportErrors.handleAll({status: 401}, "Session is missing token");
 			}
 			$.ajax({
 				url: window.location.origin + '/picsure/info/resources',
@@ -50,18 +50,13 @@ define(["jquery", "common/transportErrors", "filter/filterList", "header/header"
 			            outputPanel.update(query);
 			        }.bind(this),
 			        error: function (response) {
-                        transportErrors.handle401(response);
-                        console.log("Cannot retrieve query template with status: " + response.status);
-                        console.log(response);
+                        transportErrors.handleAll(response, "Cannot retrieve query template with status: " + response.status);
 			        }.bind(this)
 			    });
 
 				},
 				error: function(jqXhr){
-				    if (!transportErrors.handle401(response)) {
-                        console.log("ERROR in startup.js!!!");
-                        window.location = transportErrors.redirectionUrl;
-                    }
+				    transportErrors.handleAll(jqXhr, "ERROR in startup.js!");
 				},
 				dataType: "json"
 			});

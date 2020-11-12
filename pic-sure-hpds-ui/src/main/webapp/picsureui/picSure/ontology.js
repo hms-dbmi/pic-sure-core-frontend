@@ -138,16 +138,14 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
                         done(result);
                     }.bind(this),
                     error: function(response){
-                        console.log("error retrieving user info");
-                        console.dir(response);
-                        transportErrors.handleAll(response);
+                        transportErrors.handleAll(response, "error retrieving user info");
                     }.bind(this)
                 });
             }.bind({
                 done: done
             }),
             function(response) {
-                if (!transportErrors.handle401(response)) {
+                if (!transportErrors.handleAll(response, "error in dictionary")) {
                     searchCache[query.toLowerCase()] = [];
                     done({
                         suggestions: []
@@ -192,9 +190,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
             allInfoColumnsLoaded.resolve();
         }.bind(this),
         error: function(response) {
-            console.log("error retrieving info columns");
-            console.dir(response);
-            transportErrors.handleAll(response);
+            transportErrors.handleAll(response, "error retrieving info columns");
         }.bind(this)
     });
 
@@ -224,9 +220,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
             }
         }.bind(this),
         error: function(response){
-            console.log("error retrieving user info");
-            console.log(response);
-            transportErrors.handleAll(response);
+            transportErrors.handleAll(response, "error retrieving user info");
         }.bind(this)
     });
     

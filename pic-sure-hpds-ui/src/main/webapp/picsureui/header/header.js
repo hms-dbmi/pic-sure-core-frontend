@@ -9,7 +9,7 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 		},
 		logout : function(event){
 			sessionStorage.clear();
-			window.location = '/psamaui?redirection_url=/picsureui';
+			window.location = transportErrors.redirectionUrl;
 		},
 		render : function(){
 			jsonSettings = JSON.parse(settings);
@@ -33,9 +33,7 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 					}
 				}.bind(this),
 				error: function(response){
-					console.log("error retrieving user info");
-					console.log(response);
-                    transportErrors.handleAll(response);
+                    transportErrors.handleAll(response, "error retrieving user info");
 				}.bind(this)
 			});
 		}

@@ -72,9 +72,7 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 								$("#download-btn", this.$el)[0].click();
 	  						}.bind(this),
 	  						error: function(response){
-	  							console.log("error preparing download : ");
-	  							console.dir(response);
-                                transportErrors.handleAll(response);
+                                transportErrors.handleAll(response, "error preparing download");
 	  						}.bind(this)
 	  					})
 	  					, "#download-spinner"

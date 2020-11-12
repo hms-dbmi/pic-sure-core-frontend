@@ -3,10 +3,12 @@ define(["jquery"],
         var transportErrorHandlers = {};
         transportErrorHandlers.redirectionUrl = "/psamaui/login?redirection_url=" + "/picsureui/";
 
-        transportErrorHandlers.handleAll = function (response) {
+        transportErrorHandlers.handleAll = function (response, logMsg) {
+            console.debug(logMsg);
+            console.dir(response);
             var hasError = false;
-            if (!hasError && this.handle401(response)) {
-                console.debug("Captured HTTP 401 response");
+            // list of all error handlers here
+            if (this.handle401(response)) {
                 hasError = true;
             }
             return hasError;
