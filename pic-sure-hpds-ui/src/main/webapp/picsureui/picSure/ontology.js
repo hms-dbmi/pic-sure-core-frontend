@@ -1,6 +1,5 @@
-define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "overrides/ontology"], 
-		function($, _, settings, resourceMeta, overrides) {
-	
+define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "overrides/ontology", "common/transportErrors"],
+		function($, _, settings, resourceMeta, overrides, transportErrors) {
     var allConcepts;
     var allInfoColumns;
 
@@ -142,22 +141,14 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
                         done(result);
                     }.bind(this),
                     error: function(response){
-                        console.log("error retrieving user info");
-                        console.log(response);
-                        if (response.status === 401) {
-                            sessionStorage.clear();
-                            window.locaion = "/";
-                        }
+                        transportErrors.handleAll(response, "error retrieving user info");
                     }.bind(this)
                 });
             }.bind({
                 done: done
             }),
             function(response) {
-                if (response.status === 401) {
-                    sessionStorage.clear();
-                    window.location = "/";
-                } else {
+                if (!transportErrors.handleAll(response, "error in dictionary")) {
                     searchCache[query.toLowerCase()] = [];
                     done({
                         suggestions: []
@@ -214,6 +205,23 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
     
 
 
+    $.ajax({
+        url: window.location.origin + "/picsure/query/sync",
+        type: 'POST',
+        headers: {
+            "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
+        },
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(allInfoColumnsQuery),
+        success: function(response) {
+            allInfoColumns = response;
+            allInfoColumnsLoaded.resolve();
+        }.bind(this),
+        error: function(response) {
+            transportErrors.handleAll(response, "error retrieving info columns");
+        }.bind(this)
+    });
 
     var cachedTree;
 
@@ -241,12 +249,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
             }
         }.bind(this),
         error: function(response){
-            console.log("error retrieving user info");
-            console.log(response);
-            if (response.status === 401) {
-                sessionStorage.clear();
-                window.locaion = "/";
-            }
+            transportErrors.handleAll(response, "error retrieving user info");
         }.bind(this)
     });
     

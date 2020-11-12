@@ -1,13 +1,12 @@
-define(["jquery", "filter/filterList", "header/header", "footer/footer", "text!../settings/settings.json", "output/outputPanel", "handlebars", "text!common/mainLayout.hbs", "picSure/queryBuilder", "treeview", "common/styles"],
-	function($, filterList, header, footer, settings, output, HBS, layoutTemplate, queryBuilder){
-		var redirection_url = "/psamaui/login?redirection_url=" + "/picsureui/";
+define(["jquery", "common/transportErrors", "filter/filterList", "header/header", "footer/footer", "text!../settings/settings.json", "output/outputPanel", "handlebars", "text!common/mainLayout.hbs", "picSure/queryBuilder", "treeview", "common/styles"],
+	function($, transportErrors, filterList, header, footer, settings, output, HBS, layoutTemplate, queryBuilder){
 		return function(){
 			if(window.location.pathname !== "/picsureui/"){
 				window.location = "/picsureui/";
 			}
 			var session = JSON.parse(sessionStorage.getItem("session"));
 			if(!session || !session.token){
-				window.location = redirection_url;
+			    transportErrors.handleAll({status: 401}, "Session is missing token");
 			}
 			$.ajax({
 				url: window.location.origin + '/picsure/info/resources',
@@ -20,7 +19,7 @@ define(["jquery", "filter/filterList", "header/header", "footer/footer", "text!.
 						error: function(event, jqxhr){
 							console.log(jqxhr + ": " + event.status);
 							if(event.status == 401) {
-								window.location = redirection_url;
+								window.location = transportErrors.redirectionUrl;
 							}
 						}
 					});
@@ -51,24 +50,13 @@ define(["jquery", "filter/filterList", "header/header", "footer/footer", "text!.
 			            outputPanel.update(query);
 			        }.bind(this),
 			        error: function (response) {
-			        	if (response.status == 401) {
-			             sessionStorage.clear();
-			             window.location = redirection_url;
-								}
-			          console.log("Cannot retrieve query template with status: " + response.status);
-			          console.log(response);
+                        transportErrors.handleAll(response, "Cannot retrieve query template with status: " + response.status);
 			        }.bind(this)
 			    });
 
 				},
 				error: function(jqXhr){
-					if(jqXhr.status === 401){
-						sessionStorage.clear();
-						window.location = redirection_url;
-					}else{
-						console.log("ERROR in startup.js!!!");
-						window.location = redirection_url;
-					}
+				    transportErrors.handleAll(jqXhr, "ERROR in startup.js!");
 				},
 				dataType: "json"
 			});
