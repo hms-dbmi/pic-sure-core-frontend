@@ -169,13 +169,14 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
 	    return allConceptsDeferred;
     }
     
+    var allInfoColumnsQuery = {
+        resourceUUID: JSON.parse(settings).picSureResourceId,
+        query: {
+            expectedResultType: "INFO_COLUMN_LISTING"
+        }
+    };
+    
     var loadAllInfoColumnsDeferred = function() {
-    	var allInfoColumnsQuery = {
-            resourceUUID: JSON.parse(settings).picSureResourceId,
-            query: {
-                expectedResultType: "INFO_COLUMN_LISTING"
-            }
-        };
 
     	allinfoColumnsDeferred = $.Deferred();
         $.ajax({
