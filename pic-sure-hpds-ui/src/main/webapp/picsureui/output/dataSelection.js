@@ -25,10 +25,18 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 				$("#download-btn", this.$el).addClass('hidden');
 				var query = {};
 				query = JSON.parse(JSON.stringify(this.query));
-				query.query.fields = _.filter($('#concept-tree', this.$el).jstree().get_selected(), function(child){
-					var children = $('#concept-tree', this.$el).jstree().get_node(child).children;
-					return children == undefined || children.length === 0;
-				}.bind(this))
+				
+				if(query.query.fields){
+					query.query.fields.concat(_.filter($('#concept-tree', this.$el).jstree().get_selected(), function(child){
+						var children = $('#concept-tree', this.$el).jstree().get_node(child).children;
+						return children == undefined || children.length === 0;
+					}.bind(this)));
+				} else {
+					query.query.fields = _.filter($('#concept-tree', this.$el).jstree().get_selected(), function(child){
+						var children = $('#concept-tree', this.$el).jstree().get_node(child).children;
+						return children == undefined || children.length === 0;
+					}.bind(this))
+				}
 				query.query.expectedResultType="DATAFRAME";
         
 				if(this.settings.queryExportType == "EXPORT_IMMEDIATE"){
