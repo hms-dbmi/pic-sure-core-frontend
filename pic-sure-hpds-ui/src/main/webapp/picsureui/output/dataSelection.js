@@ -27,7 +27,7 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 				query = JSON.parse(JSON.stringify(this.query));
 				
 				if(query.query.fields){
-					query.query.fields.concat(_.filter($('#concept-tree', this.$el).jstree().get_selected(), function(child){
+					query.query.fields = query.query.fields.concat(_.filter($('#concept-tree', this.$el).jstree().get_selected(), function(child){
 						var children = $('#concept-tree', this.$el).jstree().get_node(child).children;
 						return children == undefined || children.length === 0;
 					}.bind(this)));
