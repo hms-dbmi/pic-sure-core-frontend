@@ -204,26 +204,6 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
     var allConceptsLoaded = overrides.loadAllConceptsDeferred ? overrides.loadAllConceptsDeferred() : loadAllConceptsDeferred();
     var allInfoColumnsLoaded = overrides.loadAllInfoColumnsDeferred ? overrides.loadAllInfoColumnsDeferred() : loadAllInfoColumnsDeferred();
     
-
-
-    $.ajax({
-        url: window.location.origin + "/picsure/query/sync",
-        type: 'POST',
-        headers: {
-            "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
-        },
-        contentType: 'application/json',
-        dataType: 'json',
-        data: JSON.stringify(allInfoColumnsQuery),
-        success: function(response) {
-            allInfoColumns = response;
-            allInfoColumnsLoaded.resolve();
-        }.bind(this),
-        error: function(response) {
-            transportErrors.handleAll(response, "error retrieving info columns");
-        }.bind(this)
-    });
-
     var cachedTree;
 
     // build query scope 
