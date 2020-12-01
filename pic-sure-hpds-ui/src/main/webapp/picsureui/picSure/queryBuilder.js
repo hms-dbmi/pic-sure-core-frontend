@@ -1,5 +1,5 @@
-define(["underscore", "text!../settings/settings.json", "overrides/queryBuilder" ], 
-		function(_, settings, overrides){
+define(["underscore", "text!../settings/settings.json"], 
+		function(_, settings){
 
     var queryTemplate = {
         categoryFilters: {},
@@ -109,10 +109,6 @@ define(["underscore", "text!../settings/settings.json", "overrides/queryBuilder"
 
 			}
 		});
-		
-		if(overrides.updateConsentFilters){
-			overrides.updateConsentFilters(query, settings);
-		}
 		
 		return query;
 	};

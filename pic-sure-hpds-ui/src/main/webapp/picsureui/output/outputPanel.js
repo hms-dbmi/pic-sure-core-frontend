@@ -47,7 +47,7 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 				this.model.set('spinning', true);
 				if(!this.dataSelection){
 					var query = JSON.parse(JSON.stringify(this.model.get("query")));
-					this.dataSelection = new dataSelection({query:query});
+					this.dataSelection = new dataSelection({query:JSON.parse(JSON.stringify(this.model.baseQuery))});
 					$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
 					this.model.set("spinning", false);
 					this.dataSelection.render();
@@ -63,6 +63,7 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 	
 				// make a safe deep copy of the incoming query so we don't modify it
 				var query = JSON.parse(JSON.stringify(incomingQuery));
+				this.model.baseQuery = incomingQuery;
 				query.resourceUUID = JSON.parse(settings).picSureResourceId;
 				query.resourceCredentials = {};
 				query.query.expectedResultType="COUNT";
@@ -73,6 +74,10 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 					this.dataSelection.render();
 				}
 	
+				if(overrides.updateConsentFilters){
+					overrides.updateConsentFilters(query, settings);
+				}
+				
 				var dataCallback = function(result){
 					this.model.set("totalPatients", parseInt(result));
 					this.model.set("spinning", false);

@@ -1,5 +1,5 @@
-define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataSelection.hbs", "jstree", "picSure/ontology", "text!../settings/settings.json", "common/transportErrors" ],
-		function($, spinner, BB, HBS, template, jstree, ontology, settings, transportErrors){
+define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataSelection.hbs", "jstree", "picSure/ontology", "text!../settings/settings.json", "overrides/outputPanel", "common/transportErrors" ],
+		function($, spinner, BB, HBS, template, jstree, ontology, settings, outputOverride, transportErrors){
 			//don't need to reference jstree, just need to load it.
 		return BB.View.extend({
 			template: HBS.compile(template),
@@ -38,6 +38,11 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 					}.bind(this))
 				}
 				query.query.expectedResultType="DATAFRAME";
+				
+				//we can only clear the unused consents AFTER adding the fields
+				if(outputOverride.updateConsentFilters){
+					outputOverride.updateConsentFilters(query, settings);
+				}
         
 				if(this.settings.queryExportType == "EXPORT_IMMEDIATE"){
 					this.querySync(query);
