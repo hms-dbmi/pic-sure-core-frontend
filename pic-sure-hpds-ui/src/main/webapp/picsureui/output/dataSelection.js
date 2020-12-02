@@ -247,6 +247,12 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 									var children = $('#concept-tree', this.$el).jstree().get_node(child).children;
 									return children == undefined || children.length === 0;
 								}.bind(this));
+								
+								//we can only clear the unused consents AFTER adding the fields
+								if(outputOverride.updateConsentFilters){
+									outputOverride.updateConsentFilters(query, settings);
+								}
+								
 								$.ajax({
 									url: window.location.origin + "/picsure/query/sync",
 									type: 'POST',
