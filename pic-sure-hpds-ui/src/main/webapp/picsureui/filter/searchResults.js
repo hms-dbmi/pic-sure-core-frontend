@@ -17,7 +17,7 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 			if(settingsJson.categoryAliases && settingsJson.categoryAliases[key]){
                 return settingsJson.categoryAliases[key];
             } else {
-                return key;
+                return key.toLowerCase();
             }
 		}
 		var keys = _.keys(data);
