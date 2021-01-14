@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5">
+    <output url="file://$MODULE_DIR$/../../pic-sure-auth-microapp/pic-sure-auth-ui/target/classes" />
+    <output-test url="file://$MODULE_DIR$/../../pic-sure-auth-microapp/pic-sure-auth-ui/target/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.webjars:underscorejs:1.8.3" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:jquery:3.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:bootstrap:3.3.7-1" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:backbonejs:1.3.3" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:handlebars:4.0.5" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:bootstrap-modal:2.2.5" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:requirejs:2.3.5" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:requirejs-text:2.0.15" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars.bower:auth0.js:9.2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars.bower:auth0-lock:11.2.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars.bower:noty:3.1.4" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:font-awesome:4.7.0" level="project" />
+  </component>
+</module>
