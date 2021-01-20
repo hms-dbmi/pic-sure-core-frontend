@@ -20,8 +20,8 @@ require.config({
 		connection: "psamaui/connection/",
 		login: "psamaui/login/",
 		privilege: "psamaui/privilege/",
+		picSure: "picSure/",
 		role: "psamaui/role/",
-        tos: "psamaui/tos/",
         user: "psamaui/user/",
         util: "psamaui/util/",
 	},
@@ -41,7 +41,7 @@ require.config({
 	}
 });
 
-require(["backbone", "psamaui/common/session", "common/router", "underscore", "jquery", "bootstrap"],
+require(["backbone", "common/session", "common/router", "underscore", "jquery", "bootstrap"],
     function(Backbone, session, router, _){
         Backbone.history.start({pushState:true});
         document.onmousemove = session.activity;
