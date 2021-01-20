@@ -14,7 +14,16 @@ require.config({
 		treeviewStyles: 'webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css',
 		Noty: 'webjars/noty/3.1.4/lib/noty',
 		NotyStyles: 'webjars/noty/3.1.4/lib/noty.css',
-		"jstree":"webjars/jstree/3.3.7/jstree"
+		"jstree":"webjars/jstree/3.3.7/jstree",
+		accessRule: "psamaui/accessRule/",
+		application: "psamaui/application/",
+		connection: "psamaui/connection/",
+		login: "psamaui/login/",
+		privilege: "psamaui/privilege/",
+		role: "psamaui/role/",
+        tos: "psamaui/tos/",
+        user: "psamaui/user/",
+        util: "psamaui/util/",
 	},
 	shim: {
 		"bootstrap": {
