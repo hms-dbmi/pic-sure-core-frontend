@@ -1,18 +1,35 @@
-define(["jquery", "backbone", "auth/login", "common/queryBuilderView"],
-        function($, Backbone, login, queryBuilderView){
-    var Router = Backbone.Router.extend({
+define(["common/searchParser", "backbone", "psamaui/common/session", "psamaui/login/login", 'header/header', 'footer/footer','psamaui/user/userManagement',
+        'psamaui/role/roleManagement', 'psamaui/privilege/privilegeManagement', "psamaui/application/applicationManagement",
+        'psamaui/connection/connectionManagement', 'psamaui/termsOfService/tos', "psamaui/picSure/userFunctions",
+        'handlebars', 'psamaui/accessRule/accessRuleManagement', 'common/startup'],
+        function(searchParser, Backbone, session, login, header, footer, userManagement, roleManagement,
+                 privilegeManagement, applicationManagement, connectionManagement, tos, userFunctions,
+                 HBS, accessRuleManagement, startup){
+        var Router = Backbone.Router.extend({
         routes: {
-            "queryBuilder" : "displayQueryBuilder",
-            "login(/)" : "login",
-            "logout(/)" : "logout",
-            "not_authorized(/)" : "not_authorized",
+            "psamaui/userManagement(/)" : "displayUserManagement",
+            "psamaui/connectionManagement(/)" : "displayConnectionManagement",
+            "psamaui/tos(/)" : "displayTOS",
+            "psamaui/login(/)" : "login",
+            "psamaui/logout(/)" : "logout",
+            "psamaui/not_authorized(/)" : "not_authorized",
+            "psamaui/roleManagement(/)" : "displayRoleManagement",
+            "psamaui/privilegeManagement(/)" : "displayPrivilegeManagement",
+            "psamaui/applicationManagement(/)" : "displayApplicationManagement",
+            "psamaui/accessRuleManagement(/)" : "displayAccessRuleManagement",
+            "psamaui/userProfile(/)" : "showUserProfileHeader",
+            "picsureui/queryBuilder" : "displayQueryBuilder",
+            "picsureui/" : "displayQueryBuilder",
+            "picsureui/not_authorized(/)" : "not_authorized",
 
             // This path must be last in the list
-            "*path" : "displayQueryBuilder"
+            //"*path" : "displayQueryBuilder"
+            "*path" : "displayUserManagement"
         },
-
         initialize: function(){
             var pushState = history.pushState;
+            //TODO: Why
+            this.tos = tos;
             history.pushState = function(state, title, path) {
             		if(state.trigger){
             			this.router.navigate(path, state);
@@ -22,36 +39,139 @@ define(["jquery", "backbone", "auth/login", "common/queryBuilderView"],
                 return pushState.apply(history, arguments);
             }.bind({router:this});
         },
-
-        execute: function(callback, args, name){
-            if( ! session.isValid()){
-                this.login();
-                return false;
-            }
-            if (callback) {
+       execute: function(callback, args, name){
+            if ( name === 'not_authorized' ){
+                callback.apply(this, args);
+            } else {
+                if ( ! session.isValid(login.handleNotAuthorizedResponse)){
+                    this.login();
+                    return false;
+                }
+                if (!session.acceptedTOS() && name !== 'displayTOS'){
+                    history.pushState({}, "", "/psamaui/tos");
+                }
+                else if (callback) {
                     callback.apply(this, args);
+                }
             }
+            this.renderHeaderAndFooter();
         },
-
         login : function(){
-            topNav.clear();
             login.showLoginPage();
         },
-
         logout : function(){
-            topNav.clear();
             sessionStorage.clear();
-            window.location = "/logout";
+            localStorage.clear();
+            window.location = "/psamaui/logout";
         },
-
         not_authorized : function(){
-        		sessionStorage.clear();
-        		$('body').html("Sorry you are not authorized to access this system at this time.");
+            login.displayNotAuthorized();
+        },
+        renderHeaderAndFooter: function(){
+        	 var headerView = header.View;
+             headerView.render();
+             $('#header-content').append(headerView.$el);
+
+             var footerView = footer.View;
+             footerView.render();
+             $('#footer-content').append(footerView.$el);
+        },
+        displayUserManagement : function(){
+            userFunctions.me(this, function(data){
+                    var userMngmt = new userManagement.View({model: new userManagement.Model()});
+                    userMngmt.render();
+                    $('#main-content').html(userMngmt.$el);
+            });
+        },
+        displayTOS : function() {
+            var termsOfService = new this.tos.View({model: new this.tos.Model()});
+            termsOfService.render();
+            $('#main-content').html(termsOfService.$el);
+
+        },
+        displayApplicationManagement : function(){
+            userFunctions.me(this, function(data){
+                if (_.find(data.privileges, function(element){
+                    return (element === 'SUPER_ADMIN')
+                })) {
+                    var appliMngmt = new applicationManagement.View({model: new applicationManagement.Model()});
+                    appliMngmt.render();
+                    $('#main-content').append(appliMngmt.$el);
+                } else {
+                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                }
+            });
+
+        },
+        displayRoleManagement : function(){
+            userFunctions.me(this, function(data){
+                if (_.find(data.privileges, function(element){
+                    return (element === 'SUPER_ADMIN')
+                })) {
+                    var roleMngmt = new roleManagement.View({model: new roleManagement.Model()});
+                    roleMngmt.render();
+                    $('#main-content').append(roleMngmt.$el);
+                } else {
+                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                }
+            });
+
         },
 
-        displayQueryBuilder : function(){
-            queryBuilderView();
+        displayPrivilegeManagement : function() {
+            userFunctions.me(this, function(data){
+                if (_.find(data.privileges, function(element){
+                    return (element === 'SUPER_ADMIN')
+                })) {
+                    var privMngmt = new privilegeManagement.View({model: new privilegeManagement.Model()});
+                    privMngmt.render();
+                    $('#main-content').append(privMngmt.$el);
+                } else {
+                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                }
+            });
+
+            this.renderHeaderAndFooter();
+        },
+        displayAccessRuleManagement : function() {
+            userFunctions.me(this, function(data){
+                if (_.find(data.accessRules, function(element){
+                    return (element === 'ROLE_SUPER_ADMIN')
+                })) {
+                    var accRuleMngmt = new accessRuleManagement.View({model: new accessRuleManagement.Model()});
+                    accRuleMngmt.render();
+                    $('#main-content').append(accRuleMngmt.$el);
+                } else {
+                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                }
+            });
+        },
+        displayConnectionManagement : function() {
+            userFunctions.me(this, function(data){
+                if (_.find(data.privileges, function(element){
+                    return (element === 'SUPER_ADMIN')
+                })) {
+                    var connectionMngmt = new connectionManagement.View({model: new connectionManagement.Model()});
+                    connectionMngmt.render();
+                    $('#main-content').append(connectionMngmt.$el);
+                } else {
+                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                }
+            });
+
+        },
+        showUserProfileHeader : function() {
+            var headerView = header.View;
+            headerView.render();
+            $('#header-content').append(headerView.$el);
+            $('#main-content').html("<div class='row'><div id='modal-window'></div></div>");
+            header.View.userProfile();
+        },
+        displayQueryBuilder: function() {
+            startup();
         }
+
+
     });
     return new Router();
 });

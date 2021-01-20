@@ -32,12 +32,10 @@ require.config({
 	}
 });
 
-if(sessionStorage.getItem("session")){
-    require(["common/startup"], function(startup){
-       startup();
-    });
-} else {
-    require(["common/transportErrors"],function(transportErrors){
-        window.location = transportErrors.redirectionUrl;
-    });
-}
+require(["backbone", "psamaui/common/session", "common/router", "underscore", "jquery", "bootstrap"],
+    function(Backbone, session, router, _){
+        Backbone.history.start({pushState:true});
+        document.onmousemove = session.activity;
+        document.onkeyup = session.activity;
+    }
+);
