@@ -22,6 +22,7 @@ require.config({
 		privilege: "psamaui/privilege/",
 		picSure: "picSure/",
 		role: "psamaui/role/",
+		termsOfService: "psamaui/termsOfService/",
         user: "psamaui/user/",
         util: "psamaui/util/",
 	},
