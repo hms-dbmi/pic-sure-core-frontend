@@ -1,5 +1,9 @@
 define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "overrides/ontology", "common/transportErrors"],
 		function($, _, settings, resourceMeta, overrides, transportErrors) {
+
+    if (!sessionStorage.getItem("session")) {
+        return {};
+    }
     var allConcepts;
     var allInfoColumns;
 
