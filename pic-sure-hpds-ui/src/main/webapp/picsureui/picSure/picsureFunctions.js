@@ -1,5 +1,5 @@
 // Util functions get data to/from picsure
-define(["util/notification", "picSure/settings"],
+define(["util/notification", "picSure/psamaSettings"],
 		function(notification, settings){
     var picsureFunctions = {
         init: function () {}

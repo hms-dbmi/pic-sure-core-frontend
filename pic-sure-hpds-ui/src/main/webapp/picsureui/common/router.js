@@ -2,9 +2,10 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
         'role/roleManagement', 'privilege/privilegeManagement', "application/applicationManagement",
         'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
         'handlebars', 'psamaui/accessRule/accessRuleManagement', 'common/startup'],
-        function(searchParser, Backbone, session, login, header, footer, userManagement, roleManagement,
-                 privilegeManagement, applicationManagement, connectionManagement, tos, userFunctions,
-                 HBS, accessRuleManagement, startup){
+        function(searchParser, Backbone, session, login, header, footer, userManagement,
+                roleManagement, privilegeManagement, applicationManagement,
+                connectionManagement, tos, userFunctions,
+                HBS, accessRuleManagement, startup){
         var Router = Backbone.Router.extend({
         routes: {
             "psamaui/userManagement(/)" : "displayUserManagement",
