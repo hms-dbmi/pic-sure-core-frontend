@@ -46,6 +46,7 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
             } else {
                 if ( ! session.isValid(login.handleNotAuthorizedResponse)){
                     this.login();
+                    this.renderHeaderAndFooter();
                     return false;
                 }
                 if (!session.acceptedTOS() && name !== 'displayTOS'){
