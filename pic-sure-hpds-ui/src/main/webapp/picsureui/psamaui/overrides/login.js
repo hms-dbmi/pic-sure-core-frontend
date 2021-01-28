@@ -1,4 +1,4 @@
-define(["psamaSettings/settings", "handlebars", 'text!overrides/not_authorized.hbs'], function(settings, HBS, notAuthorizedTemplate){
+define(["psamaSettings/settings", "handlebars", 'text!psamaui/overrides/not_authorized.hbs'], function(settings, HBS, notAuthorizedTemplate){
 	return {
 		/*
 		 * This allows you to build any authorization logic you wish.

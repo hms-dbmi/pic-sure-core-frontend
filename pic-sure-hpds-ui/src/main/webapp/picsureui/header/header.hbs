@@ -1,7 +1,7 @@
 <div class="row header-row">
 	<img class="logo-img col-md-4" src="{{logoPath}}"></a>
 	<div class="logo-img col-md-3"
-         {{#not_contains privileges 'ADMIN'}}style="visibility: hidden"{{/not_contains}}>Management console</div>
+         {{#not_contains privileges 'ADMIN'}}style="display: none;"{{/not_contains}}>Management console</div>
 </div>
 <div class="row" style="margin-bottom: 5px">
     <span class="col-md-4"></span>
@@ -16,7 +16,7 @@
     </div>
     {{/not_empty}}
 
-    <div class="col-md-2 dropdown" id="super-admin-dropdown"  {{#not_contains privileges 'SUPER_ADMIN'}}style="visibility: hidden"{{/not_contains}}>
+    <div class="col-md-2 dropdown" id="super-admin-dropdown"  {{#not_contains privileges 'SUPER_ADMIN'}}style="display: none;"{{/not_contains}}>
         <button class="btn btn-secondary dropdown-toggle header-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</button>
         <ul class="dropdown-menu" role="menu">
             <li class="dropdown"><a id="appMgmt-super-admin" href="/psamaui/applicationManagement">Application management</a></li>
@@ -25,8 +25,9 @@
             <li class="dropdown"><a id="roleMgmt-super-admin" href="/psamaui/roleManagement">Role management</a></li>
         </ul>
     </div>
-    <a class="col-md-1 btn btn-default header-btn" id="userMgmt-users" href="/psamaui/userManagement"
-       {{#not_contains privileges 'ADMIN'}}style="visibility: hidden"{{/not_contains}}>Users
+    <a class="col-md-2 btn btn-default header-btn" href="/picsureui/queryBuilder">Query Builder</a>
+    <a class="col-md-1 btn btn-default header-btn" id="admin-btn" href="/psamaui/userManagement"
+       {{#not_contains privileges 'ADMIN'}}style="display: none;"{{/not_contains}}>Users
     </a>
     <div class="col-md-1 dropdown btn btn-default header-btn" id="help-dropdown" >
         <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</span>
@@ -37,6 +38,6 @@
             {{#if helpLink}}<li class="dropdown"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
     </div>
 
-    <a id="user-profile-btn" class="col-md-1 btn btn-default header-btn">User Profile</a>
+    <a id="user-profile-btn" class="col-md-1 btn btn-default header-btn" href="/psamaui/userProfile">User Profile</a>
     <a id="logout-btn" class="col-md-1 btn btn-default header-btn">Log Out</a>
 </div>

@@ -1,6 +1,9 @@
-define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/header", "text!../settings/settings.json", "text!psamaSettings/settings.json",
-"common/transportErrors", "text!options/modal.hbs","text!header/userProfile.hbs", "util/notification", "psamaui/overrides/userProfile"],
-		function($, BB, HBS, template, overrides, settings, psamaSettings, transportErrors, modalTemplate, userProfileTemplate, notification, profileOverride){
+define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/header", "text!../settings/settings.json",
+        "text!psamaSettings/settings.json", "common/transportErrors", "text!options/modal.hbs","text!header/userProfile.hbs",
+        "util/notification", "psamaui/overrides/userProfile", "picSure/userFunctions"],
+		function($, BB, HBS, template, overrides, settings,
+                 psamaSettings, transportErrors, modalTemplate, userProfileTemplate,
+                 notification, profileOverride, userFunctions){
 	var headerView = BB.View.extend({
 		initialize : function(){
             HBS.registerHelper('not_contains', function (array, object, opts) {
