@@ -1,4 +1,4 @@
-define(["util/notification", "picSure/settings"],
+define(["util/notification", "picSure/psamaSettings"],
 		function(notification, settings){
     var accessRuleFunctions = {
         init: function () {}

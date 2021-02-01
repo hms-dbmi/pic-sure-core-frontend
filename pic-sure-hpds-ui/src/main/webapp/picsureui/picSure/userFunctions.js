@@ -1,4 +1,4 @@
-define(["util/notification", "psamaSettings/settings"],
+define(["util/notification", "picSure/psamaSettings"],
 		function(notification, settings){
     var userFunctions = {
         init: function () {}

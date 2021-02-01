@@ -4,7 +4,7 @@
          {{#not_contains privileges 'ADMIN'}}style="display: none;"{{/not_contains}}>Management console</div>
 </div>
 <div class="row" style="margin-bottom: 5px">
-    <span class="col-md-4"></span>
+    <span class="col-md-2"></span>
     {{#not_empty applications}}
     <div class="col-md-2 dropdown" id="applications-dropdown">
         <button class="btn btn-secondary dropdown-toggle header-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Applications</button>
@@ -16,8 +16,8 @@
     </div>
     {{/not_empty}}
 
-    <div class="col-md-2 dropdown" id="super-admin-dropdown"  {{#not_contains privileges 'SUPER_ADMIN'}}style="display: none;"{{/not_contains}}>
-        <button class="btn btn-secondary dropdown-toggle header-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</button>
+    <div class="col-md-2 dropdown btn btn-default header-btn" id="super-admin-dropdown"  {{#not_contains privileges 'SUPER_ADMIN'}}style="display: none;"{{/not_contains}}>
+        <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
         <ul class="dropdown-menu" role="menu">
             <li class="dropdown"><a id="appMgmt-super-admin" href="/psamaui/applicationManagement">Application management</a></li>
             <li class="dropdown"><a id="connMgmt-super-admin" href="/psamaui/connectionManagement">Connection management</a></li>
