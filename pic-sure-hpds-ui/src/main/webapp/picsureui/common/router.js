@@ -1,11 +1,11 @@
 define(["common/searchParser", "backbone", "common/session", "login/login", 'header/header', 'footer/footer','user/userManagement',
         'role/roleManagement', 'privilege/privilegeManagement', "application/applicationManagement",
         'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
-        'handlebars', 'psamaui/accessRule/accessRuleManagement', 'common/startup'],
+        'handlebars', 'psamaui/accessRule/accessRuleManagement', 'common/startup', 'overrides/router'],
         function(searchParser, Backbone, session, login, header, footer, userManagement,
                 roleManagement, privilegeManagement, applicationManagement,
                 connectionManagement, tos, userFunctions,
-                HBS, accessRuleManagement, startup){
+                HBS, accessRuleManagement, startup, routerOverrides){
         var Router = Backbone.Router.extend({
         routes: {
             "psamaui/userManagement(/)" : "displayUserManagement",
@@ -28,6 +28,9 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
             "*path" : "displayUserManagement"
         },
         initialize: function(){
+            for (const routeOverride in routerOverrides.routes) {
+                this.route(routeOverride, routerOverrides.routes[routeOverride]);
+            }
             var pushState = history.pushState;
             //TODO: Why
             this.tos = tos;
@@ -39,9 +42,6 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
             		}
                 return pushState.apply(history, arguments);
             }.bind({router:this});
-        },
-        test2: function() {
-            console.log("Success");
         },
        execute: function(callback, args, name){
             if ( name === 'not_authorized' ){
