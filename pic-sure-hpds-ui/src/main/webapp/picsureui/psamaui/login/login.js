@@ -1,10 +1,10 @@
-define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'text!login/login.hbs', 'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'login/fence_login'],
+define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'text!login/login.hbs', 'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login'],
 		function(session, settings, parseQueryString, $, HBS, loginTemplate, notAuthorizedTemplate, overrides, notification, fenceLogin){
 
 	var loginTemplate = HBS.compile(loginTemplate);
 
 	var loginCss = null
-	$.get("https://avillachlab.us.webtask.io/connection_details_base64?webtask_no_cache=1&css=true", function(css){
+	$.get("https://avillachlab.us.webtask.io/connection_det`ails_base64?webtask_no_cache=1&css=true", function(css){
 		loginCss = "<style>" + css + "</style";
 	});
 
@@ -37,7 +37,8 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                                 window.location = sessionStorage.redirection_url;
                             }
                             else {
-                                history.pushState({}, "", "/psamaui/userManagement");
+                                // todo: based on user
+                                history.pushState({}, "", "/picsureui");
                             }
                         }
                     }.bind(this),
@@ -132,8 +133,11 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
             console.log("Auth0-displayNotAuthorized()");
             if (overrides.displayNotAuthorized)
                 overrides.displayNotAuthorized()
-            else
+            else {
+                sessionStorage.clear();
+                localStorage.clear();
                 $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:settings.helpLink}));
+            }
         }
     };
 	return settings.idp_provider == "fence" ? fenceLogin : login;

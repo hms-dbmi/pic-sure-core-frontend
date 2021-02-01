@@ -25,11 +25,11 @@
             <li class="dropdown"><a id="roleMgmt-super-admin" href="/psamaui/roleManagement">Role management</a></li>
         </ul>
     </div>
-    <a class="col-md-2 btn btn-default header-btn" href="/picsureui/queryBuilder">Query Builder</a>
+    <a class="col-md-2 btn btn-default header-btn" href="/picsureui/queryBuilder" style="display: none;" id="query-builder-btn">Query Builder</a>
     <a class="col-md-1 btn btn-default header-btn" id="admin-btn" href="/psamaui/userManagement"
        {{#not_contains privileges 'ADMIN'}}style="display: none;"{{/not_contains}}>Users
     </a>
-    <div class="col-md-1 dropdown btn btn-default header-btn" id="help-dropdown" >
+    <div class="col-md-1 dropdown btn btn-default header-btn" id="help-dropdown" style="display: none;" >
         <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</span>
         <ul class="dropdown-menu" role="menu">
          	{{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
@@ -38,6 +38,6 @@
             {{#if helpLink}}<li class="dropdown"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
     </div>
 
-    <a id="user-profile-btn" class="col-md-1 btn btn-default header-btn" href="/psamaui/userProfile">User Profile</a>
-    <a id="logout-btn" class="col-md-1 btn btn-default header-btn">Log Out</a>
+    <a id="user-profile-btn" class="col-md-1 btn btn-default header-btn" href="/psamaui/userProfile" style="display: none;">User Profile</a>
+    <a id="logout-btn" class="col-md-1 btn btn-default header-btn" style="display: none;">Log Out</a>
 </div>

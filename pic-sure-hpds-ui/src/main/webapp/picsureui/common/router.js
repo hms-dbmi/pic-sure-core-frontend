@@ -40,6 +40,9 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                 return pushState.apply(history, arguments);
             }.bind({router:this});
         },
+        test2: function() {
+            console.log("Success");
+        },
        execute: function(callback, args, name){
             if ( name === 'not_authorized' ){
                 callback.apply(this, args);

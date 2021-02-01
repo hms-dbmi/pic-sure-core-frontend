@@ -139,7 +139,7 @@
      border-bottom-style: solid;
      box-shadow: none;
      -webkit-box-shadow: none;
-     background-color: light-gray;
+     background-color: lightgrey;
      color: black;
 }
 .header-btn:hover {
@@ -540,11 +540,11 @@ body {
 #prepare-btn {
     position: -webkit-sticky;
     position: sticky;
-    bottom: 25;
+    bottom: 25px;
 }
 
 .anyvalueof-value-list {
-    max-height: 300;
+    max-height: 300px;
     overflow: auto;
     border: 1px solid;
     padding: 4px;
@@ -585,9 +585,9 @@ body {
 
 .results-div {
     position: sticky;
-    bottom: 25;
-    padding: 5;
-    padding-bottom: 25;
+    bottom: 25px;
+    padding: 5px;
+    padding-bottom: 25px;
     background-color: #f4f4f6;
 }
 .numeric-label {

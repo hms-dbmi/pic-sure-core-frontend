@@ -134,16 +134,23 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 				videoLink: jsonSettings.videoLink
 			}));
 			if (sessionStorage.getItem("session")) {
+			    // todo: make this set of tab ids dynamic and overridable
+			    $('#logout-btn', this.$el).show();
+			    $('#user-profile-btn', this.$el).show();
+			    $('#help-dropdown', this.$el).show();
+			    $('#query-builder-btn', this.$el).show();
                 $.ajax({
                     url: window.location.origin + "/psama/user/me",
                     type: 'GET',
                     headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
                     contentType: 'application/json',
                     success: function(response){
-                        if(response.privileges.includes("ADMIN") || response.privileges.includes("SUPER_ADMIN")){
+                        if(response.privileges.includes("ADMIN")){
                             $('#admin-btn', this.$el).show();
-                        } else {
-                            $('#user-profile-btn', this.$el).show();
+                        }
+                        if(response.privileges.includes("SUPER_ADMIN")){
+                            $('#admin-btn', this.$el).show();
+                            $('#super-admin-dropdown', this.$el).show();
                         }
                     }.bind(this),
                     error: function(response){
