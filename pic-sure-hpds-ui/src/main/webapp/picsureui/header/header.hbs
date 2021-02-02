@@ -19,16 +19,17 @@
     <div class="col-md-2 dropdown btn btn-default header-btn" id="super-admin-dropdown"  {{#not_contains privileges 'SUPER_ADMIN'}}style="display: none;"{{/not_contains}}>
         <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
         <ul class="dropdown-menu" role="menu">
-            <li class="dropdown"><a id="appMgmt-super-admin" href="/psamaui/applicationManagement">Application management</a></li>
-            <li class="dropdown"><a id="connMgmt-super-admin" href="/psamaui/connectionManagement">Connection management</a></li>
-            <li class="dropdown"><a id="privMgmt-super-admin" href="/psamaui/privilegeManagement">Privilege management</a></li>
-            <li class="dropdown"><a id="roleMgmt-super-admin" href="/psamaui/roleManagement">Role management</a></li>
+            <li class="dropdown"><a id="appMgmt-super-admin" href="/psamaui/applicationManagement">Applications</a></li>
+            <li class="dropdown"><a id="connMgmt-super-admin" href="/psamaui/connectionManagement">Connections</a></li>
+            <li class="dropdown"><a id="privMgmt-super-admin" href="/psamaui/privilegeManagement">Privileges</a></li>
+            <li class="dropdown"><a id="roleMgmt-super-admin" href="/psamaui/roleManagement">Roles</a></li>
         </ul>
     </div>
     <a class="col-md-2 btn btn-default header-btn" href="/picsureui/queryBuilder" style="display: none;" id="query-builder-btn">Query Builder</a>
     <a class="col-md-1 btn btn-default header-btn" id="admin-btn" href="/psamaui/userManagement"
        {{#not_contains privileges 'ADMIN'}}style="display: none;"{{/not_contains}}>Users
     </a>
+    <a id="user-profile-btn" class="col-md-1 btn btn-default header-btn" href="#" style="display: none;">User Profile</a>
     <div class="col-md-1 dropdown btn btn-default header-btn" id="help-dropdown" style="display: none;" >
         <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</span>
         <ul class="dropdown-menu" role="menu">
@@ -38,6 +39,5 @@
             {{#if helpLink}}<li class="dropdown"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
     </div>
 
-    <a id="user-profile-btn" class="col-md-1 btn btn-default header-btn" href="#" style="display: none;">User Profile</a>
     <a id="logout-btn" class="col-md-1 btn btn-default header-btn" style="display: none;">Log Out</a>
 </div>
