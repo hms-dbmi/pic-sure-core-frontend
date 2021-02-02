@@ -1,9 +1,6 @@
 define(["jquery", "common/transportErrors", "filter/filterList", "header/header", "footer/footer", "text!../settings/settings.json", "output/outputPanel", "handlebars", "text!common/mainLayout.hbs", "picSure/queryBuilder", "treeview", "common/styles"],
 	function($, transportErrors, filterList, header, footer, settings, output, HBS, layoutTemplate, queryBuilder){
 		return function(){
-			if(window.location.pathname !== "/picsureui/"){
-				window.location = "/picsureui/";
-			}
 			var session = JSON.parse(sessionStorage.getItem("session"));
 			if(!session || !session.token){
 			    transportErrors.handleAll({status: 401}, "Session is missing token");

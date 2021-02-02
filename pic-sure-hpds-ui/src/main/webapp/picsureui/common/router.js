@@ -18,7 +18,6 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
             "psamaui/privilegeManagement(/)" : "displayPrivilegeManagement",
             "psamaui/applicationManagement(/)" : "displayApplicationManagement",
             "psamaui/accessRuleManagement(/)" : "displayAccessRuleManagement",
-            "psamaui/userProfile(/)" : "showUserProfileHeader",
             "picsureui/queryBuilder" : "displayQueryBuilder",
             "picsureui/" : "displayQueryBuilder",
             "picsureui/not_authorized(/)" : "not_authorized",
@@ -164,13 +163,6 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                 }
             });
 
-        },
-        showUserProfileHeader : function() {
-            var headerView = header.View;
-            headerView.render();
-            $('#header-content').append(headerView.$el);
-            $('#main-content').html("<div class='row'><div id='modal-window'></div></div>");
-            header.View.userProfile();
         },
         displayQueryBuilder: function() {
             startup();
