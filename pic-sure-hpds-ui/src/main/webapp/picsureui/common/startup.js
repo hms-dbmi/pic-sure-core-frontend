@@ -35,12 +35,6 @@ define(["jquery", "common/transportErrors", "filter/filterList", "header/header"
 			            sessionStorage.setItem("session", JSON.stringify(session));
 
 			            $('body').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
-			            /*var headerView = header.View;
-			            headerView.render();
-			            $('#header-content').append(headerView.$el);
-			            var footerView = footer.View;
-			            footerView.render();
-			            $('#footer-content').append(footerView.$el);*/
 			            filterList.init();
 			            var outputPanel = output.View;
 			            outputPanel.render();

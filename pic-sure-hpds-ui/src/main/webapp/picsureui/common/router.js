@@ -25,7 +25,7 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
 
             // This path must be last in the list
             //"*path" : "displayQueryBuilder"
-            "*path" : "displayUserManagement"
+            "*path" : "displayQueryBuilder"
         },
         initialize: function(){
             for (const routeOverride in routerOverrides.routes) {
