@@ -23,7 +23,6 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
             "picsureui/not_authorized(/)" : "not_authorized",
 
             // This path must be last in the list
-            //"*path" : "displayQueryBuilder"
             "*path" : "displayQueryBuilder"
         },
         initialize: function(){
