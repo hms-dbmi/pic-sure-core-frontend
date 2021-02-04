@@ -605,6 +605,9 @@ body {
 
 
 
+
+
+-- Following styles mported from psamaui as part of ALS-1636
 .table-picsure {
     border-collapse: collapse;
     width: 100%;
@@ -701,4 +704,64 @@ body {
 
 .btn-picsure-sm {
     padding: 4px;
+}
+
+#current-connection-form {
+    width: inherit;
+}
+
+.margin-top-ten {
+    margin-top: 10px;
+}
+
+.bordered-block {
+    margin-top: 3px;
+    margin-bottom: 3px;
+    padding: 6px;
+    border: 1px solid #4a90e2;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th{
+    background-color: #cddfeb;
+}
+
+.btn-show-inactive {
+    margin: 10px;
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+    float: right;
+}
+
+.badge-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
+.badge-success {
+    color: #fff;
+    background-color: #28a745;
+}
+.badge-warning {
+    color: #212529;
+    background-color: #ffc107;
+}
+
+.footer-row {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+
+.login-logo {
+    width:100%;
+}
+
+.fence-login-btn {
+    display: inline;
+    padding: 5px;
+    background-color: #d0d0d0;
+}
+
+.fence-login-img {
+    height:16px;
 }
