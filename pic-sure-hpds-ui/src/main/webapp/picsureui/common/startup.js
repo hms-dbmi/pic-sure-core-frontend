@@ -31,7 +31,7 @@ define(["jquery", "common/transportErrors", "filter/filterList", "header/header"
 			            session.queryTemplate = response.queryTemplate;
 			            sessionStorage.setItem("session", JSON.stringify(session));
 
-			            $('body').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
+			            $('#main-content').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
 			            filterList.init();
 			            var outputPanel = output.View;
 			            outputPanel.render();
