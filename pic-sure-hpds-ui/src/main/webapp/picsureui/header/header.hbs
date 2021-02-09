@@ -17,14 +17,14 @@
     <div class="col-md-2 dropdown btn btn-default header-btn super-admin-visible" id="super-admin-dropdown"  {{#not_contains privileges 'SUPER_ADMIN'}}style="display: none;"{{/not_contains}}>
         <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
         <ul class="dropdown-menu" role="menu">
-            <li class="dropdown"><a id="appMgmt-super-admin" href="/psamaui/applicationManagement">Applications</a></li>
-            <li class="dropdown"><a id="connMgmt-super-admin" href="/psamaui/connectionManagement">Connections</a></li>
-            <li class="dropdown"><a id="privMgmt-super-admin" href="/psamaui/privilegeManagement">Privileges</a></li>
-            <li class="dropdown"><a id="roleMgmt-super-admin" href="/psamaui/roleManagement">Roles</a></li>
+            <li class="dropdown"><a id="appMgmt-super-admin header-navigation" data-href="/psamaui/applicationManagement" href="#">Applications</a></li>
+            <li class="dropdown"><a id="connMgmt-super-admin header-navigation" data-href="/psamaui/connectionManagement">Connections</a></li>
+            <li class="dropdown"><a id="privMgmt-super-admin header-navigation" data-href="/psamaui/privilegeManagement">Privileges</a></li>
+            <li class="dropdown"><a id="roleMgmt-super-admin header-navigation" data-href="/psamaui/roleManagement">Roles</a></li>
         </ul>
     </div>
-    <a class="col-md-2 btn btn-default header-btn authenticated-visible" href="/picsureui/queryBuilder" style="display: none;" id="query-builder-btn">Query Builder</a>
-    <a class="col-md-1 btn btn-default header-btn admin-visible" id="admin-btn" href="/psamaui/userManagement"
+    <a class="col-md-2 btn btn-default header-btn authenticated-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" style="display: none;" id="query-builder-btn">Query Builder</a>
+    <a class="col-md-1 btn btn-default header-btn admin-visible header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#"
        {{#not_contains privileges 'ADMIN'}}style="display: none;"{{/not_contains}}>Users
     </a>
     <a id="user-profile-btn" class="col-md-1 btn btn-default header-btn authenticated-visible" href="#" style="display: none;">User Profile</a>

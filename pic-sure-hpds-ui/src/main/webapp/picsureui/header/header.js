@@ -1,9 +1,9 @@
 define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/header", "text!../settings/settings.json",
         "text!psamaSettings/settings.json", "common/transportErrors", "text!options/modal.hbs","text!header/userProfile.hbs",
-        "util/notification", "psamaui/overrides/userProfile", "picSure/userFunctions"],
+        "util/notification", "psamaui/overrides/userProfile", "picSure/userFunctions", "picSure/applicationFunctions"],
 		function($, BB, HBS, template, overrides, settings,
                  psamaSettings, transportErrors, modalTemplate, userProfileTemplate,
-                 notification, profileOverride, userFunctions){
+                 notification, profileOverride, userFunctions, applicationFunctions){
 	var headerView = BB.View.extend({
 		initialize : function(){
             HBS.registerHelper('not_contains', function (array, object, opts) {
@@ -46,7 +46,8 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 		},
 		events : {
 			"click #logout-btn" : "gotoLogin",
-            "click #user-profile-btn": "userProfile"
+            "click #user-profile-btn": "userProfile",
+            "click .header-navigation": "headerClick"
 		},
         logout: function (event) {
         	//save redirection URL so we can log back in after logging out
@@ -124,6 +125,11 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
         closeDialog: function () {
             $("#modalDialog").hide();
         },
+        headerClick: function(event) {
+		    if ($(event.target).data("href")) {
+                window.history.pushState({}, "", $(event.target).data("href"));
+            }
+        },
 		render : function(){
 			jsonSettings = JSON.parse(settings);
 			this.$el.html(this.template({
@@ -134,7 +140,6 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 				videoLink: jsonSettings.videoLink
 			}));
 			if (sessionStorage.getItem("session")) {
-			    // todo: make this set of tab ids dynamic and overridable
 			    $('.authenticated-visible', this.$el).show();
                 $.ajax({
                     url: window.location.origin + "/psama/user/me",
