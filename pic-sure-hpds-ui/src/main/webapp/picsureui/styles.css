@@ -113,9 +113,7 @@
  .logo-img {
      max-height: 90px;
      max-width: 275px;
-}
- #pic-sure-instances {
-     width: 100%;
+     padding-top: 10px;
 }
  #header {
      color: black;
@@ -139,7 +137,7 @@
      border-bottom-style: solid;
      box-shadow: none;
      -webkit-box-shadow: none;
-     background-color: light-gray;
+     background-color: lightgrey;
      color: black;
 }
 .header-btn:hover {
@@ -406,9 +404,6 @@ body {
     border-radius: unset;
 }
 
-.logo-img {
-    padding-top: 10px;
-}
 
 .category-restriction-type-row {
     display:flex;
@@ -540,11 +535,11 @@ body {
 #prepare-btn {
     position: -webkit-sticky;
     position: sticky;
-    bottom: 25;
+    bottom: 25px;
 }
 
 .anyvalueof-value-list {
-    max-height: 300;
+    max-height: 300px;
     overflow: auto;
     border: 1px solid;
     padding: 4px;
@@ -585,9 +580,9 @@ body {
 
 .results-div {
     position: sticky;
-    bottom: 25;
-    padding: 5;
-    padding-bottom: 25;
+    bottom: 25px;
+    padding: 5px;
+    padding-bottom: 25px;
     background-color: #f4f4f6;
 }
 .numeric-label {
@@ -606,4 +601,167 @@ body {
 
 .modal-body {
 	overflow-x: scroll;
+}
+
+
+
+
+
+-- Following styles mported from psamaui as part of ALS-1636
+.table-picsure {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table-picsure thead {
+    border: 1px solid rgb(74, 144, 226);
+    border-bottom: 0px;
+}
+
+.table-picsure th {
+    color: white;
+    padding: 10px;
+}
+
+.table-picsure td {
+    border: 1px solid #b2cfeb;
+    text-align: left;
+    padding: 10px;
+}
+
+.table-picsure tbody td:nth-child(1) {
+    font-weight: bold;
+    color: #007eff;
+    cursor: pointer;
+}
+
+.table-picsure tbody tr:nth-child(odd) {
+    background-color: #deeaf6;
+}
+
+.table-inactive td {
+    border: 1px solid #cfcfcf !important;
+}
+
+.table-inactive tbody td:nth-child(1) {
+    color: #606060 !important;
+}
+
+.table-inactive tbody tr:nth-child(odd) {
+    background-color: #dddddd !important;
+}
+
+.header-color {
+    background: rgb(74, 144, 226);
+}
+
+.header-tool {
+    font-size: 2.0em;
+}
+
+
+.btn-info {
+    background-color: #4a90e2;
+    border-color: #4a90e2;
+}
+
+.btn-outline {
+    color: #4a90e2;
+    border-color: #4a90e2;
+}
+
+.btn-outline:hover {
+    color: #ffffff;
+    background-color: #76a6de;
+    border-color: #76a6de;
+}
+
+.btn:hover, .btn:focus {
+    color: #ffffff;
+    background-color: #76a6de;
+    border-color: #76a6de;
+}
+
+.btn-info:hover {
+    color: #ffffff;
+    background-color: #76a6de;
+    border-color: #76a6de;
+}
+
+.btn-success:disabled, .btn-success:disabled:hover{
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+.btn-right {
+    float: right;
+}
+
+.btn-picsure-xs {
+    padding: 2px;
+}
+
+.btn-picsure-sm {
+    padding: 4px;
+}
+
+#current-connection-form {
+    width: inherit;
+}
+
+.margin-top-ten {
+    margin-top: 10px;
+}
+
+.bordered-block {
+    margin-top: 3px;
+    margin-bottom: 3px;
+    padding: 6px;
+    border: 1px solid #4a90e2;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th{
+    background-color: #cddfeb;
+}
+
+.btn-show-inactive {
+    margin: 10px;
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+    float: right;
+}
+
+.badge-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
+.badge-success {
+    color: #fff;
+    background-color: #28a745;
+}
+.badge-warning {
+    color: #212529;
+    background-color: #ffc107;
+}
+
+.footer-row {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+
+.login-logo {
+    width:100%;
+}
+
+.fence-login-btn {
+    display: inline;
+    padding: 5px;
+    background-color: #d0d0d0;
+}
+
+.fence-login-img {
+    height:16px;
 }
