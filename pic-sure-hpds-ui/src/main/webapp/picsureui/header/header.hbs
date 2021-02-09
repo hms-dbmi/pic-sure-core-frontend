@@ -17,10 +17,10 @@
     <div class="col-md-2 dropdown btn btn-default header-btn super-admin-visible" id="super-admin-dropdown"  {{#not_contains privileges 'SUPER_ADMIN'}}style="display: none;"{{/not_contains}}>
         <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
         <ul class="dropdown-menu" role="menu">
-            <li class="dropdown"><a id="appMgmt-super-admin header-navigation" data-href="/psamaui/applicationManagement" href="#">Applications</a></li>
-            <li class="dropdown"><a id="connMgmt-super-admin header-navigation" data-href="/psamaui/connectionManagement">Connections</a></li>
-            <li class="dropdown"><a id="privMgmt-super-admin header-navigation" data-href="/psamaui/privilegeManagement">Privileges</a></li>
-            <li class="dropdown"><a id="roleMgmt-super-admin header-navigation" data-href="/psamaui/roleManagement">Roles</a></li>
+            <li class="dropdown"><a id="appMgmt-super-admin" class="header-navigation" data-href="/psamaui/applicationManagement" href="#">Applications</a></li>
+            <li class="dropdown"><a id="connMgmt-super-admin" class="header-navigation" data-href="/psamaui/connectionManagement">Connections</a></li>
+            <li class="dropdown"><a id="privMgmt-super-admin" class="header-navigation" data-href="/psamaui/privilegeManagement">Privileges</a></li>
+            <li class="dropdown"><a id="roleMgmt-super-admin" class="header-navigation" data-href="/psamaui/roleManagement">Roles</a></li>
         </ul>
     </div>
     <a class="col-md-2 btn btn-default header-btn authenticated-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" style="display: none;" id="query-builder-btn">Query Builder</a>

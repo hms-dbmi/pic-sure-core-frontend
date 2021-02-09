@@ -33,11 +33,11 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
             //TODO: Why
             this.tos = tos;
             history.pushState = function(state, title, path) {
-            		if(state.trigger){
-            			this.router.navigate(path, state);
-            		}else{
-            			this.router.navigate(path, {trigger: true});
-            		}
+                if(state.trigger){
+                    this.router.navigate(path, state);
+                }else{
+                    this.router.navigate(path, {trigger: true});
+                }
                 return pushState.apply(history, arguments);
             }.bind({router:this});
         },
@@ -71,15 +71,20 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
             login.displayNotAuthorized();
         },
         renderHeaderAndFooter: function(){
-        	 var headerView = header.View;
-             headerView.render();
-             $('#header-content').append(headerView.$el);
+            if ($('#header-content').is(':empty')) {
+                var headerView = header.View;
+                headerView.render();
+                $('#header-content').html(headerView.$el);
+            }
 
-             var footerView = footer.View;
-             footerView.render();
-             $('#footer-content').append(footerView.$el);
+            if ($('#footer-content').is(':empty')) {
+                var footerView = footer.View;
+                footerView.render();
+                $('#footer-content').html(footerView.$el);
+            }
         },
         displayUserManagement : function(){
+            $('#main-content').empty();
             userFunctions.me(this, function(data){
                     var userMngmt = new userManagement.View({model: new userManagement.Model()});
                     userMngmt.render();
@@ -87,12 +92,14 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
             });
         },
         displayTOS : function() {
+            $('#main-content').empty();
             var termsOfService = new this.tos.View({model: new this.tos.Model()});
             termsOfService.render();
             $('#main-content').html(termsOfService.$el);
 
         },
         displayApplicationManagement : function(){
+            $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
                     return (element === 'SUPER_ADMIN')
@@ -107,6 +114,7 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
 
         },
         displayRoleManagement : function(){
+            $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
                     return (element === 'SUPER_ADMIN')
@@ -120,8 +128,8 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
             });
 
         },
-
         displayPrivilegeManagement : function() {
+            $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
                     return (element === 'SUPER_ADMIN')
@@ -133,10 +141,9 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
                 }
             });
-
-            this.renderHeaderAndFooter();
         },
         displayAccessRuleManagement : function() {
+            $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.accessRules, function(element){
                     return (element === 'ROLE_SUPER_ADMIN')
@@ -150,6 +157,7 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
             });
         },
         displayConnectionManagement : function() {
+            $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
                     return (element === 'SUPER_ADMIN')
@@ -164,6 +172,7 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
 
         },
         displayQueryBuilder: function() {
+            $('#main-content').empty();
             startup();
         }
 
