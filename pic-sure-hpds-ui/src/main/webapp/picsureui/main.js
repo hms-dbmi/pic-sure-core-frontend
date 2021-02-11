@@ -8,7 +8,7 @@ require.config({
 		bootstrapStyles: 'webjars/bootstrap/3.4.1/css/bootstrap.min.css',
 		backbone: 'webjars/backbonejs/1.3.3/backbone-min',
 		text: 'webjars/requirejs-text/2.0.15/text',
-		handlebars: 'webjars/handlebars/4.0.5/handlebars.min',
+		handlebars: 'webjars/handlebars/4.7.6/handlebars.min',
 		treeview: 'webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min',
 		treeviewStyles: 'webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css',
 		Noty: 'webjars/noty/3.1.4/lib/noty',
