@@ -3,6 +3,6 @@ define(["jquery", "text!styles.css", "text!bootstrapStyles", "text!treeviewStyle
 	$('head').append("<style></style>");
 	$('head style').html(
 			bootstrapStyles.replace(new RegExp('\.\./fonts/', 'g'),
-					'webjars/bootstrap/3.3.7-1/fonts/')
+					'webjars/bootstrap/4.6.0/fonts/')
 					+ bootstrapTreeviewStyles + styles + overrides);
 });
