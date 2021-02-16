@@ -27,7 +27,7 @@ define(["picSure/queryBuilder", "filter/filter", "jquery"],  function(queryBuild
 					  "expectedResultType": "COUNT"
 					}
 			}
-			expect(queryBuilder.createQuery([new filter.Model({inclusive:true, searchTerm: "Asthma", and: false,theList:null,constrainByValue=true,valueType="STR"})])).toEqual(expectedQuery);
+			expect(queryBuilder.createQuery([new filter.Model({inclusive:true,searchTerm:"Asthma",and:false,theList:null,constrainByValue:true,valueType:"STR"})])).toEqual(expectedQuery);
 		});
 		
 	});
