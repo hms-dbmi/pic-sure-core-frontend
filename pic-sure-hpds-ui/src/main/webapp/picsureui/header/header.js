@@ -65,6 +65,9 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
         		profileOverride.userProfile(event, this);
         	} else {
 	            userFunctions.meWithToken(this, function(user){
+	                if ($("#modal-window").length === 0) {
+	                    $('#main-content').append('<div id="modal-window"></div>');
+                    }
 	                $("#modal-window").html(this.modalTemplate({title: "User Profile"}));
 	                $("#modalDialog").show();
 	                $(".modal-body").html(this.userProfileTemplate({user:user}));
