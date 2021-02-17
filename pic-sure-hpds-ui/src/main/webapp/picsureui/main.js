@@ -1,5 +1,6 @@
 require.config({
 	baseUrl: "/picsureui",
+	urlArgs: "",
 	paths: {
 		jquery: 'webjars/jquery/3.5.1/dist/jquery.min',
 		autocomplete: 'webjars/devbridge-autocomplete/1.4.7/dist/jquery.autocomplete',
