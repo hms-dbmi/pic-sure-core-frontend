@@ -1,5 +1,5 @@
-define(["underscore", "text!../settings/settings.json"], 
-		function(_, settings){
+define(["underscore"],
+		function(_){
 
     var queryTemplate = {
         categoryFilters: {},
@@ -15,21 +15,21 @@ define(["underscore", "text!../settings/settings.json"],
         expectedResultType: "COUNT"
     };
 
-	var createQuery = function(filters){
+	var createQuery = function(filters, resourceUUID){
 		var parsedSess = JSON.parse(sessionStorage.getItem("session"));
 		if(parsedSess.queryTemplate){
-			return generateQuery(filters,JSON.parse(parsedSess.queryTemplate));
+			return generateQuery(filters,JSON.parse(parsedSess.queryTemplate), resourceUUID);
 		} else {
-			return generateQuery(filters,JSON.parse(JSON.stringify(queryTemplate)));
+			return generateQuery(filters,JSON.parse(JSON.stringify(queryTemplate)), resourceUUID);
 		}
 	};
 
-	var generateQuery = function(filters, template) {
+	var generateQuery = function(filters, template, resourceUUID) {
 		if (!template)
 			template = JSON.parse(JSON.stringify(queryTemplate));
 
 		var query = {
-			resourceUUID: JSON.parse(settings).picSureResourceId,
+			resourceUUID: resourceUUID,
 			query: template};
 
 		_.each(filters, function(filter){

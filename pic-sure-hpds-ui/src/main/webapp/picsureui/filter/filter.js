@@ -37,7 +37,8 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.constrainFilterMenuCategoriesTemplate = HBS.compile(constrainFilterMenuCategoriesTemplate);
 			this.constrainFilterMenuGeneticsTemplate = HBS.compile(constrainFilterMenuGeneticsTemplate);
 			this.constrainFilterMenuVariantInfoNumericTemplate= HBS.compile(constrainFilterMenuVariantInfoNumericTemplate);
-			this.constrainFilterMenuAnyRecordOfTemplate = HBS.compile(constrainFilterMenuAnyRecordOfTemplate);			
+			this.constrainFilterMenuAnyRecordOfTemplate = HBS.compile(constrainFilterMenuAnyRecordOfTemplate);
+			this.resourceUUID = opts.resourceUUID;
 			
 			this.showSearchResults  = overrides.showSearchResults ? overrides.showSearchResults.bind(this) : this.showSearchResults.bind(this);
 			this.onSelect = overrides.onSelect ? overrides.onSelect.bind(this) : this.onSelect.bind(this);
@@ -45,18 +46,9 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.noResultsTemplate = HBS.compile(noResultsTemplate);
 			
 			$('.search-help-tooltip').tooltip();
-			ontology.allInfoColumnsLoaded.then(function(){
-				
-				$('.show-help-modal').click(function() {
-					$('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
-					$('#modal-window', this.$el).tooltip();
-					$(".close").click(function(){
-			            $("#search-help-modal").hide();
-					});
-	                $("#search-help-modal").show();
-				});
-				
-			}.bind(this));
+			if (typeof opts.renderHelpCallback !== 'undefined') {
+				opts.renderHelpCallback(this);
+			}
 		},
 		tagName: "div",
 		className: "filter-list-entry row",
@@ -113,7 +105,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 				var deferredSearchResults = $.Deferred();
 				
 				spinner.small(deferredSearchResults, "#spinner-div", "download-spinner")
-				ontology.autocomplete(term, deferredSearchResults.resolve);
+				ontology.autocomplete(term, deferredSearchResults.resolve, this.resourceUUID);
 				$.when(deferredSearchResults).then(this.showSearchResults);
 			}
 		},

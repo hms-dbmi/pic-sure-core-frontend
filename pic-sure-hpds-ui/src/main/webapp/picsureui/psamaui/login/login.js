@@ -1,10 +1,14 @@
-define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'text!login/login.hbs', 'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login'],
-		function(session, settings, parseQueryString, $, HBS, loginTemplate, notAuthorizedTemplate, overrides, notification, fenceLogin){
+define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'text!login/login.hbs',
+        'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login',
+        "picSure/settings"],
+		function(session, settings, parseQueryString, $, HBS, loginTemplate,
+                 notAuthorizedTemplate, overrides, notification, fenceLogin,
+                 picSureSettings){
 
 	var loginTemplate = HBS.compile(loginTemplate);
 
 	var loginCss = null
-	$.get("https://avillachlab.us.webtask.io/connection_det`ails_base64?webtask_no_cache=1&css=true", function(css){
+	$.get("https://avillachlab.us.webtask.io/connection_details_base64?webtask_no_cache=1&css=true", function(css){
 		loginCss = "<style>" + css + "</style";
 	});
 
@@ -30,17 +34,33 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                     contentType: 'application/json',
                     success: function(data){
                         session.authenticated(data.userId, data.token, data.email, data.permissions, data.acceptedTOS, this.handleNotAuthorizedResponse);
-                        if (data.acceptedTOS !== 'true'){
-                            history.pushState({}, "", "/psamaui/tos");
-                        } else {
-                            if (sessionStorage.redirection_url) {
-                                window.location = sessionStorage.redirection_url;
-                            }
-                            else {
-                                // todo: based on user
-                                history.pushState({}, "", "/picsureui");
-                            }
-                        }
+
+                        $.ajax({
+                            url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
+                            type: 'GET',
+                            headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                            contentType: 'application/json',
+                            success: function (response) {
+                                var currentSession = JSON.parse(sessionStorage.getItem("session"));
+                                currentSession.queryTemplate = response.queryTemplate;
+                                sessionStorage.setItem("session", JSON.stringify(currentSession));
+
+                                if (data.acceptedTOS !== 'true'){
+                                    history.pushState({}, "", "/psamaui/tos");
+                                } else {
+                                    if (sessionStorage.redirection_url) {
+                                        window.location = sessionStorage.redirection_url;
+                                    }
+                                    else {
+                                        // todo: based on user
+                                        history.pushState({}, "", "/picsureui");
+                                    }
+                                }
+                            }.bind(this),
+                            error: function (response) {
+                                transportErrors.handleAll(response, "Cannot retrieve query template with status: " + response.status);
+                            }.bind(this)
+                        });
                     }.bind(this),
                     error: function(data){
                         notification.showFailureMessage("Failed to authenticate with provider. Try again or contact administrator if error persists.")

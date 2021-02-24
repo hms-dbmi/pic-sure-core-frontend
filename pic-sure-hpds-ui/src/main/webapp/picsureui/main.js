@@ -34,7 +34,7 @@ require.config({
 		"treeview": {
 			deps:["bootstrap"]
 		},
-		"common/startup":{
+		"common/router":{
 			deps:["overrides/main"]
 		},
 		"jstree": {

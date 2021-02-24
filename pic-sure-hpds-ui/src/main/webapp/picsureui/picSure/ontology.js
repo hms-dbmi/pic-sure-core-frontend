@@ -90,9 +90,9 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
 
     var searchCache = {};
 
-    var dictionary = function(query, success, error) {
+    var dictionary = function(query, success, error, resourceUUID) {
         return $.ajax({
-            url: window.location.origin + '/picsure/search/' + JSON.parse(settings).picSureResourceId,
+            url: window.location.origin + '/picsure/search/' + resourceUUID,
             data: JSON.stringify({
                 "query": query
             }),
@@ -129,7 +129,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
         return total + tree.children.length - folderCount;
     }
 
-    var autocomplete = function(query, done) {
+    var autocomplete = function(query, done, resourceUUID) {
 
         return dictionary(
             query,
@@ -158,7 +158,9 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
                         suggestions: []
                     });
                 }
-            })
+            },
+            resourceUUID
+            )
     }.bind({
         resourceMeta: resourceMeta
     });
@@ -169,7 +171,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
 	    dictionary("\\", function(allConceptsRetrieved) {
 	        allConcepts = allConceptsRetrieved;
 	        allConceptsDeferred.resolve();
-	    });
+	    }, {}, JSON.parse(settings).picSureResourceId);
 	    return allConceptsDeferred;
     }
     
@@ -295,32 +297,6 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
         }
     };
 
-    var verifyPathsExist = function(paths, targetResource, done) {
-        if (!localStorage.getItem("id_token")) {
-            done(false);
-            var resolved = $.Deferred();
-            resolved.resolve();
-            return resolved;
-        }
-        return $.ajax({
-            url: window.location.origin + '/picsure/search/' + JSON.parse(settings).picSureResourceId,
-            headers: {
-                "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
-            },
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                "query": paths[0]
-            }),
-            success: function(response) {
-                done(true);
-            },
-            error: function(response) {
-                done(false);
-            }
-        });
-    };
-
     var allInfoColumns_ = function() {
         return allInfoColumns;
     };
@@ -333,7 +309,6 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
         dictionary: dictionary,
         tree: tree,
         autocomplete: autocomplete,
-        verifyPathsExist: verifyPathsExist,
         allConcepts: allConcepts_,
         allInfoColumns: allInfoColumns_,
         allInfoColumnsLoaded: allInfoColumnsLoaded

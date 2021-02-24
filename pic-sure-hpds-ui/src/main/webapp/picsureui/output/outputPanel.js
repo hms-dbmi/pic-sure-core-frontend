@@ -64,7 +64,6 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 				// make a safe deep copy of the incoming query so we don't modify it
 				var query = JSON.parse(JSON.stringify(incomingQuery));
 				this.model.baseQuery = incomingQuery;
-				query.resourceUUID = JSON.parse(settings).picSureResourceId;
 				query.resourceCredentials = {};
 				query.query.expectedResultType="COUNT";
 				this.model.set("query", query);

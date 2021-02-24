@@ -1,9 +1,11 @@
 define(["jquery", "output/outputPanel","picSure/queryBuilder", "filter/filter"],
 		function($, outputPanel, queryBuilder, filter){
 	var filterList = {
-		init : function(){
+		init : function(resourceUUID, renderHelpCallback){
 			$('#filter-list').html();
 			this.filters = [];
+			this.resourceUUID = resourceUUID;
+			this.renderHelpCallback = renderHelpCallback;
 			this.addFilter();
 		}
 	};
@@ -13,6 +15,8 @@ define(["jquery", "output/outputPanel","picSure/queryBuilder", "filter/filter"],
 			queryCallback : this.runQuery,
 			model : new filter.Model(),
 			removeFilter : this.removeFilter,
+			resourceUUID: this.resourceUUID,
+			renderHelpCallback: this.renderHelpCallback
 		});
 		newFilter.render();
 		this.filters.push(newFilter);
@@ -42,7 +46,7 @@ define(["jquery", "output/outputPanel","picSure/queryBuilder", "filter/filter"],
 	}.bind(filterList);
 	filterList.runQuery = function(){
 		var query = queryBuilder.createQuery(
-				_.pluck(this.filters, "model"));
+				_.pluck(this.filters, "model"), this.resourceUUID);
 		outputPanel.View.update(query);
 		if(_.countBy(this.filters, function(filter){
 			return $(".search-box", filter.$el).is(":visible") ? "visible" : "hidden";

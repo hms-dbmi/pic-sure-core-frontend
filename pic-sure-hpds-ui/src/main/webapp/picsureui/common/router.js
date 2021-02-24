@@ -1,11 +1,15 @@
 define(["common/searchParser", "backbone", "common/session", "login/login", 'header/header', 'footer/footer','user/userManagement',
         'role/roleManagement', 'privilege/privilegeManagement', "application/applicationManagement",
         'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
-        'handlebars', 'psamaui/accessRule/accessRuleManagement', 'common/startup', 'overrides/router'],
+        'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
+        "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "text!../settings/settings.json",
+        "picSure/ontology", "text!filter/searchHelpTooltip.hbs"],
         function(searchParser, Backbone, session, login, header, footer, userManagement,
                 roleManagement, privilegeManagement, applicationManagement,
                 connectionManagement, tos, userFunctions,
-                HBS, accessRuleManagement, startup, routerOverrides){
+                HBS, accessRuleManagement, routerOverrides, filterList,
+                 layoutTemplate, queryBuilder, output, settings,
+                 ontology, searchHelpTooltipTemplate){
         var Router = Backbone.Router.extend({
         routes: {
             "psamaui/userManagement(/)" : "displayUserManagement",
@@ -173,7 +177,34 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
         },
         displayQueryBuilder: function() {
             $('#main-content').empty();
-            startup();
+            $('#main-content').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
+            // todo: move this somewhere else
+            var renderHelpCallback = function(filterView) {
+                var renderHelp = function () {
+                    ontology.allInfoColumnsLoaded.then(function(){
+                        $('.show-help-modal').click(function() {
+                            $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
+                            $('#modal-window', this.$el).tooltip();
+                            $(".close").click(function(){
+                                $("#search-help-modal").hide();
+                            });
+                            $("#search-help-modal").show();
+                        });
+                    }.bind(filterView));
+                }
+                if (typeof ontology.allInfoColumnsLoaded === 'undefined') {
+                    setTimeout(renderHelp, 100);
+                } else {
+                    renderHelp();
+                }
+            }
+            filterList.init(JSON.parse(settings).picSureResourceId, renderHelpCallback);
+            var outputPanel = output.View;
+            outputPanel.render();
+            $('#query-results').append(outputPanel.$el);
+
+            var query = queryBuilder.createQuery({}, JSON.parse(settings).picSureResourceId);
+            outputPanel.update(query);
         }
 
 
