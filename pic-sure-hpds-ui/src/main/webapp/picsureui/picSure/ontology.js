@@ -1,96 +1,13 @@
-define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "overrides/ontology",
-        "picSure/search", "common/transportErrors"],
-		function($, _, settings, resourceMeta, overrides,
-                 search, transportErrors) {
+define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ontology",
+        "picSure/search"],
+		function($, _, settings, overrides,
+                 search) {
 
     if (!sessionStorage.getItem("session")) {
         return {};
     }
     var allConcepts;
     var allInfoColumns;
-
-    /*
-     * A function that takes a PUI that is already split on forward slash and returns
-     * the category value for that PUI.
-     */
-    var extractCategoryFromPui = function(puiSegments) {
-        return puiSegments[0];
-    };
-
-    /*
-     * A function that takes a PUI that is already split on forward slash and returns
-     * the parent value for that PUI.
-     */
-    var extractParentFromPui = function(puiSegments) {
-        return puiSegments[puiSegments.length - 2];
-    };
-    
-    var mapResponseToResult = function(query, response, incomingQueryScope) {
-    	//lowercase for consistent comparisons
-    	query = query.toLowerCase();
-        var queryScope = [];
-        if (incomingQueryScope && incomingQueryScope.length > 0) {
-            queryScope = incomingQueryScope;
-        }
-
-        var result = {};
-        result.suggestions = [];
-        result.suggestions = _.filter(result.suggestions.concat(_.map(response.phenotypes,
-            entry => {
-                var puiSegments = entry.name.split("\\").filter(function(seg) {
-                    return seg.length > 0;
-                });
-                return {
-                    value: puiSegments[puiSegments.length - 1],
-                    data: entry.name,
-                    category: extractCategoryFromPui(puiSegments).replace(/[\W_]+/g, "_"),
-                    tooltip: entry.name,
-                    columnDataType: entry.categorical ? "CATEGORICAL" : "CONTINUOUS",
-                    metadata: entry,
-                    parent: extractParentFromPui(puiSegments)
-                };
-        }).concat(_.map(response.genes, entry => {
-//            var puiSegments = ["Genes", entry.name]; //entry.name.split("\\").filter(function(seg){return seg.length > 0;});
-            return {
-                value: entry.name,
-                data: entry.name,
-                category: "Genes",
-                tooltip: entry.name,
-                columnDataType: "VARIANT",
-                metadata: entry,
-                parent: "Chromosome " + entry.chr
-            };
-        })).concat(_.map(_.keys(response.info), key => {
-            var entry = response.info[key];
-            entry.name = entry.description;
-	    return {
-                value: entry.description,
-                data: entry.description,
-                category: key,
-                tooltip: entry.description,
-                columnDataType: "INFO",
-                metadata: entry,
-                parent: "Variant Info"
-            };
-        })).sort(function(a, b) {
-            var indexOfTerm = a.value.toLowerCase().indexOf(query) - b.value.toLowerCase().indexOf(query);
-            var differenceInLength = a.value.length - b.value.length;
-            return (indexOfTerm * 1000) + differenceInLength;
-        })),function(element){
-        	if(queryScope.length == 0) {
-        		return true;
-        	}
-    		var scopeMatches = function(value){
-    			return element.metadata.name.startsWith(value) || element.category.startsWith(value);
-    		}
-    		//Check to see if element name (aka path) starts with any value defined in the query scope
-    		return _.some(queryScope, scopeMatches);
-    	});
-       
-        return result;
-    };
-
-    var searchCache = {};
 
     var counts = function(tree, allConcepts, crossCounts) {
         var total = 0;
@@ -115,31 +32,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
         return total + tree.children.length - folderCount;
     }
 
-    var autocomplete = function(query, done, resourceUUID) {
-
-        return search.dictionary(
-            query,
-            function(response) {
-                var result = mapResponseToResult(query, response.results, JSON.parse(sessionStorage.getItem("session")).queryScopes);
-                searchCache[query.toLowerCase()] = result;
-                done(result);
-            }.bind({
-                done: done
-            }),
-            function(response) {
-                if (!transportErrors.handleAll(response, "error in search.dictionary")) {
-                    searchCache[query.toLowerCase()] = [];
-                    done({
-                        suggestions: []
-                    });
-                }
-            },
-            resourceUUID
-            )
-    }.bind({
-        resourceMeta: resourceMeta
-    });
-
+    var autocomplete = search.query;
 
     var loadAllConceptsDeferred = function(){
     	allConceptsDeferred = $.Deferred();
@@ -186,30 +79,28 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
     var allInfoColumnsLoaded = overrides.loadAllInfoColumnsDeferred ? overrides.loadAllInfoColumnsDeferred() : loadAllInfoColumnsDeferred();
     
     var cachedTree;
-
-    // build query scope 
-    // scope filters export tree to authorized root nodes for applications using the the query scope feature.
-    var scope = [];
-
-    var scopes = JSON.parse(sessionStorage.getItem("session")).queryScopes;
-    if(scopes != undefined){
-        scopes.forEach(function(item, index) {
-            if ( item.length < 2 || !item.startsWith("\\")) {
-                scope.push(item);
-            } else if(item.length < 3){
-                scope.push(item.substr(1,2));
-            } else {
-                scope.push(item.substr(1,item.length - 2));
-            };
-        });
-    }
     
     var tree = function(consumer, crossCounts) {
         if (cachedTree) {
             counts(cachedTree, allConcepts, crossCounts);
             consumer(cachedTree);
         } else {
-            
+            // build query scope
+            // scope filters export tree to authorized root nodes for applications using the the query scope feature.
+            var scope = [];
+
+            var scopes = JSON.parse(sessionStorage.getItem("session")).queryScopes;
+            if(scopes != undefined){
+                scopes.forEach(function(item, index) {
+                    if ( item.length < 2 || !item.startsWith("\\")) {
+                        scope.push(item);
+                    } else if(item.length < 3){
+                        scope.push(item.substr(1,2));
+                    } else {
+                        scope.push(item.substr(1,item.length - 2));
+                    };
+                });
+            }
 
             allConceptsLoaded.then(function() {
                 var tree = {
@@ -271,7 +162,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
 
     return {
         tree: tree,
-        autocomplete: autocomplete,
+        // todo: is this being used anywhere?
         allConcepts: allConcepts_,
         allInfoColumns: allInfoColumns_,
         allInfoColumnsLoaded: allInfoColumnsLoaded

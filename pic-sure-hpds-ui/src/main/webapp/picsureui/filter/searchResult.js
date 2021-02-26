@@ -1,5 +1,5 @@
-define(["jquery", "backbone", "handlebars", "text!filter/searchResult.hbs", "picSure/ontology", "text!settings/settings.json"],
-    function($, BB, HBS, searchResultTemplate, ontology, settings){
+define(["jquery", "backbone", "handlebars", "text!filter/searchResult.hbs", "picSure/search", "text!settings/settings.json"],
+    function($, BB, HBS, searchResultTemplate, search, settings){
         var searchResultModel = BB.Model.extend({
 
         });
@@ -34,7 +34,7 @@ define(["jquery", "backbone", "handlebars", "text!filter/searchResult.hbs", "pic
                 var searchValue = data.pui.join("\\") + "\\" + data.text.trim();
 
     		    var deferredSearchResults = $.Deferred();
-    		    ontology.autocomplete(searchValue, deferredSearchResults.resolve);
+    		    search.autocomplete(searchValue, deferredSearchResults.resolve);
     		    $.when(deferredSearchResults).then(this.updateAnyRecordFilter);
 
     		    var valueType = "ANYRECORDOF";
