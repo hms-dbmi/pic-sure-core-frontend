@@ -1,5 +1,7 @@
-define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "overrides/ontology", "common/transportErrors"],
-		function($, _, settings, resourceMeta, overrides, transportErrors) {
+define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "overrides/ontology",
+        "picSure/search", "common/transportErrors"],
+		function($, _, settings, resourceMeta, overrides,
+                 search, transportErrors) {
 
     if (!sessionStorage.getItem("session")) {
         return {};
@@ -90,22 +92,6 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
 
     var searchCache = {};
 
-    var dictionary = function(query, success, error, resourceUUID) {
-        return $.ajax({
-            url: window.location.origin + '/picsure/search/' + resourceUUID,
-            data: JSON.stringify({
-                "query": query
-            }),
-            headers: {
-                "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
-            },
-            contentType: 'application/json',
-            type: 'POST',
-            success: success,
-            error: error,
-            dataType: "json"
-        });
-    };
     var counts = function(tree, allConcepts, crossCounts) {
         var total = 0;
         var folderCount = 0;
@@ -131,28 +117,17 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
 
     var autocomplete = function(query, done, resourceUUID) {
 
-        return dictionary(
+        return search.dictionary(
             query,
             function(response) {
-                $.ajax({
-                    url: window.location.origin + "/psama/user/me",
-                    type: 'GET',
-                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-                    contentType: 'application/json',
-                    success: function(meResponse){
-                        var result = mapResponseToResult(query, response.results, meResponse.queryScopes);
-                        searchCache[query.toLowerCase()] = result;
-                        done(result);
-                    }.bind(this),
-                    error: function(response){
-                        transportErrors.handleAll(response, "error retrieving user info");
-                    }.bind(this)
-                });
+                var result = mapResponseToResult(query, response.results, JSON.parse(sessionStorage.getItem("session")).queryScopes);
+                searchCache[query.toLowerCase()] = result;
+                done(result);
             }.bind({
                 done: done
             }),
             function(response) {
-                if (!transportErrors.handleAll(response, "error in dictionary")) {
+                if (!transportErrors.handleAll(response, "error in search.dictionary")) {
                     searchCache[query.toLowerCase()] = [];
                     done({
                         suggestions: []
@@ -168,7 +143,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
 
     var loadAllConceptsDeferred = function(){
     	allConceptsDeferred = $.Deferred();
-	    dictionary("\\", function(allConceptsRetrieved) {
+	    search.dictionary("\\", function(allConceptsRetrieved) {
 	        allConcepts = allConceptsRetrieved;
 	        allConceptsDeferred.resolve();
 	    }, {}, JSON.parse(settings).picSureResourceId);
@@ -216,29 +191,18 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
     // scope filters export tree to authorized root nodes for applications using the the query scope feature.
     var scope = [];
 
-    $.ajax({
-        url: window.location.origin + "/psama/user/me",
-        type: 'GET',
-        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-        contentType: 'application/json',
-        success: function(meResponse){
-            var scopes = meResponse.queryScopes;
-            if(scopes != undefined){
-	            scopes.forEach(function(item, index) {
-	                if ( item.length < 2 || !item.startsWith("\\")) {
-	                    scope.push(item);
-	                } else if(item.length < 3){
-	                    scope.push(item.substr(1,2));
-	                } else {
-	                    scope.push(item.substr(1,item.length - 2));
-	                };
-	            });
-            }
-        }.bind(this),
-        error: function(response){
-            transportErrors.handleAll(response, "error retrieving user info");
-        }.bind(this)
-    });
+    var scopes = JSON.parse(sessionStorage.getItem("session")).queryScopes;
+    if(scopes != undefined){
+        scopes.forEach(function(item, index) {
+            if ( item.length < 2 || !item.startsWith("\\")) {
+                scope.push(item);
+            } else if(item.length < 3){
+                scope.push(item.substr(1,2));
+            } else {
+                scope.push(item.substr(1,item.length - 2));
+            };
+        });
+    }
     
     var tree = function(consumer, crossCounts) {
         if (cachedTree) {
@@ -306,7 +270,6 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
     };
 
     return {
-        dictionary: dictionary,
         tree: tree,
         autocomplete: autocomplete,
         allConcepts: allConcepts_,

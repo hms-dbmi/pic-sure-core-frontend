@@ -1,9 +1,9 @@
 define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'text!login/login.hbs',
         'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login',
-        "picSure/settings"],
-		function(session, settings, parseQueryString, $, HBS, loginTemplate,
+        "picSure/settings", 'common/transportErrors'],
+		function(session, psamaSettings, parseQueryString, $, HBS, loginTemplate,
                  notAuthorizedTemplate, overrides, notification, fenceLogin,
-                 picSureSettings){
+                 picSureSettings, transportErrors){
 
 	var loginTemplate = HBS.compile(loginTemplate);
 
@@ -12,81 +12,48 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
 		loginCss = "<style>" + css + "</style";
 	});
 
-	var login = {
-		showLoginPage : function(){
-		    console.log("Auth0-showLoginPage()");
+	var showNormalLogin = function(){
+        console.log("Auth0-showLoginPage()");
 
-            var queryObject = parseQueryString();
-            if (queryObject.redirection_url) sessionStorage.redirection_url = queryObject.redirection_url.trim();
-            if (queryObject.not_authorized_url) sessionStorage.not_authorized_url = queryObject.not_authorized_url.trim();
-            var redirectURI = window.location.protocol
-                            + "//"+ window.location.hostname
-                            + (window.location.port ? ":"+window.location.port : "")
-                            + "/psamaui/login/";
-            if(typeof queryObject.access_token === "string"){
-                $.ajax({
-                    url: '/psama/authentication',
-                    type: 'post',
-                    data: JSON.stringify({
-                        access_token : queryObject.access_token,
-                        redirectURI: redirectURI
-                    }),
-                    contentType: 'application/json',
-                    success: function(data){
-                        session.authenticated(data.userId, data.token, data.email, data.permissions, data.acceptedTOS, this.handleNotAuthorizedResponse);
+        var queryObject = parseQueryString();
+        if (queryObject.redirection_url) sessionStorage.redirection_url = queryObject.redirection_url.trim();
+        if (queryObject.not_authorized_url) sessionStorage.not_authorized_url = queryObject.not_authorized_url.trim();
+        var redirectURI = window.location.protocol
+            + "//"+ window.location.hostname
+            + (window.location.port ? ":"+window.location.port : "")
+            + "/psamaui/login/";
+        if(typeof queryObject.access_token === "string"){
+            $.ajax({
+                url: '/psama/authentication',
+                type: 'post',
+                data: JSON.stringify({
+                    access_token : queryObject.access_token,
+                    redirectURI: redirectURI
+                }),
+                contentType: 'application/json',
+                success: this.sessionInit,
+                error: this.handleAuthenticationError
+            });
+        } else{
+            if (!overrides.client_id){
+                notification.showFailureMessage("Client_ID is not provided. Please update overrides/login.js file.");
+            }
+            var clientId = overrides.client_id;
 
-                        $.ajax({
-                            url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
-                            type: 'GET',
-                            headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-                            contentType: 'application/json',
-                            success: function (response) {
-                                var currentSession = JSON.parse(sessionStorage.getItem("session"));
-                                currentSession.queryTemplate = response.queryTemplate;
-                                sessionStorage.setItem("session", JSON.stringify(currentSession));
-
-                                if (data.acceptedTOS !== 'true'){
-                                    history.pushState({}, "", "/psamaui/tos");
-                                } else {
-                                    if (sessionStorage.redirection_url) {
-                                        window.location = sessionStorage.redirection_url;
-                                    }
-                                    else {
-                                        // todo: based on user
-                                        history.pushState({}, "", "/picsureui");
-                                    }
-                                }
-                            }.bind(this),
-                            error: function (response) {
-                                transportErrors.handleAll(response, "Cannot retrieve query template with status: " + response.status);
-                            }.bind(this)
-                        });
-                    }.bind(this),
-                    error: function(data){
-                        notification.showFailureMessage("Failed to authenticate with provider. Try again or contact administrator if error persists.")
-                        history.pushState({}, "", sessionStorage.not_authorized_url? sessionStorage.not_authorized_url : "/psamaui/not_authorized?redirection_url=/picsureui");
+            if (psamaSettings.customizeAuth0Login){
+                require.config({
+                    paths: {
+                        'auth0-js': "webjars/auth0.js/9.2.3/build/auth0"
+                    },
+                    shim: {
+                        "auth0-js": {
+                            deps:["jquery"],
+                            exports: "Auth0Lock"
+                        }
                     }
                 });
-            }else{
-                if (!overrides.client_id){
-                    notification.showFailureMessage("Client_ID is not provided. Please update overrides/login.js file.");
-                }
-                var clientId = overrides.client_id;
-
-                if (settings.customizeAuth0Login){
-                    require.config({
-                        paths: {
-                            'auth0-js': "webjars/auth0.js/9.2.3/build/auth0"
-                        },
-                        shim: {
-                            "auth0-js": {
-                                deps:["jquery"],
-                                exports: "Auth0Lock"
-                            }
-                        }
-                    });
-                    require(['auth0-js'], function(){
-                        $.ajax("https://avillachlab.us.webtask.io/connection_details_base64/?webtask_no_cache=1&client_id=" + clientId,
+                require(['auth0-js'], function(){
+                    $.ajax("https://avillachlab.us.webtask.io/connection_details_base64/?webtask_no_cache=1&client_id=" + clientId,
                         {
                             dataType: "text",
                             success : function(scriptResponse){
@@ -101,42 +68,96 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                                 $('#main-content').append(loginCss);
                             }
                         })
-                    });
+                });
 
 
-                } else {
-                    require.config({
-                        paths: {
-                            'auth0Lock': "webjars/auth0-lock/11.2.3/build/lock",
-                        },
-                        shim: {
-                            "auth0Lock": {
-                                deps:["jquery"],
-                                exports: "Auth0Lock"
-                            }
+            } else {
+                require.config({
+                    paths: {
+                        'auth0Lock': "webjars/auth0-lock/11.2.3/build/lock",
+                    },
+                    shim: {
+                        "auth0Lock": {
+                            deps:["jquery"],
+                            exports: "Auth0Lock"
                         }
-                    });
-                    require(['auth0Lock'], function(Auth0Lock){
-                        var lock = new Auth0Lock(
-                            clientId,
-                            settings.auth0domain + ".auth0.com",
-                            {
-                                auth: {
-                                    redirectUrl: redirectURI,
-                                    responseType: 'token',
-                                    params: {
-                                        scope: 'openid email' // Learn about scopes: https://auth0.com/docs/scopes
-                                    }
+                    }
+                });
+                require(['auth0Lock'], function(Auth0Lock){
+                    var lock = new Auth0Lock(
+                        clientId,
+                        psamaSettings.auth0domain + ".auth0.com",
+                        {
+                            auth: {
+                                redirectUrl: redirectURI,
+                                responseType: 'token',
+                                params: {
+                                    scope: 'openid email' // Learn about scopes: https://auth0.com/docs/scopes
                                 }
                             }
-                        );
-                        lock.show();
-                    });
-                }
+                        }
+                    );
+                    lock.show();
+                });
             }
-		},
+        }
+    };
+
+	var _sessionInit = function(data) {
+        session.authenticated(data.userId, data.token, data.email, data.permissions, data.acceptedTOS, this.handleNotAuthorizedResponse);
+        var queryTemplateRequest = function() {
+            return $.ajax({
+                url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
+                type: 'GET',
+                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                contentType: 'application/json'
+            });
+        };
+        var meRequest = function () {
+            return $.ajax({
+                url: window.location.origin + "/psama/user/me",
+                type: 'GET',
+                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                contentType: 'application/json'
+            });
+        };
+        $.when(queryTemplateRequest(), meRequest()).then(
+            function(queryTemplateResponse, meResponse) {
+                var currentSession = JSON.parse(sessionStorage.getItem("session"));
+                currentSession.queryTemplate = queryTemplateResponse[0].queryTemplate;
+                currentSession.queryScopes = meResponse[0].queryScopes;
+                sessionStorage.setItem("session", JSON.stringify(currentSession));
+
+                if (data.acceptedTOS !== 'true'){
+                    history.pushState({}, "", "/psamaui/tos");
+                } else {
+                    if (sessionStorage.redirection_url) {
+                        window.location = sessionStorage.redirection_url;
+                    }
+                    else {
+                        history.pushState({}, "", "/picsureui");
+                    }
+                }
+            }.bind(this),
+            function(queryTemplateResponse, meResponse) {
+                if (queryTemplateResponse[0].status !== 200)
+                    transportErrors.handleAll(queryTemplateResponse[0], "Cannot retrieve query template with status: " + queryTemplateResponse[0].status);
+                else
+                    transportErrors.handleAll(meResponse[0], "Cannot retrieve user with status: " + meResponse[0].status);
+            }
+        )
+    };
+
+	var _handleAuthenticationError = function(data){
+        notification.showFailureMessage("Failed to authenticate with provider. Try again or contact administrator if error persists.")
+        history.pushState({}, "", sessionStorage.not_authorized_url? sessionStorage.not_authorized_url : "/psamaui/not_authorized?redirection_url=/picsureui");
+    };
+
+	return {
+		showLoginPage : psamaSettings.idp_provider == "fence" ? fenceLogin.showLoginPage(_sessionInit, _handleAuthenticationError) : showNormalLogin,
+        sessionInit: _sessionInit,
         handleNotAuthorizedResponse : function () {
-            console.log("Auth0-handleNotAuthorizedResponse()");
+            console.log("handleNotAuthorizedResponse()");
 
             if (JSON.parse(sessionStorage.session).token) {
                 if (sessionStorage.not_authorized_url)
@@ -149,16 +170,16 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                 return null; //window.location = "/psamaui/logout" + window.location.search;
             }
         },
+        handleAuthenticationError: _handleAuthenticationError,
         displayNotAuthorized : function () {
-            console.log("Auth0-displayNotAuthorized()");
+            console.log("displayNotAuthorized()");
             if (overrides.displayNotAuthorized)
                 overrides.displayNotAuthorized()
             else {
                 sessionStorage.clear();
                 localStorage.clear();
-                $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:settings.helpLink}));
+                $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:psamaSettings.helpLink}));
             }
         }
-    };
-	return settings.idp_provider == "fence" ? fenceLogin : login;
+    }
 });

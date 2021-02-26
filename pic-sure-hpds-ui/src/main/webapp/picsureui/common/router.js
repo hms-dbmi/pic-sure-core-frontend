@@ -1,10 +1,10 @@
-define(["common/searchParser", "backbone", "common/session", "login/login", 'header/header', 'footer/footer','user/userManagement',
+define(["backbone", "common/session", "login/login", 'header/header', 'footer/footer','user/userManagement',
         'role/roleManagement', 'privilege/privilegeManagement', "application/applicationManagement",
         'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
         'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
         "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "text!../settings/settings.json",
         "picSure/ontology", "text!filter/searchHelpTooltip.hbs"],
-        function(searchParser, Backbone, session, login, header, footer, userManagement,
+        function(Backbone, session, login, header, footer, userManagement,
                 roleManagement, privilegeManagement, applicationManagement,
                 connectionManagement, tos, userFunctions,
                 HBS, accessRuleManagement, routerOverrides, filterList,
@@ -112,7 +112,7 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     appliMngmt.render();
                     $('#main-content').append(appliMngmt.$el);
                 } else {
-                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                    window.history.pushState({}, "", "/psamaui/not_authorized");
                 }
             });
 
@@ -127,7 +127,7 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     roleMngmt.render();
                     $('#main-content').append(roleMngmt.$el);
                 } else {
-                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                    window.history.pushState({}, "", "/psamaui/not_authorized");
                 }
             });
 
@@ -142,7 +142,7 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     privMngmt.render();
                     $('#main-content').append(privMngmt.$el);
                 } else {
-                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                    window.history.pushState({}, "", "/psamaui/not_authorized");
                 }
             });
         },
@@ -156,7 +156,7 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     accRuleMngmt.render();
                     $('#main-content').append(accRuleMngmt.$el);
                 } else {
-                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                    window.history.pushState({}, "", "/psamaui/not_authorized");
                 }
             });
         },
@@ -170,14 +170,15 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     connectionMngmt.render();
                     $('#main-content').append(connectionMngmt.$el);
                 } else {
-                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                    window.history.pushState({}, "", "/psamaui/not_authorized");
                 }
             });
 
         },
         displayQueryBuilder: function() {
             $('#main-content').empty();
-            $('#main-content').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
+            let parsedSettings = JSON.parse(settings);
+            $('#main-content').append(HBS.compile(layoutTemplate)(parsedSettings));
             // todo: move this somewhere else
             var renderHelpCallback = function(filterView) {
                 var renderHelp = function () {
@@ -198,12 +199,12 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     renderHelp();
                 }
             }
-            filterList.init(JSON.parse(settings).picSureResourceId, renderHelpCallback);
+            filterList.init(parsedSettings.picSureResourceId, renderHelpCallback);
             var outputPanel = output.View;
             outputPanel.render();
             $('#query-results').append(outputPanel.$el);
 
-            var query = queryBuilder.createQuery({}, JSON.parse(settings).picSureResourceId);
+            var query = queryBuilder.createQuery({}, parsedSettings.picSureResourceId);
             outputPanel.update(query);
         }
 
