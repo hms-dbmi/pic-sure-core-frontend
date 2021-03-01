@@ -100,7 +100,7 @@ define(["common/transportErrors"], function(transportErrors){
                 dataType: "json"
             });
         },
-        query: function(query, done, resourceUUID) {
+        execute: function(query, done, resourceUUID) {
             return this.dictionary(
                 query,
                 function(response) {

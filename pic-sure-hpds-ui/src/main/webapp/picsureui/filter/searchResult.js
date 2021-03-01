@@ -34,7 +34,7 @@ define(["jquery", "backbone", "handlebars", "text!filter/searchResult.hbs", "pic
                 var searchValue = data.pui.join("\\") + "\\" + data.text.trim();
 
     		    var deferredSearchResults = $.Deferred();
-    		    search.autocomplete(searchValue, deferredSearchResults.resolve);
+    		    search.execute(searchValue, deferredSearchResults.resolve);
     		    $.when(deferredSearchResults).then(this.updateAnyRecordFilter);
 
     		    var valueType = "ANYRECORDOF";

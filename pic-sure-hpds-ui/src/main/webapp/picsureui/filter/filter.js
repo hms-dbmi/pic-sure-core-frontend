@@ -105,7 +105,7 @@ define(["jquery", "picSure/search", "text!filter/searchHelpTooltip.hbs", "overri
 				var deferredSearchResults = $.Deferred();
 				
 				spinner.small(deferredSearchResults, "#spinner-div", "download-spinner")
-				search.autocomplete(term, deferredSearchResults.resolve, this.resourceUUID);
+				search.execute(term, deferredSearchResults.resolve, this.resourceUUID);
 				$.when(deferredSearchResults).then(this.showSearchResults);
 			}
 		},
