@@ -23,6 +23,9 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
             + (window.location.port ? ":"+window.location.port : "")
             + "/psamaui/login/";
         if(typeof queryObject.access_token === "string"){
+            if (overrides.waitingMessage) {
+                $('#main-content').html(overrides.waitingMessage);
+            }
             $.ajax({
                 url: '/psama/authentication',
                 type: 'post',

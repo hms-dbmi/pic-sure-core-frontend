@@ -29,6 +29,11 @@ define(["psamaSettings/settings", "handlebars", 'text!psamaui/overrides/not_auth
 		 * Example configuration: provide custom not_authorized.hbs template in overrides folder and render it similar manner
 		 * as login.displayNotAuthorized() function.
 		 */
-        displayNotAuthorized: undefined
+        displayNotAuthorized: undefined,
+		/*
+		 * An optional message to display in the main-content div while login is processing. This can be a string
+		 * containing html, it will be directly passed to $.html
+		 */
+		waitingMessage: undefined
     };
 });

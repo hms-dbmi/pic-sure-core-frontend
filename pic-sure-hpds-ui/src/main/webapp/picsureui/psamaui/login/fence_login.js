@@ -1,5 +1,5 @@
-define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs', 'login/login'],
-    function(psamaSettings, $, HBS, loginTemplate){
+define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs', 'psamaui/overrides/login'],
+    function(psamaSettings, $, HBS, loginTemplate, loginOverrides){
         var loginTemplate = HBS.compile(loginTemplate);
 
         return {
@@ -18,7 +18,9 @@ define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_logi
                     }
                     var code = params['code'];
                     if (code) {
-                        $('#main-content').html('DataStage authentication is successful. Processing UserProfile information...');
+                        if (loginOverrides.waitingMessage) {
+                            $('#main-content').html(loginOverrides.waitingMessage);
+                        }
 
                         $.ajax({
                             url: '/psama/authentication',
@@ -39,10 +41,12 @@ define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_logi
                                 "?response_type=code"+
                                 "&scope=user+openid"+
                                 "&client_id=" + psamaSettings.fence_client_id +
-                                "&redirect_uri="+psamaSettings.fence_redirect_url
+                                "&redirect_uri=" + window.location.protocol
+                                + "//"+ window.location.hostname
+                                + (window.location.port ? ":"+window.location.port : "")
+                                + "/psamaui/login/"
                         }));
                     }
-                    console.log("FENCE-showLoginPage() finished");
                 }
             }
         }
