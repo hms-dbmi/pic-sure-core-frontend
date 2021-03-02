@@ -56,7 +56,6 @@ define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ont
 
     var getInstance_ = function() {
         if (typeof instance === 'undefined') {
-            console.log("initializing ontology");
             var allConceptsLoaded = overrides.loadAllConceptsDeferred ? overrides.loadAllConceptsDeferred() : loadAllConceptsDeferred();
             var allInfoColumnsLoaded = overrides.loadAllInfoColumnsDeferred ? overrides.loadAllInfoColumnsDeferred() : loadAllInfoColumnsDeferred();
             instance = {
@@ -65,7 +64,6 @@ define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ont
                 allInfoColumns: allInfoColumns_,
                 allInfoColumnsLoaded: allInfoColumnsLoaded
             }
-            console.log("ontology initialized");
             return instance;
         }
         return instance;
