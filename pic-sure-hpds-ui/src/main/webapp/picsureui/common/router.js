@@ -181,23 +181,18 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             $('#main-content').append(HBS.compile(layoutTemplate)(parsedSettings));
             // todo: move this somewhere else
             var renderHelpCallback = function(filterView) {
-                var renderHelp = function () {
-                    ontology.allInfoColumnsLoaded.then(function(){
-                        $('.show-help-modal').click(function() {
-                            $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
-                            $('#modal-window', this.$el).tooltip();
-                            $(".close").click(function(){
-                                $("#search-help-modal").hide();
-                            });
-                            $("#search-help-modal").show();
+                console.log("Rendering help");
+                ontology.getInstance().allInfoColumnsLoaded.then(function(){
+                    $('.show-help-modal').click(function() {
+                        $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)(ontology.getInstance().allInfoColumns()));
+                        $('#modal-window', this.$el).tooltip();
+                        $(".close").click(function(){
+                            $("#search-help-modal").hide();
                         });
-                    }.bind(filterView));
-                }
-                if (typeof ontology.allInfoColumnsLoaded === 'undefined') {
-                    setTimeout(renderHelp, 100);
-                } else {
-                    renderHelp();
-                }
+                        $("#search-help-modal").show();
+                    });
+                }.bind(filterView));
+                console.log("Help rendered")
             }
             filterList.init(parsedSettings.picSureResourceId, renderHelpCallback);
             var outputPanel = output.View;

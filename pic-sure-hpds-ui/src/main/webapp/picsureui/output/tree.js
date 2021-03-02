@@ -5,7 +5,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ont
         var cachedTree;
         var tree = function(consumer, crossCounts) {
             if (cachedTree) {
-                counts(cachedTree, ontology.allConcepts, crossCounts);
+                counts(cachedTree, ontology.getInstance().allConcepts(), crossCounts);
                 consumer(cachedTree);
             } else {
                 // build query scope
@@ -25,7 +25,8 @@ define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ont
                     });
                 }
 
-                ontology.allConceptsLoaded.then(function() {
+                ontology.getInstance().allConceptsLoaded.then(function() {
+                    let allConcepts = ontology.getInstance().allConcepts();
                     var tree = {
                         text: "data",
                         state: {
@@ -35,7 +36,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ont
                         children: []
                     };
 
-                    _.each(_.keys(ontology.allConcepts.results.phenotypes), function(concept) {
+                    _.each(_.keys(allConcepts.results.phenotypes), function(concept) {
                         var segments = concept.split("\\");
                         var currentNode =  tree;
 
@@ -68,7 +69,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ont
 
                     });
 
-                    counts(tree, ontology.allConcepts, crossCounts);
+                    counts(tree, allConcepts, crossCounts);
                     consumer(tree);
                     cachedTree = JSON.parse(JSON.stringify(tree));
                 });

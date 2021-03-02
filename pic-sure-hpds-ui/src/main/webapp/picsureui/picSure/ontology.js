@@ -3,11 +3,8 @@ define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ont
 		function($, _, settings, overrides,
                  search) {
 
-    if (!sessionStorage.getItem("session")) {
-        return {};
-    }
-    var allConcepts;
-    var allInfoColumns;
+    var instance;
+    var allConcepts, allInfoColumns;
 
     var loadAllConceptsDeferred = function(){
     	allConceptsDeferred = $.Deferred();
@@ -17,16 +14,15 @@ define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ont
 	    }, {}, JSON.parse(settings).picSureResourceId);
 	    return allConceptsDeferred;
     }
-    
+
     var allInfoColumnsQuery = {
         resourceUUID: JSON.parse(settings).picSureResourceId,
         query: {
             expectedResultType: "INFO_COLUMN_LISTING"
         }
     };
-    
-    var loadAllInfoColumnsDeferred = function() {
 
+    var loadAllInfoColumnsDeferred = function() {
     	allinfoColumnsDeferred = $.Deferred();
         $.ajax({
             url: window.location.origin + "/picsure/query/sync",
@@ -46,13 +42,9 @@ define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ont
                 console.log(response);
             }.bind(this)
         });
-        
+
         return allinfoColumnsDeferred;
     }
-    
-    var allConceptsLoaded = overrides.loadAllConceptsDeferred ? overrides.loadAllConceptsDeferred() : loadAllConceptsDeferred();
-    var allInfoColumnsLoaded = overrides.loadAllInfoColumnsDeferred ? overrides.loadAllInfoColumnsDeferred() : loadAllInfoColumnsDeferred();
-
 
     var allInfoColumns_ = function() {
         return allInfoColumns;
@@ -62,10 +54,24 @@ define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ont
         return allConcepts;
     };
 
+    var getInstance_ = function() {
+        if (typeof instance === 'undefined') {
+            console.log("initializing ontology");
+            var allConceptsLoaded = overrides.loadAllConceptsDeferred ? overrides.loadAllConceptsDeferred() : loadAllConceptsDeferred();
+            var allInfoColumnsLoaded = overrides.loadAllInfoColumnsDeferred ? overrides.loadAllInfoColumnsDeferred() : loadAllInfoColumnsDeferred();
+            instance = {
+                allConcepts: allConcepts_,
+                allConceptsLoaded: allConceptsLoaded,
+                allInfoColumns: allInfoColumns_,
+                allInfoColumnsLoaded: allInfoColumnsLoaded
+            }
+            console.log("ontology initialized");
+            return instance;
+        }
+        return instance;
+    };
+
     return {
-        allConcepts: allConcepts_,
-        allConceptsLoaded: allConceptsLoaded,
-        allInfoColumns: allInfoColumns_,
-        allInfoColumnsLoaded: allInfoColumnsLoaded
+        getInstance: getInstance_
     };
 });
