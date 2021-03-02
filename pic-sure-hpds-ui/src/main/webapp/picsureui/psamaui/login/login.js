@@ -34,8 +34,8 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                     redirectURI: redirectURI
                 }),
                 contentType: 'application/json',
-                success: this.sessionInit,
-                error: this.handleAuthenticationError
+                success: sessionInit,
+                error: handleAuthenticationError
             });
         } else{
             if (!overrides.client_id){
@@ -106,29 +106,16 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
         }
     };
 
-	var _sessionInit = function(data) {
+    var sessionInit = function(data) {
         session.authenticated(data.userId, data.token, data.email, data.permissions, data.acceptedTOS, this.handleNotAuthorizedResponse);
-        var queryTemplateRequest = function() {
-            return $.ajax({
-                url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
-                type: 'GET',
-                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-                contentType: 'application/json'
-            });
-        };
-        var meRequest = function () {
-            return $.ajax({
-                url: window.location.origin + "/psama/user/me",
-                type: 'GET',
-                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-                contentType: 'application/json'
-            });
-        };
-        $.when(queryTemplateRequest(), meRequest()).then(
-            function(queryTemplateResponse, meResponse) {
+        $.ajax({
+            url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
+            type: 'GET',
+            headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+            contentType: 'application/json',
+            success: function(queryTemplateResponse) {
                 var currentSession = JSON.parse(sessionStorage.getItem("session"));
-                currentSession.queryTemplate = queryTemplateResponse[0].queryTemplate;
-                currentSession.queryScopes = meResponse[0].queryScopes;
+                currentSession.queryTemplate = queryTemplateResponse.queryTemplate;
                 sessionStorage.setItem("session", JSON.stringify(currentSession));
 
                 if (data.acceptedTOS !== 'true'){
@@ -142,23 +129,19 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                     }
                 }
             }.bind(this),
-            function(queryTemplateResponse, meResponse) {
-                if (queryTemplateResponse[0].status !== 200)
-                    transportErrors.handleAll(queryTemplateResponse[0], "Cannot retrieve query template with status: " + queryTemplateResponse[0].status);
-                else
-                    transportErrors.handleAll(meResponse[0], "Cannot retrieve user with status: " + meResponse[0].status);
+            error: function(queryTemplateResponse) {
+                transportErrors.handleAll(queryTemplateResponse, "Cannot retrieve query template with status: " + queryTemplateResponse.status);
             }
-        )
+        });
     };
 
-	var _handleAuthenticationError = function(data){
+	var handleAuthenticationError = function(data){
         notification.showFailureMessage("Failed to authenticate with provider. Try again or contact administrator if error persists.")
         history.pushState({}, "", sessionStorage.not_authorized_url? sessionStorage.not_authorized_url : "/psamaui/not_authorized?redirection_url=/picsureui");
     };
 
 	return {
-		showLoginPage : psamaSettings.idp_provider == "fence" ? fenceLogin.showLoginPage(_sessionInit, _handleAuthenticationError) : showNormalLogin,
-        sessionInit: _sessionInit,
+		showLoginPage : psamaSettings.idp_provider == "fence" ? fenceLogin.showLoginPage(handleAuthenticationError) : showNormalLogin,
         handleNotAuthorizedResponse : function () {
             console.log("handleNotAuthorizedResponse()");
 
@@ -173,7 +156,6 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                 return null; //window.location = "/psamaui/logout" + window.location.search;
             }
         },
-        handleAuthenticationError: _handleAuthenticationError,
         displayNotAuthorized : function () {
             console.log("displayNotAuthorized()");
             if (overrides.displayNotAuthorized)

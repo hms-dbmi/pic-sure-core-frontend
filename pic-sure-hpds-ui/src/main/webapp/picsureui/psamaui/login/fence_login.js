@@ -1,9 +1,56 @@
-define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs', 'psamaui/overrides/login'],
-    function(psamaSettings, $, HBS, loginTemplate, loginOverrides){
+define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_login.hbs', 'psamaui/overrides/login',
+        'common/session', 'picSure/settings', 'common/transportErrors'],
+    function(psamaSettings, $, HBS, loginTemplate, loginOverrides,
+             session, picSureSettings, transportErrors){
         var loginTemplate = HBS.compile(loginTemplate);
 
+        var sessionInit = function(data) {
+            session.authenticated(data.userId, data.token, data.email, data.permissions, data.acceptedTOS, this.handleNotAuthorizedResponse);
+            var queryTemplateRequest = function() {
+                return $.ajax({
+                    url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
+                    type: 'GET',
+                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                    contentType: 'application/json'
+                });
+            };
+            var meRequest = function () {
+                return $.ajax({
+                    url: window.location.origin + "/psama/user/me",
+                    type: 'GET',
+                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                    contentType: 'application/json'
+                });
+            };
+            $.when(queryTemplateRequest(), meRequest()).then(
+                function(queryTemplateResponse, meResponse) {
+                    var currentSession = JSON.parse(sessionStorage.getItem("session"));
+                    currentSession.queryTemplate = queryTemplateResponse[0].queryTemplate;
+                    currentSession.queryScopes = meResponse[0].queryScopes;
+                    sessionStorage.setItem("session", JSON.stringify(currentSession));
+
+                    if (data.acceptedTOS !== 'true'){
+                        history.pushState({}, "", "/psamaui/tos");
+                    } else {
+                        if (sessionStorage.redirection_url) {
+                            window.location = sessionStorage.redirection_url;
+                        }
+                        else {
+                            history.pushState({}, "", "/picsureui");
+                        }
+                    }
+                }.bind(this),
+                function(queryTemplateResponse, meResponse) {
+                    if (queryTemplateResponse[0].status !== 200)
+                        transportErrors.handleAll(queryTemplateResponse[0], "Cannot retrieve query template with status: " + queryTemplateResponse[0].status);
+                    else
+                        transportErrors.handleAll(meResponse[0], "Cannot retrieve user with status: " + meResponse[0].status);
+                }
+            )
+        };
+
         return {
-            showLoginPage : function(sessionInitCallback, handleAuthenticationErrorCallback){
+            showLoginPage : function(handleAuthenticationErrorCallback){
                 return function () {
                     // Check if the `code` parameter is set in the URL, as it would be, when
                     // FENCE redirects back after authentication.
@@ -29,7 +76,7 @@ define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_logi
                                 code: code
                             }),
                             contentType: 'application/json',
-                            success: sessionInitCallback,
+                            success: sessionInit,
                             error: handleAuthenticationErrorCallback
                         });
                     } else {
