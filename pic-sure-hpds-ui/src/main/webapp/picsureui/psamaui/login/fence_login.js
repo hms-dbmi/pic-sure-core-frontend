@@ -32,11 +32,11 @@ define(['psamaSettings/settings', 'jquery', 'handlebars', 'text!login/fence_logi
                     if (data.acceptedTOS !== 'true'){
                         history.pushState({}, "", "/psamaui/tos");
                     } else {
-                        if (sessionStorage.redirection_url) {
+                        if (sessionStorage.redirection_url && sessionStorage.redirection_url !== 'undefined') {
                             window.location = sessionStorage.redirection_url;
                         }
                         else {
-                            history.pushState({}, "", "/picsureui");
+                            history.pushState({}, "", "/picsureui/");
                         }
                     }
                 }.bind(this),

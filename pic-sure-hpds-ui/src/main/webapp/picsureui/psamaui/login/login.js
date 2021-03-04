@@ -141,6 +141,7 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
     };
 
 	return {
+	    // make override, remove fence setting
 		showLoginPage : psamaSettings.idp_provider == "fence" ? fenceLogin.showLoginPage(handleAuthenticationError) : showNormalLogin,
         handleNotAuthorizedResponse : function () {
             console.log("handleNotAuthorizedResponse()");
