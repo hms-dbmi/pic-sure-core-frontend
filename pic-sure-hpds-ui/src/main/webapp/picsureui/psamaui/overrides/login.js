@@ -34,6 +34,11 @@ define(["psamaSettings/settings", "handlebars", 'text!psamaui/overrides/not_auth
 		 * An optional message to display in the main-content div while login is processing. This can be a string
 		 * containing html, it will be directly passed to $.html
 		 */
-		waitingMessage: undefined
+		waitingMessage: undefined,
+		/**
+		 * Allows overriding of showing the login page. This function also handles the response from the login page.
+		 * See login/login.js for example
+		 */
+		showLoginPage: undefined
     };
 });

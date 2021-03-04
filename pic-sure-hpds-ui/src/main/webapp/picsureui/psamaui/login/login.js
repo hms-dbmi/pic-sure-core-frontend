@@ -1,8 +1,8 @@
 define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'text!login/login.hbs',
-        'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login',
+        'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification',
         "picSure/settings", 'common/transportErrors'],
 		function(session, psamaSettings, parseQueryString, $, HBS, loginTemplate,
-                 notAuthorizedTemplate, overrides, notification, fenceLogin,
+                 notAuthorizedTemplate, overrides, notification,
                  picSureSettings, transportErrors){
 
 	var loginTemplate = HBS.compile(loginTemplate);
@@ -141,8 +141,7 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
     };
 
 	return {
-	    // make override, remove fence setting
-		showLoginPage : psamaSettings.idp_provider == "fence" ? fenceLogin.showLoginPage(handleAuthenticationError) : showNormalLogin,
+		showLoginPage : overrides.showLoginPage ? overrides.showLoginPage : showNormalLogin,
         handleNotAuthorizedResponse : function () {
             console.log("handleNotAuthorizedResponse()");
 
