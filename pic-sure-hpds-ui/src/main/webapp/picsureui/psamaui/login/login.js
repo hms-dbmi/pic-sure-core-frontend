@@ -125,7 +125,7 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                         window.location = sessionStorage.redirection_url;
                     }
                     else {
-                        history.pushState({}, "", "/picsureui");
+                        window.location = "/picsureui/queryBuilder"
                     }
                 }
             }.bind(this),
