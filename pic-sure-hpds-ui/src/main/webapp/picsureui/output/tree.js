@@ -100,7 +100,8 @@ define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ont
         }
 
         return {
-            getInstance: tree
+            // rename update tree or something
+            updateTree: tree
         }
 
     }

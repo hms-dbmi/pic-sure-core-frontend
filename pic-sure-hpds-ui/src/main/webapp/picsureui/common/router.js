@@ -179,6 +179,14 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             $('#main-content').empty();
             let parsedSettings = JSON.parse(settings);
             $('#main-content').append(HBS.compile(layoutTemplate)(parsedSettings));
+
+            var outputPanelView = output.View;
+            outputPanelView.render();
+            $('#query-results').append(outputPanelView.$el);
+
+            var query = queryBuilder.createQuery({}, parsedSettings.picSureResourceId);
+            outputPanelView.update(query);
+
             // todo: move this somewhere else
             var renderHelpCallback = function(filterView) {
                 ontology.getInstance().allInfoColumnsLoaded.then(function(){
@@ -192,13 +200,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
                     });
                 }.bind(filterView));
             }
-            filterList.init(parsedSettings.picSureResourceId, renderHelpCallback);
-            var outputPanel = output.View;
-            outputPanel.render();
-            $('#query-results').append(outputPanel.$el);
-
-            var query = queryBuilder.createQuery({}, parsedSettings.picSureResourceId);
-            outputPanel.update(query);
+            filterList.init(parsedSettings.picSureResourceId, outputPanelView, renderHelpCallback);
         }
 
 

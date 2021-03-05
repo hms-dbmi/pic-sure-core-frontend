@@ -214,9 +214,9 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 				this.$el.html(this.template(this.settings));
 
 				spinner.small(
-					// tree.getInstance builds a tree of json objects, and passes it to the innter function which is
+					// tree.updateTree builds a tree of json objects, and passes it to the innter function which is
 					// responsible for rendering the elements.
-					tree.getInstance(function(tree){
+					tree.updateTree(function(tree){
 						//order export tree according to settings category selections
 						//look up the category indices once, so we don't spin through this array constantly.
 						var catIndices = {};
