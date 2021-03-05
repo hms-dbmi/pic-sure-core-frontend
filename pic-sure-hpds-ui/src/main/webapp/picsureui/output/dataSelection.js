@@ -1,5 +1,5 @@
-define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataSelection.hbs", "jstree", "picSure/ontology", "text!../settings/settings.json", "overrides/outputPanel", "common/transportErrors" ],
-		function($, spinner, BB, HBS, template, jstree, ontology, settings, outputOverride, transportErrors){
+define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataSelection.hbs", "jstree", "output/tree", "text!../settings/settings.json", "overrides/outputPanel", "common/transportErrors" ],
+		function($, spinner, BB, HBS, template, jstree, tree, settings, outputOverride, transportErrors){
 			//don't need to reference jstree, just need to load it.
 		return BB.View.extend({
 			template: HBS.compile(template),
@@ -214,9 +214,9 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 				this.$el.html(this.template(this.settings));
 
 				spinner.small(
-					// ontology.tree builds a tree of json objects, and passes it to the innter function which is
+					// tree.updateTree builds a tree of json objects, and passes it to the innter function which is
 					// responsible for rendering the elements.
-					ontology.tree(function(tree){
+					tree.updateTree(function(tree){
 						//order export tree according to settings category selections
 						//look up the category indices once, so we don't spin through this array constantly.
 						var catIndices = {};
