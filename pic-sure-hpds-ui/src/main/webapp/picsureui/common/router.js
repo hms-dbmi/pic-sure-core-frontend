@@ -180,7 +180,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             let parsedSettings = JSON.parse(settings);
             $('#main-content').append(HBS.compile(layoutTemplate)(parsedSettings));
 
-            var outputPanelView = output.View;
+            var outputPanelView = new output.View({model: new output.Model()});
             outputPanelView.render();
             $('#query-results').append(outputPanelView.$el);
 
