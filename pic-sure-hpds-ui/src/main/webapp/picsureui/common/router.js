@@ -22,12 +22,10 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             "psamaui/privilegeManagement(/)" : "displayPrivilegeManagement",
             "psamaui/applicationManagement(/)" : "displayApplicationManagement",
             "psamaui/accessRuleManagement(/)" : "displayAccessRuleManagement",
-            "picsureui/queryBuilder" : "displayQueryBuilder",
-            "picsureui/" : "displayQueryBuilder",
+            "picsureui/queryBuilder(/)" : "displayQueryBuilder",
             "picsureui/not_authorized(/)" : "not_authorized",
-
             // This path must be last in the list
-            "*path" : "displayQueryBuilder"
+            "*path" : "defaultAction"
         },
         initialize: function(){
             for (const routeOverride in routerOverrides.routes) {
@@ -201,6 +199,14 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
                 }.bind(filterView));
             }
             filterList.init(parsedSettings.picSureResourceId, outputPanelView, renderHelpCallback);
+        },
+        defaultAction: function() {
+            console.log("Default action");
+            if (routerOverrides.defaultAction)
+                routerOverrides.defaultAction();
+            else {
+                this.displayQueryBuilder();
+            }
         }
 
 
