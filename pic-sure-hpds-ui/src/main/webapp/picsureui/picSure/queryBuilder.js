@@ -115,6 +115,7 @@ define(["underscore"],
 
 
 	return {
-		createQuery:createQuery
+		createQuery:createQuery,
+		generateQuery: generateQuery
 	}
 });

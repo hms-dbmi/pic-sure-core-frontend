@@ -198,7 +198,9 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
                     });
                 }.bind(filterView));
             }
-            filterList.init(parsedSettings.picSureResourceId, outputPanelView, renderHelpCallback);
+
+            var parsedSess = JSON.parse(sessionStorage.getItem("session"));
+            filterList.init(parsedSettings.picSureResourceId, outputPanelView, renderHelpCallback, JSON.parse(parsedSess.queryTemplate));
         },
         defaultAction: function() {
             console.log("Default action");
