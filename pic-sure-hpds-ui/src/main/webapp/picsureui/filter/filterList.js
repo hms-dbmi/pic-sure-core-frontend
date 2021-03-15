@@ -1,12 +1,13 @@
 define(["jquery","picSure/queryBuilder", "filter/filter"],
 		function($, queryBuilder, filter){
 	var filterList = {
-		init : function(resourceUUID, outputPanelView, renderHelpCallback){
+		init : function(resourceUUID, outputPanelView, renderHelpCallback, queryTemplate){
 			$('#filter-list').html();
 			this.filters = [];
 			this.resourceUUID = resourceUUID;
 			this.renderHelpCallback = renderHelpCallback;
 			this.outputPanelView = outputPanelView;
+			this.queryTemplate = queryTemplate;
 			this.addFilter();
 		}
 	};
@@ -46,8 +47,8 @@ define(["jquery","picSure/queryBuilder", "filter/filter"],
 		$('#filter-list').append(grouped.unsaved);*/
 	}.bind(filterList);
 	filterList.runQuery = function(){
-		var query = queryBuilder.createQuery(
-				_.pluck(this.filters, "model"), this.resourceUUID);
+		var query = queryBuilder.generateQuery(
+				_.pluck(this.filters, "model"), this.queryTemplate, this.resourceUUID);
 		this.outputPanelView.update(query);
 		if(_.countBy(this.filters, function(filter){
 			return $(".search-box", filter.$el).is(":visible") ? "visible" : "hidden";
