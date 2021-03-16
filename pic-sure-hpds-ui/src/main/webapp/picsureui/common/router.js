@@ -182,7 +182,9 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             outputPanelView.render();
             $('#query-results').append(outputPanelView.$el);
 
-            var query = queryBuilder.createQuery({}, parsedSettings.picSureResourceId);
+            var parsedSess = JSON.parse(sessionStorage.getItem("session"));
+
+            var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), parsedSettings.picSureResourceId);
             outputPanelView.update(query);
 
             // todo: move this somewhere else
@@ -198,7 +200,8 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
                     });
                 }.bind(filterView));
             }
-            filterList.init(parsedSettings.picSureResourceId, outputPanelView, renderHelpCallback);
+
+            filterList.init(parsedSettings.picSureResourceId, outputPanelView, renderHelpCallback, JSON.parse(parsedSess.queryTemplate));
         },
         defaultAction: function() {
             console.log("Default action");
