@@ -1,4 +1,4 @@
-define(["common/transportErrors"], function(transportErrors){
+define(["common/transportErrors", "overrides/search.js"], function(transportErrors, overrides){
 
     /*
      * A function that takes a PUI that is already split on forward slash and returns
@@ -17,6 +17,13 @@ define(["common/transportErrors"], function(transportErrors){
     };
 
     var searchCache = {};
+    
+    //provide default sort implementation
+    var orderResults = overrides.orderResults ? overrides.orderResults : function(searchterm, a, b){
+        var indexOfTerm = a.value.toLowerCase().indexOf(searchterm) - b.value.toLowerCase().indexOf(searchterm);
+        var differenceInLength = a.value.length - b.value.length;
+        return (indexOfTerm * 1000) + differenceInLength;
+    }
 
     var mapResponseToResult = function(query, response, incomingQueryScope) {
         //lowercase for consistent comparisons
@@ -66,9 +73,7 @@ define(["common/transportErrors"], function(transportErrors){
                 parent: "Variant Info"
             };
         })).sort(function(a, b) {
-            var indexOfTerm = a.value.toLowerCase().indexOf(query) - b.value.toLowerCase().indexOf(query);
-            var differenceInLength = a.value.length - b.value.length;
-            return (indexOfTerm * 1000) + differenceInLength;
+        	return orderResults(query, a, b);
         })),function(element){
             if(queryScope.length == 0) {
                 return true;

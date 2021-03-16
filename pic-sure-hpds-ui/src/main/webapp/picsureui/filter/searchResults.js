@@ -79,6 +79,10 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 							filterView: filterView,
 						}));
 					} );
+					
+					//TODO check to see if the key matches and render a result with all the options
+					
+					
 				} else {			
 					categorySearchResultViews.push( new searchResult.View({
 						queryCallback : queryCallback,
@@ -111,6 +115,9 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 				return true; //then we don't need to worry about doing the subcategory work.
 			}
 
+			
+			
+			
 			_.each(categorySearchResultViews, function(newSearchResultRow){
         //something is a little janky here, as we are seeing a funny 'description' string in the value field
 				// for gene info columns.  lets fix it.
