@@ -115,6 +115,8 @@ define(["underscore"],
 
 
 	return {
-		createQuery:createQuery
+		// TODO: update tests to test generateQuery and remove createQuery
+		createQuery:createQuery,
+		generateQuery: generateQuery
 	}
 });
