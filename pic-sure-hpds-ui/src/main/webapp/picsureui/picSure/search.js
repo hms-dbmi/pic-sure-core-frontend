@@ -19,7 +19,7 @@ define(["common/transportErrors", "overrides/search.js"], function(transportErro
     var searchCache = {};
     
     //provide default sort implementation
-    var orderResults = overrides.orderResults ? overrides.orderResults : function(searchterm, a, b){
+    var orderResults = (overrides && overrides.orderResults) ? overrides.orderResults : function(searchterm, a, b){
         var indexOfTerm = a.value.toLowerCase().indexOf(searchterm) - b.value.toLowerCase().indexOf(searchterm);
         var differenceInLength = a.value.length - b.value.length;
         return (indexOfTerm * 1000) + differenceInLength;
