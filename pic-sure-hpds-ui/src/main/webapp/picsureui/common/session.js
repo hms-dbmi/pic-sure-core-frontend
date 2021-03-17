@@ -38,9 +38,8 @@ define(["jquery", "underscore", "common/styles"], function($, _){
 			sessionStorage.setItem("session", JSON.stringify(session));
 			configureAjax(callback);
 		},
-		isValid : function(callback){
+		isValid : function(){
 			if(session.username){
-				configureAjax(callback);
 				return session.username;
 			}else{
 				return false;

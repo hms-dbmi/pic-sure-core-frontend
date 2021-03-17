@@ -10,6 +10,8 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
                 HBS, accessRuleManagement, routerOverrides, filterList,
                  layoutTemplate, queryBuilder, output, settings,
                  ontology, searchHelpTooltipTemplate){
+
+        var publicRoutes = ["not_authorized", "login", "logout"];
         var Router = Backbone.Router.extend({
         routes: {
             "psamaui/userManagement(/)" : "displayUserManagement",
@@ -44,13 +46,11 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             }.bind({router:this});
         },
        execute: function(callback, args, name){
-            if ( name === 'not_authorized' ){
+            if (publicRoutes.includes(name)){
                 callback.apply(this, args);
             } else {
-                if ( ! session.isValid(login.handleNotAuthorizedResponse)){
-                    this.login();
-                    this.renderHeaderAndFooter();
-                    return false;
+                if (!session.isValid()){
+                    history.pushState({}, "", "/psamaui/login");
                 }
                 if (!session.acceptedTOS() && name !== 'displayTOS'){
                     history.pushState({}, "", "/psamaui/tos");
@@ -67,7 +67,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         logout : function(){
             sessionStorage.clear();
             localStorage.clear();
-            window.location = "/psamaui/logout";
+            window.location = "/psamaui/login";
         },
         not_authorized : function(){
             login.displayNotAuthorized();
