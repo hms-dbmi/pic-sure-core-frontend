@@ -22,10 +22,24 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 		}
 		var keys = _.keys(data);
 		var aliases = [];
+		var aliasObjects = {}
 		keys.forEach((key) => {
 			var alias = getAliasName(key)
 			if(aliases.indexOf(alias) == -1){
 				aliases.push(alias);
+			}
+			var aliasObj = aliasObjects[alias];
+			if(aliasObj){
+				if(!aliasOb[key]){
+					aliasObj[key] = true;
+					aliasObj.tooltip = aliasObj.tooltip + "\n" + "-----------------------------------" + key;
+				}
+			} else {
+				aliasObj = {
+						alias: alias,
+						tooltip: key
+				}
+				aliasObj[key] = true;
 			}
 		});
 		
@@ -35,7 +49,7 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 		filterView.$el.hide();
  		$('.search-tabs', filterView.$el).append(this.searchResultTabs(
  				{filterId: filterView.model.attributes.filterId,
- 				 aliases: aliases}	));
+ 				 aliases: aliasObjects}	));
 		
  		var categorySearchResultsByAlias = {};
 		keys.forEach((key) => {
