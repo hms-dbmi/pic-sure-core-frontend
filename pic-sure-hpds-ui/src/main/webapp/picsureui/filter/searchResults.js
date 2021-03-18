@@ -30,7 +30,7 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 			}
 			var aliasObj = aliasObjects[alias];
 			if(aliasObj){
-				if(!aliasOb[key]){
+				if(!aliasObj[key]){
 					aliasObj[key] = true;
 					aliasObj.tooltip = aliasObj.tooltip + "\n" + "-----------------------------------" + key;
 				}
@@ -40,6 +40,7 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 						tooltip: key
 				}
 				aliasObj[key] = true;
+				aliasObjects[alias] = aliasObj;
 			}
 		});
 		
