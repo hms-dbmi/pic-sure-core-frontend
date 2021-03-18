@@ -13,7 +13,9 @@ define(["jquery", "studyAccess/studyAccess", "common/session"],
                 hasError = true;
             }
             console.error(message);
-            history.pushState({}, "Unexpected Error", "/picsureui/unexpected_error");
+            if(!message){
+                history.pushState({}, "Unexpected Error", "/picsureui/unexpected_error");
+            }
             return hasError;
         }.bind(transportErrorHandlers);
 
