@@ -12,7 +12,7 @@ define(["jquery", "studyAccess/studyAccess", "common/session"],
                 console.debug("Captured HTTP 401 response");
                 hasError = true;
             }
-            console.error(message);
+            console.log(message);
             if(!message){
                 history.pushState({}, "Unexpected Error", "/picsureui/unexpected_error");
             }
