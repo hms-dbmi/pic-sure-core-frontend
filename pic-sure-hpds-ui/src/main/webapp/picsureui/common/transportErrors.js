@@ -24,10 +24,10 @@ define(["jquery", "studyAccess/studyAccess", "common/session"],
             if (redirectionUrl === false) redirectionUrl = this.redirectionUrl;
             if (response.status === 401) {
                 if (this.session.isValid()) {
+                    history.pushState({}, "Not Authorized", "/psamaui/not_authorized");
+                } else {
                     sessionStorage.clear();
                     history.pushState({}, "Login", redirectionUrl);
-                } else {
-                    history.pushState({}, "Not Authorized", "/psamaui/not_authorized");
                 }
             }
             return false;
