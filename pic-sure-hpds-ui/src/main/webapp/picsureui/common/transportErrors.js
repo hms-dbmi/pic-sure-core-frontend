@@ -6,12 +6,14 @@ define(["jquery", "studyAccess/studyAccess", "common/session"],
 
         transportErrorHandlers.redirectionUrl = "/psamaui/login?redirection_url=/picsureui/";
 
-        transportErrorHandlers.handleAll = function (response) {
+        transportErrorHandlers.handleAll = function (response, message) {
             var hasError = false;
             if (this.handle401(response)) {
                 console.debug("Captured HTTP 401 response");
                 hasError = true;
             }
+            console.error(message);
+            history.pushState({}, "Unexpected Error", "/picsureui/unexpected_error");
             return hasError;
         }.bind(transportErrorHandlers);
 

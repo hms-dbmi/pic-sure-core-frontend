@@ -3,13 +3,13 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
         'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
         "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "text!../settings/settings.json",
-        "picSure/ontology", "text!filter/searchHelpTooltip.hbs"],
+        "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "text!common/unexpected_error.hbs"],
         function(Backbone, session, login, header, footer, userManagement,
                 roleManagement, privilegeManagement, applicationManagement,
                 connectionManagement, tos, userFunctions,
                 HBS, accessRuleManagement, routerOverrides, filterList,
                  layoutTemplate, queryBuilder, output, settings,
-                 ontology, searchHelpTooltipTemplate){
+                 ontology, searchHelpTooltipTemplate, unexpectedErrorTemplate){
 
         var publicRoutes = ["not_authorized", "login", "logout"];
         var Router = Backbone.Router.extend({
@@ -26,6 +26,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             "psamaui/accessRuleManagement(/)" : "displayAccessRuleManagement",
             "picsureui/queryBuilder(/)" : "displayQueryBuilder",
             "picsureui/not_authorized(/)" : "not_authorized",
+            "picsureui/unexpected_error(/)" : "unexpected_error",
             // This path must be last in the list
             "*path" : "defaultAction"
         },
@@ -44,6 +45,9 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
                 }
                 return pushState.apply(history, arguments);
             }.bind({router:this});
+            this.settings = JSON.parse(settings);
+            this.layoutTemplate = HBS.compile(layoutTemplate);
+            this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
         },
        execute: function(callback, args, name){
             if (publicRoutes.includes(name)){
@@ -71,6 +75,10 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         },
         not_authorized : function(){
             login.displayNotAuthorized();
+        },
+        unexpected_error : function(){
+            $('#main-content').empty();
+            $('#main-content').html(this.unexpectedErrorTemplate(this.settings))
         },
         renderHeaderAndFooter: function(){
             if ($('#header-content').is(':empty')) {
@@ -175,8 +183,8 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         },
         displayQueryBuilder: function() {
             $('#main-content').empty();
-            let parsedSettings = JSON.parse(settings);
-            $('#main-content').append(HBS.compile(layoutTemplate)(parsedSettings));
+            let parsedSettings = this.settings;
+            $('#main-content').append(this.layoutTemplate(parsedSettings));
 
             var outputPanelView = new output.View({model: new output.Model()});
             outputPanelView.render();
