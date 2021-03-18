@@ -1,4 +1,4 @@
-define(["jquery", "backbone", "handlebars", "text!filter/searchResult.hbs", "picSure/search", "text!settings/settings.json"],
+define(["jquery", "backbone", "handlebars", "text!filter/searchResult.hbs", "picSure/search", "text!settings/settings.json", "treeview"],
     function($, BB, HBS, searchResultTemplate, search, settings){
         var searchResultModel = BB.Model.extend({
 
@@ -34,7 +34,7 @@ define(["jquery", "backbone", "handlebars", "text!filter/searchResult.hbs", "pic
                 var searchValue = data.pui.join("\\") + "\\" + data.text.trim();
 
     		    var deferredSearchResults = $.Deferred();
-    		    search.execute(searchValue, deferredSearchResults.resolve);
+                    search.execute(searchValue, deferredSearchResults.resolve, this.filterView.resourceUUID);
     		    $.when(deferredSearchResults).then(this.updateAnyRecordFilter);
 
     		    var valueType = "ANYRECORDOF";
