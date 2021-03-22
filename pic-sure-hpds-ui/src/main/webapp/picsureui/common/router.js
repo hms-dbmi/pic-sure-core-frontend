@@ -54,7 +54,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
                 callback.apply(this, args);
             } else {
                 if (!session.isValid()){
-                    history.pushState({}, "", "/psamaui/login");
+                    history.pushState({}, "", "/psamaui/logout");
                 }
                 if (!session.acceptedTOS() && name !== 'displayTOS'){
                     history.pushState({}, "", "/psamaui/tos");
@@ -81,17 +81,13 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             $('#main-content').html(this.unexpectedErrorTemplate(this.settings))
         },
         renderHeaderAndFooter: function(){
-            if ($('#header-content').is(':empty')) {
-                var headerView = header.View;
-                headerView.render();
-                $('#header-content').html(headerView.$el);
-            }
+            var headerView = new header.View({});
+            headerView.render();
+            $('#header-content').html(headerView.$el);
 
-            if ($('#footer-content').is(':empty')) {
-                var footerView = footer.View;
-                footerView.render();
-                $('#footer-content').html(footerView.$el);
-            }
+            var footerView = new footer.View({});
+            footerView.render();
+            $('#footer-content').html(footerView.$el);
         },
         displayUserManagement : function(){
             $('#main-content').empty();

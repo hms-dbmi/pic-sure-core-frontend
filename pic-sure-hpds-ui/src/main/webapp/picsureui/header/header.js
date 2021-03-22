@@ -166,6 +166,6 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 	});
 
 	return {
-		View : new headerView({})
+		View : headerView
 	};
 });

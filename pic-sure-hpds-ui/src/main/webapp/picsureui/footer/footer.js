@@ -11,6 +11,6 @@ define(["backbone","handlebars", "text!footer/footer.hbs", "overrides/footer", "
 	});
 
 	return {
-		View : new footerView({})
+		View : footerView
 	};
 });
