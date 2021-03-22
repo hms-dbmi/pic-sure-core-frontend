@@ -26,8 +26,7 @@ define(["jquery", "studyAccess/studyAccess", "common/session"],
                 if (this.session.isValid()) {
                     history.pushState({}, "Not Authorized", "/psamaui/not_authorized");
                 } else {
-                    sessionStorage.clear();
-                    history.pushState({}, "Login", redirectionUrl);
+                    history.pushState({}, "Login", "/psamaui/logout");
                 }
             }
             return false;
