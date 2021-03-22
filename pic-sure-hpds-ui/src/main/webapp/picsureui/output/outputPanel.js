@@ -68,11 +68,6 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 				query.query.expectedResultType="COUNT";
 				this.model.set("query", query);
 	
-				if(this.dataSelection){
-					this.dataSelection.updateQuery(query);
-					this.dataSelection.render();
-				}
-	
 				if(overrides.updateConsentFilters){
 					overrides.updateConsentFilters(query, settings);
 				}
@@ -81,13 +76,13 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 					this.model.set("totalPatients", parseInt(result));
 					this.model.set("spinning", false);
 					this.model.set("queryRan", true);
-					this.render();
+					this.render(result);
 				}.bind(this);
 	
 				var errorCallback = function(message){
 					this.model.set("spinning", false);
-	                                        this.model.set("queryRan", true);
-	                                        this.render();
+                    this.model.set("queryRan", true);
+                    this.render();
 					$("#patient-count").html(message);
 				}.bind(this);
 	
@@ -110,7 +105,7 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 					}
 				});
 			},
-			render: function(){
+			render: function(result){
 				var context = this.model.toJSON();
 				this.$el.html(this.template(Object.assign({},context , overrides)));
 				if(this.dataSelection){
