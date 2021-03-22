@@ -1,5 +1,5 @@
-define(["jquery", "studyAccess/studyAccess", "common/session"],
-    function($, studyAccess, session) {
+define(["jquery", "common/session"],
+    function($, session) {
         var transportErrorHandlers = {
             session: session
         };
