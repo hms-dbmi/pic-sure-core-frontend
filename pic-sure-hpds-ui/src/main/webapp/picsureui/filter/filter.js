@@ -46,9 +46,6 @@ define(["jquery", "picSure/search", "text!filter/searchHelpTooltip.hbs", "overri
 			this.noResultsTemplate = HBS.compile(noResultsTemplate);
 			
 			$('.search-help-tooltip').tooltip();
-			if (typeof opts.renderHelpCallback !== 'undefined') {
-				opts.renderHelpCallback(this);
-			}
 		},
 		tagName: "div",
 		className: "filter-list-entry row",

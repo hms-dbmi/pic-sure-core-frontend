@@ -17,12 +17,15 @@ define(["jquery","picSure/queryBuilder", "filter/filter"],
 			queryCallback : this.runQuery,
 			model : new filter.Model(),
 			removeFilter : this.removeFilter,
-			resourceUUID: this.resourceUUID,
-			renderHelpCallback: this.renderHelpCallback
+			resourceUUID: this.resourceUUID
 		});
 		newFilter.render();
 		this.filters.push(newFilter);
 		$('#filter-list').append(newFilter.$el);
+
+		if (typeof this.renderHelpCallback !== 'undefined') {
+			this.renderHelpCallback(this);
+		}
 /*
 		var grouped = _.groupBy($('#filter-list').children(), function(child){
 			if($(child).hasClass("variant-info-filter")) return "info";
