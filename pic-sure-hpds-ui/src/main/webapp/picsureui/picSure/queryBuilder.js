@@ -26,11 +26,11 @@ define(["underscore"],
 
 	var generateQuery = function(filters, template, resourceUUID) {
 		if (!template)
-			template = JSON.parse(JSON.stringify(queryTemplate));
+			template = queryTemplate;
 
 		var query = {
 			resourceUUID: resourceUUID,
-			query: template};
+			query:  JSON.parse(JSON.stringify(template))};
 
 		_.each(filters, function(filter){
 			if(filter.get("searchTerm").trim().length !== 0){
