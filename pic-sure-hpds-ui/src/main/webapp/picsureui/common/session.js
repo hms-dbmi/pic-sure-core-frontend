@@ -1,4 +1,3 @@
-
 define(["jquery", "underscore", "common/styles"], function($, _){
 	var storedSession = JSON.parse(
 			sessionStorage.getItem("session"));
@@ -38,10 +37,9 @@ define(["jquery", "underscore", "common/styles"], function($, _){
 			sessionStorage.setItem("session", JSON.stringify(session));
 			configureAjax(callback);
 		},
-		isValid : function(callback){
+		isValid : function(){
 			if(session.username){
-				configureAjax(callback);
-				return session.username;
+			        return (new Date().getTime()/1000) < JSON.parse(atob(session.token.split('.')[1])).exp;
 			}else{
 				return false;
 			}
