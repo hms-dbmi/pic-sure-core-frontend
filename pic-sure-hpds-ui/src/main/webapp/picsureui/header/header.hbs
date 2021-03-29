@@ -1,14 +1,34 @@
 <div class="row header-row">
-	<a href="/picsureui/"><img class="logo-img col-md-4" src="{{logoPath}}"></a>
-	<a class="col-md-2 btn btn-default header-btn active">Query Builder</a>
-    <a class="col-md-2 btn btn-default header-btn" id="admin-btn" href="/psamaui/userManagement"
-       style="display:none">Admin
-    </a>
-	<a class="col-md-2 btn btn-default header-btn" id="user-profile-btn" href="/psamaui/userProfile"
-       style="display:none">User Profile
-    </a>
+	<img class="logo-img col-md-4" src="{{logoPath}}">
+</div>
+<div class="row" style="margin-bottom: 5px">
+    <span class="col-md-2"></span>
+    {{#not_empty applications}}
+    <div class="col-md-2 dropdown" id="applications-dropdown">
+        <button class="btn btn-secondary dropdown-toggle header-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Applications</button>
+        <ul class="dropdown-menu" role="menu">
+        {{#each applications}}
+            <li class="dropdown"><a id="{{this.uuid}}" href="{{this.url}}">{{this.name}}</a></li>
+        {{/each}}
+        </ul>
+    </div>
+    {{/not_empty}}
 
-  <div class="col-md-1 dropdown btn btn-default header-btn" id="help-dropdown" >
+    <div class="col-md-2 dropdown btn btn-default header-btn super-admin-visible" id="super-admin-dropdown"  {{#not_contains privileges 'SUPER_ADMIN'}}style="display: none;"{{/not_contains}}>
+        <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
+        <ul class="dropdown-menu" role="menu">
+            <li class="dropdown"><a id="appMgmt-super-admin" class="header-navigation" data-href="/psamaui/applicationManagement" href="#">Applications</a></li>
+            <li class="dropdown"><a id="connMgmt-super-admin" class="header-navigation" data-href="/psamaui/connectionManagement">Connections</a></li>
+            <li class="dropdown"><a id="privMgmt-super-admin" class="header-navigation" data-href="/psamaui/privilegeManagement">Privileges</a></li>
+            <li class="dropdown"><a id="roleMgmt-super-admin" class="header-navigation" data-href="/psamaui/roleManagement">Roles</a></li>
+        </ul>
+    </div>
+    <a class="col-md-2 btn btn-default header-btn authenticated-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" style="display: none;" id="query-builder-btn">Query Builder</a>
+    <a class="col-md-1 btn btn-default header-btn admin-visible header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#"
+       {{#not_contains privileges 'ADMIN'}}style="display: none;"{{/not_contains}}>Users
+    </a>
+    <a id="user-profile-btn" class="col-md-1 btn btn-default header-btn authenticated-visible" href="#" style="display: none;">User Profile</a>
+    <div class="col-md-1 dropdown btn btn-default header-btn authenticated-visible" id="help-dropdown" style="display: none;" >
         <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</span>
         <ul class="dropdown-menu" role="menu">
             {{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
@@ -16,5 +36,6 @@
             {{#if jupyterExampleLink}}<li class="dropdown"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
             {{#if helpLink}}<li class="dropdown"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}
     </div>
-	<a id="logout-btn" class="col-md-1 btn btn-default header-btn">Log Out</a>
+
+    <a id="logout-btn" class="col-md-1 btn btn-default header-btn authenticated-visible" style="display: none;">Log Out</a>
 </div>

@@ -1,10 +1,10 @@
 require.config({
 	baseUrl: "/picsureui",
+	urlArgs: "",
 	paths: {
-		jquery: 'webjars/jquery/3.5.0/dist/jquery.min',
+		jquery: 'webjars/jquery/3.5.1/jquery.min',
 		autocomplete: 'webjars/devbridge-autocomplete/1.4.7/dist/jquery.autocomplete',
 		underscore: 'webjars/underscorejs/1.8.3/underscore-min',
-		handlebars: 'webjars/handlebars/1.8.3/underscore-min',
 		bootstrap: 'webjars/bootstrap/3.3.7-1/js/bootstrap.min',
 		bootstrapStyles: 'webjars/bootstrap/3.3.7-1/css/bootstrap.min.css',
 		backbone: 'webjars/backbonejs/1.3.3/backbone-min',
@@ -14,7 +14,18 @@ require.config({
 		treeviewStyles: 'webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css',
 		Noty: 'webjars/noty/3.1.4/lib/noty',
 		NotyStyles: 'webjars/noty/3.1.4/lib/noty.css',
-		"jstree":"webjars/jstree/3.3.7/jstree"
+		"jstree":"webjars/jstree/3.3.7/jstree",
+		accessRule: "psamaui/accessRule/",
+		application: "psamaui/application/",
+		connection: "psamaui/connection/",
+		login: "psamaui/login/",
+		privilege: "psamaui/privilege/",
+		picSure: "picSure/",
+		psamaSettings: "psamaui/settings/",
+		role: "psamaui/role/",
+		termsOfService: "psamaui/termsOfService/",
+        user: "psamaui/user/",
+        util: "psamaui/util/",
 	},
 	shim: {
 		"bootstrap": {
@@ -32,11 +43,10 @@ require.config({
 	}
 });
 
-if(sessionStorage.getItem("session")){
-	require(["common/startup"], function(startup){
-		startup();
-
-	});
-}else{
-		window.location = "/psamaui/login?redirection_url=/picsureui/";
-	};
+require(["backbone", "common/session", "common/router", "underscore", "jquery", "bootstrap"],
+    function(Backbone, session, router, _){
+        Backbone.history.start({pushState:true});
+        document.onmousemove = session.activity;
+        document.onkeyup = session.activity;
+    }
+);

@@ -1,9 +1,10 @@
-define(["filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs", "text!filter/searchResultSubCategories.hbs", "text!../settings/settings.json"],
-		function( searchResult, HBS, searchResultTabsTemplate, searchSubCatTemplate, settings){
+define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs", "text!filter/searchResultSubCategories.hbs", "text!filter/searchResultSubCategoriesContainer.hbs", "text!../settings/settings.json"],
+		function($, searchResult, HBS, searchResultTabsTemplate, searchSubCatTemplate, searchSubCategoriesContainerTemplate, settings){
 	var searchResults = {
 			init : function(data, view, callback){
 				this.searchResultTabs = HBS.compile(searchResultTabsTemplate);
 				this.searchSubCategories = HBS.compile(searchSubCatTemplate);
+				this.searchSubCategoriesContainer = HBS.compile(searchSubCategoriesContainerTemplate)
 				this.addSearchResultRows(data, view, callback, view.model.get("searchTerm"));
 			}
 	};
@@ -16,23 +17,36 @@ define(["filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs",
 			if(settingsJson.categoryAliases && settingsJson.categoryAliases[key]){
                 return settingsJson.categoryAliases[key];
             } else {
-                return key;
+                return key.toLowerCase();
             }
 		}
 		var keys = _.keys(data);
 		var aliases = [];
 		keys.forEach((key) => {
-			aliases.push(getAliasName(key));
+			var alias = getAliasName(key)
+			if(aliases.indexOf(alias) == -1){
+				aliases.push(alias);
+			}
 		});
 		
 		
 		var compiledSubCategoryTemplate = this.searchSubCategories;
-		$('.search-tabs', filterView.$el).append(this.searchResultTabs(
-				{filterId: filterView.model.attributes.filterId,
-				 aliases: aliases}	));
+		var compiledSubCategoryContainerTemplate = this.searchSubCategoriesContainer
+		filterView.$el.hide();
+ 		$('.search-tabs', filterView.$el).append(this.searchResultTabs(
+ 				{filterId: filterView.model.attributes.filterId,
+ 				 aliases: aliases}	));
+		
+ 		var categorySearchResultsByAlias = {};
 		keys.forEach((key) => {
 			var subCategories = [];
-			var categorySearchResultViews = [];
+			var categorySearchResultViews = categorySearchResultsByAlias[getAliasName(key)];
+			
+			if(!categorySearchResultViews){
+				categorySearchResultViews = [];
+				categorySearchResultsByAlias[getAliasName(key)] = categorySearchResultViews;
+			}
+			
 			_.each(data[key], function(value){
 				var matchedSelections = [];
 				// For categorical or INFO columns, we want to render a search result for each value that matches the search term
@@ -110,7 +124,11 @@ define(["filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs",
 			var tabPane = $('#'+getAliasName(key)+'.tab-pane', filterView.$el)
 
 			if(_.keys(subCategories).length > 1){
-				$(".result-subcategories-div", tabPane).append(compiledSubCategoryTemplate(_.keys(subCategories)));
+				//if no container has been added, add one for the sub categories
+				if($(".subcat-row", tabPane).length == 0)
+					$(".result-subcategories-div", tabPane).append(compiledSubCategoryContainerTemplate());
+				
+				$(".sub-nav-pills", tabPane).append(compiledSubCategoryTemplate(_.keys(subCategories)));
 				//bootstap.js is used for the top-level category pills; here we are keeping a bit of the naming scheme
 				// need to roll our own logic so that the 'all results' sub-category tab works as expected
 				$(".sub-nav-pills li", tabPane).click(function(event){
@@ -118,6 +136,7 @@ define(["filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs",
 					$(event.target.parentElement).addClass("active")
 					$(event.target.parentElement).siblings().removeClass("active");
 					
+					$('.tab-pane.active').hide();
 					if(event.target.text == "All Results"){
 						_.each(categorySearchResultViews, function(result){
 							result.$el.show();
@@ -132,6 +151,7 @@ define(["filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs",
 							}
 						});
 					}
+					$('.tab-pane.active').show();
 				});
 			}
 
@@ -149,6 +169,7 @@ define(["filter/searchResult", "handlebars", "text!filter/searchResultTabs.hbs",
 			//dont forget to show the cats again if we update!
 			$(".filter-search > .nav-pills").hide();
 		}
+		filterView.$el.show();
 	}.bind(searchResults);
 
 	return searchResults;

@@ -1,4 +1,5 @@
-define(["text!common/spinner.hbs", "handlebars"], function(template, HBS){
+define(["jquery", "text!common/spinner.hbs", "handlebars"], 
+		function($, template, HBS){
 	var template = HBS.compile(template);
 	
 	HBS.registerPartial("spinner", template);

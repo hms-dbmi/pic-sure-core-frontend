@@ -1,4 +1,5 @@
-define(['picSure/ontology', 'jquery','underscore'], function(ontology, $, _){
+define(["jquery", 'underscore', "common/transportErrors"],
+		function($,  _, transportErrors){
 
     var runningQueryIds = {};
 
@@ -38,7 +39,7 @@ define(['picSure/ontology', 'jquery','underscore'], function(ontology, $, _){
                                         dataCallback(result);
                                     },
                                     failure : function(data){
-                                        console.log(data);
+                                        transportErrors.handleAll(data, "failure on AVAILABLE status");
                                     }
                                 });
                                 break;

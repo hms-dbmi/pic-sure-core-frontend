@@ -1,4 +1,12 @@
-define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"], function(_, settings, resourceMeta) {
+define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "overrides/ontology", "common/transportErrors"],
+		function($, _, settings, resourceMeta, overrides, transportErrors) {
+
+    if (!sessionStorage.getItem("session")) {
+        return {};
+    }
+    var allConcepts;
+    var allInfoColumns;
+
     /*
      * A function that takes a PUI that is already split on forward slash and returns
      * the category value for that PUI.
@@ -14,7 +22,7 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
     var extractParentFromPui = function(puiSegments) {
         return puiSegments[puiSegments.length - 2];
     };
-
+    
     var mapResponseToResult = function(query, response, incomingQueryScope) {
     	//lowercase for consistent comparisons
     	query = query.toLowerCase();
@@ -52,7 +60,8 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
             };
         })).concat(_.map(_.keys(response.info), key => {
             var entry = response.info[key];
-            return {
+            entry.name = entry.description;
+	    return {
                 value: entry.description,
                 data: entry.description,
                 category: key,
@@ -70,7 +79,7 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
         		return true;
         	}
     		var scopeMatches = function(value){
-    			return element.metadata.name.startsWith(value);
+    			return element.metadata.name.startsWith(value) || element.category.startsWith(value);
     		}
     		//Check to see if element name (aka path) starts with any value defined in the query scope
     		return _.some(queryScope, scopeMatches);
@@ -136,22 +145,14 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
                         done(result);
                     }.bind(this),
                     error: function(response){
-                        console.log("error retrieving user info");
-                        console.log(response);
-                        if (response.status === 401) {
-                            sessionStorage.clear();
-                            window.locaion = "/";
-                        }
+                        transportErrors.handleAll(response, "error retrieving user info");
                     }.bind(this)
                 });
             }.bind({
                 done: done
             }),
             function(response) {
-                if (response.status === 401) {
-                    sessionStorage.clear();
-                    window.location = "/";
-                } else {
+                if (!transportErrors.handleAll(response, "error in dictionary")) {
                     searchCache[query.toLowerCase()] = [];
                     done({
                         suggestions: []
@@ -162,52 +163,88 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
         resourceMeta: resourceMeta
     });
 
-    var allConcepts;
-    var allInfoColumns;
 
-    var allConceptsLoaded = $.Deferred();
-
-    var allInfoColumnsLoaded = $.Deferred();
-
-    dictionary("\\", function(allConceptsRetrieved) {
-        allConcepts = allConceptsRetrieved;
-        allConceptsLoaded.resolve();
-    });
-
+    var loadAllConceptsDeferred = function(){
+    	allConceptsDeferred = $.Deferred();
+	    dictionary("\\", function(allConceptsRetrieved) {
+	        allConcepts = allConceptsRetrieved;
+	        allConceptsDeferred.resolve();
+	    });
+	    return allConceptsDeferred;
+    }
+    
     var allInfoColumnsQuery = {
         resourceUUID: JSON.parse(settings).picSureResourceId,
         query: {
-
             expectedResultType: "INFO_COLUMN_LISTING"
         }
     };
+    
+    var loadAllInfoColumnsDeferred = function() {
 
-    $.ajax({
-        url: window.location.origin + "/picsure/query/sync",
-        type: 'POST',
-        headers: {
-            "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
-        },
-        contentType: 'application/json',
-        dataType: 'json',
-        data: JSON.stringify(allInfoColumnsQuery),
-        success: function(response) {
-            allInfoColumns = response;
-            allInfoColumnsLoaded.resolve();
-        }.bind(this),
-        error: function(response) {
-            console.log("error retrieving info columns");
-            console.log(response);
-        }.bind(this)
-    });
-
+    	allinfoColumnsDeferred = $.Deferred();
+        $.ajax({
+            url: window.location.origin + "/picsure/query/sync",
+            type: 'POST',
+            headers: {
+                "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
+            },
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(allInfoColumnsQuery),
+            success: function(response) {
+                allInfoColumns = response;
+                allinfoColumnsDeferred.resolve();
+            }.bind(this),
+            error: function(response) {
+                console.log("error retrieving info columns");
+                console.log(response);
+            }.bind(this)
+        });
+        
+        return allinfoColumnsDeferred;
+    }
+    
+    var allConceptsLoaded = overrides.loadAllConceptsDeferred ? overrides.loadAllConceptsDeferred() : loadAllConceptsDeferred();
+    var allInfoColumnsLoaded = overrides.loadAllInfoColumnsDeferred ? overrides.loadAllInfoColumnsDeferred() : loadAllInfoColumnsDeferred();
+    
     var cachedTree;
 
+    // build query scope 
+    // scope filters export tree to authorized root nodes for applications using the the query scope feature.
+    var scope = [];
+
+    $.ajax({
+        url: window.location.origin + "/psama/user/me",
+        type: 'GET',
+        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+        contentType: 'application/json',
+        success: function(meResponse){
+            var scopes = meResponse.queryScopes;
+            if(scopes != undefined){
+	            scopes.forEach(function(item, index) {
+	                if ( item.length < 2 || !item.startsWith("\\")) {
+	                    scope.push(item);
+	                } else if(item.length < 3){
+	                    scope.push(item.substr(1,2));
+	                } else {
+	                    scope.push(item.substr(1,item.length - 2));
+	                };
+	            });
+            }
+        }.bind(this),
+        error: function(response){
+            transportErrors.handleAll(response, "error retrieving user info");
+        }.bind(this)
+    });
+    
     var tree = function(consumer, crossCounts) {
         if (cachedTree) {
             counts(cachedTree, allConcepts, crossCounts);
             consumer(cachedTree);
         } else {
+            
+
             allConceptsLoaded.then(function() {
                 var tree = {
                     text: "data",
@@ -217,25 +254,39 @@ define(["underscore", "text!../settings/settings.json", "picSure/resourceMeta"],
                     },
                     children: []
                 };
-                _.each(_.keys(allConcepts.results.phenotypes), function(concept) {
+
+		      _.each(_.keys(allConcepts.results.phenotypes), function(concept) {
                     var segments = concept.split("\\");
-                    var currentNode = tree;
-                    for (var x = 1; x < segments.length - 1; x++) {
-                        if (currentNode.children[_.findIndex(currentNode.children, function(child) {
-                            return child.text.includes(segments[x])
-                        })] === undefined) {
-                            var newNode = {
-                                id: segments.slice(0, x + 1).join("\\") + "\\",
-                                text: segments[x],
-                                children: []
-                            };
-                            currentNode.children.push(newNode);
-                        }
-                        currentNode = currentNode.children[_.findIndex(currentNode.children, function(child) {
-                            return child.text.includes(segments[x])
-                        })];
+                    var currentNode =  tree;
+                    
+                    if(segments.length > 0) {
+                        // if criteria:
+                        // 1.  currently the business rule for query scope is if untrue we will show all nodes
+                        // 2.  if using scope check if root node is in queryScope for user
+                        // 3.  all nodes starting with an underscore are also shown.
+                        if(!scope || scope.length === 0 || scope.includes(segments[1]) || segments[1].startsWith("_")) {
+
+                            for (var x = 1; x < segments.length - 1; x++) {
+                                var index_of_child = _.findIndex(currentNode.children, function(child) {
+                                    return child.text === segments[x];
+                                })
+                                if (currentNode.children[index_of_child] === undefined) {
+                                    var newNode = {
+                                        id: segments.slice(0, x + 1).join("\\") + "\\",
+                                        text: segments[x],
+                                        children: []
+                                    };
+                                    currentNode.children.push(newNode);
+                                }
+                                currentNode = currentNode.children[(index_of_child===-1) ? currentNode.children.length-1 : index_of_child];
+                            }
+
+                        } 
+                       
+
                     }
-                });
+
+               });
 
                 counts(tree, allConcepts, crossCounts);
                 consumer(tree);

@@ -1,4 +1,5 @@
-define([ "text!../settings/settings.json" ], function(settings){
+define(["underscore", "text!../settings/settings.json"], 
+		function(_, settings){
 
     var queryTemplate = {
         categoryFilters: {},
@@ -31,7 +32,6 @@ define([ "text!../settings/settings.json" ], function(settings){
 			resourceUUID: JSON.parse(settings).picSureResourceId,
 			query: template};
 
-		var lastFilter = undefined;
 		_.each(filters, function(filter){
 			if(filter.get("searchTerm").trim().length !== 0){
 				if ( filter.attributes.valueType === "ANYRECORDOF" ){
@@ -43,9 +43,23 @@ define([ "text!../settings/settings.json" ], function(settings){
 					}
 				} else if(filter.attributes.constrainByValue || filter.get("constrainParams").get("constrainByValue")){
 					if(filter.attributes.valueType==="INFO"){
-						var variantInfoFilter = {};
-						query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category] = filter.get("constrainParams").get("constrainValueOne");
-						query.query.variantInfoFilters[0].numericVariantInfoFilters[filter.attributes.category] = filter.attributes.variantInfoConstraints.numericVariantInfoFilters[filter.attributes.category];
+						if ( ! query.query.variantInfoFilters[0] ){
+							query.query.variantInfoFilters.push({
+								categoryVariantInfoFilters:{},
+								numericVariantInfoFilters:{}
+							    });
+						}
+
+						if( filter.get("constrainParams").get("metadata").continuous){
+							query.query.variantInfoFilters[0].numericVariantInfoFilters[filter.attributes.category] =
+							{
+									min: filter.attributes.constrainParams.attributes.constrainValueOne,
+									max: filter.attributes.constrainParams.attributes.constrainValueTwo
+							}
+						} else {
+							query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category] = filter.get("constrainParams").get("constrainValueOne");
+							
+						}
 					} else if(filter.attributes.valueType==="NUMBER"){
 						var one = filter.attributes.constrainParams.attributes.constrainValueOne;
 						var two = filter.attributes.constrainParams.attributes.constrainValueTwo;
@@ -94,8 +108,8 @@ define([ "text!../settings/settings.json" ], function(settings){
 				}
 
 			}
-			lastFilter = filter;
 		});
+		
 		return query;
 	};
 

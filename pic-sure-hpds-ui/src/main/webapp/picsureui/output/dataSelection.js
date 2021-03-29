@@ -1,5 +1,6 @@
-define(["common/spinner", "backbone", "handlebars", "text!output/dataSelection.hbs", "jstree", "picSure/ontology", "picSure/queryCache", "text!../settings/settings.json" ], 
-	function(spinner, BB, HBS, template, jstree, ontology, queryCache, settings){
+define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataSelection.hbs", "jstree", "picSure/ontology", "text!../settings/settings.json", "overrides/outputPanel", "common/transportErrors" ],
+		function($, spinner, BB, HBS, template, jstree, ontology, settings, outputOverride, transportErrors){
+			//don't need to reference jstree, just need to load it.
 		return BB.View.extend({
 			template: HBS.compile(template),
 			settings: JSON.parse(settings),
@@ -24,11 +25,24 @@ define(["common/spinner", "backbone", "handlebars", "text!output/dataSelection.h
 				$("#download-btn", this.$el).addClass('hidden');
 				var query = {};
 				query = JSON.parse(JSON.stringify(this.query));
-				query.query.fields = _.filter($('#concept-tree', this.$el).jstree().get_selected(), function(child){
-					var children = $('#concept-tree', this.$el).jstree().get_node(child).children;
-					return children == undefined || children.length === 0;
-				}.bind(this))
+				
+				if(query.query.fields){
+					query.query.fields = query.query.fields.concat(_.filter($('#concept-tree', this.$el).jstree().get_selected(), function(child){
+						var children = $('#concept-tree', this.$el).jstree().get_node(child).children;
+						return children == undefined || children.length === 0;
+					}.bind(this)));
+				} else {
+					query.query.fields = _.filter($('#concept-tree', this.$el).jstree().get_selected(), function(child){
+						var children = $('#concept-tree', this.$el).jstree().get_node(child).children;
+						return children == undefined || children.length === 0;
+					}.bind(this))
+				}
 				query.query.expectedResultType="DATAFRAME";
+				
+				//we can only clear the unused consents AFTER adding the fields
+				if(outputOverride.updateConsentFilters){
+					outputOverride.updateConsentFilters(query, settings);
+				}
         
 				if(this.settings.queryExportType == "EXPORT_IMMEDIATE"){
 					this.querySync(query);
@@ -71,8 +85,8 @@ define(["common/spinner", "backbone", "handlebars", "text!output/dataSelection.h
 								$("#download-btn", this.$el)[0].click();
 	  						}.bind(this),
 	  						error: function(response){
-	  							console.log("error preparing download : ");
-	  							console.log(response);
+                                console.log("error preparing download : ");
+                                console.dir(response);
 	  						}.bind(this)
 	  					})
 	  					, "#download-spinner"
@@ -122,7 +136,7 @@ define(["common/spinner", "backbone", "handlebars", "text!output/dataSelection.h
   						error: function(response){
   							$('#resource-id-display', this.$el).html("Error running query, Please see logs");
   							console.log("error preparing async download: ");
-  							console.log(response);
+  							console.dir(response);
   						}
   					});
   				}());
@@ -145,7 +159,7 @@ define(["common/spinner", "backbone", "handlebars", "text!output/dataSelection.h
 					}.bind(this),
 					error: function(response){
 						console.log("error preparing download : ");
-						console.log(response);
+						console.dir(response);
 					}.bind(this)
 				})
 			}.bind(this),
@@ -184,7 +198,9 @@ define(["common/spinner", "backbone", "handlebars", "text!output/dataSelection.h
 								$('#concept-tree', this.$el).jstree().redraw_node(child);
 							}.bind(this));
 						}.bind(this),
-						error: console.log
+						error: function(response) {
+						    console.dir(response);
+                        }
 					});
 				}.bind(this));
 				$("#concept-tree", this.$el).on("check_node.jstree", function(node, selected, event){
@@ -231,6 +247,12 @@ define(["common/spinner", "backbone", "handlebars", "text!output/dataSelection.h
 									var children = $('#concept-tree', this.$el).jstree().get_node(child).children;
 									return children == undefined || children.length === 0;
 								}.bind(this));
+								
+								//we can only clear the unused consents AFTER adding the fields
+								if(outputOverride.updateConsentFilters){
+									outputOverride.updateConsentFilters(query, settings);
+								}
+								
 								$.ajax({
 									url: window.location.origin + "/picsure/query/sync",
 									type: 'POST',

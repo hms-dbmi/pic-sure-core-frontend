@@ -1,5 +1,5 @@
-define(["common/spinner", "backbone", "handlebars", "text!filter/searchResult.hbs", "picSure/ontology", "text!settings/settings.json"],
-    function(spinner, BB, HBS, searchResultTemplate, ontology, settings, dataTypeMapping){
+define(["jquery", "backbone", "handlebars", "text!filter/searchResult.hbs", "picSure/ontology", "text!settings/settings.json"],
+    function($, BB, HBS, searchResultTemplate, ontology, settings){
         var searchResultModel = BB.Model.extend({
 
         });
@@ -8,7 +8,7 @@ define(["common/spinner", "backbone", "handlebars", "text!filter/searchResult.hb
             initialize: function(opts){
                 this.filterView = opts.filterView;
                 this.queryCallback = opts.queryCallback;
-		this.updateAnyRecordFilter = this.updateAnyRecordFilter.bind(this);
+                this.updateAnyRecordFilter = this.updateAnyRecordFilter.bind(this);
                 this.preSelection = opts.preSelection;
             },
             tagName: "div",
