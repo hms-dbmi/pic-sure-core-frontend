@@ -15,6 +15,12 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                 else
                     return opts.fn(this);
             });
+            HBS.registerHelper('contains', function(list, element, options) {
+                if(list.indexOf(element) > -1) {
+                    return options.fn(this);
+                }
+                return options.inverse(this);
+            });
             HBS.registerHelper('not_empty', function (array, opts) {
                 if (array && array.length>0)
                     return opts.fn(this);
@@ -43,6 +49,12 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
             this.applications = [];
             this.modalTemplate = HBS.compile(modalTemplate);
             this.userProfileTemplate = HBS.compile(userProfileTemplate);
+            this.privileges = [];
+
+            if (sessionStorage.getItem("session")) {
+                var currentSession = JSON.parse(sessionStorage.getItem("session"));
+                this.privileges = currentSession.privileges;
+            }
 		},
 		events : {
 			"click #logout-btn" : "gotoLogin",
@@ -140,28 +152,10 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 					? overrides.logoPath : "/images/logo.png"),
 				helpLink: jsonSettings.helpLink,
 				pdfLink: jsonSettings.pdfLink,
-				videoLink: jsonSettings.videoLink
+				videoLink: jsonSettings.videoLink,
+                privileges: this.privileges,
+                authenticated: !!sessionStorage.getItem("session")
 			}));
-			if (sessionStorage.getItem("session")) {
-			    $('.authenticated-visible', this.$el).show();
-                $.ajax({
-                    url: window.location.origin + "/psama/user/me",
-                    type: 'GET',
-                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-                    contentType: 'application/json',
-                    success: function(response){
-                        if(response.privileges.includes("ADMIN")){
-                            $('.admin-visible', this.$el).show();
-                        }
-                        if(response.privileges.includes("SUPER_ADMIN")){
-                            $('.super-admin-visible', this.$el).show();
-                        }
-                    }.bind(this),
-                    error: function(response){
-                        transportErrors.handleAll(response, "error retrieving user info");
-                    }.bind(this)
-                });
-			}
 		}
 	});
 
