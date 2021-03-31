@@ -43,7 +43,6 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 				"click #select-btn": "select"
 			},
 			select: function(event){
-				
 				this.model.set('spinning', true);
 				if(!this.dataSelection){
 					var query = JSON.parse(JSON.stringify(this.model.get("query")));
@@ -51,7 +50,9 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 					$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
 					this.model.set("spinning", false);
 					this.dataSelection.render();
-				}
+				} else {
+                    this.dataSelection.updateQuery(this.model.get("query"));
+                }
 			},
 			totalCount: 0,
 			tagName: "div",
