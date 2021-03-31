@@ -35,7 +35,9 @@ define(["jquery", "backbone", "handlebars", "text!filter/searchResult.hbs", "pic
 
     		    var deferredSearchResults = $.Deferred();
                     search.execute(searchValue, deferredSearchResults.resolve, this.filterView.resourceUUID);
-    		    $.when(deferredSearchResults).then(this.updateAnyRecordFilter);
+    		    $.when(deferredSearchResults).then((results) => {
+    		        this.updateAnyRecordFilter(results, searchValue);
+    		    });
 
     		    var valueType = "ANYRECORDOF";
                 this.filterView.model.set("searchTerm", searchValue);
@@ -46,9 +48,13 @@ define(["jquery", "backbone", "handlebars", "text!filter/searchResult.hbs", "pic
 		    //we do not have any values to constrain. This is used later when building the query object
             this.filterView.model.attributes.constrainParams.attributes.constrainByValue=false;
 	    },
-	    updateAnyRecordFilter: function (result) {
+	    updateAnyRecordFilter: function (result, searchValue) {
     		console.log("Update any record");
-    		this.filterView.model.set("anyRecordCategories", _.pluck(result.suggestions, "data"));
+    		if (searchValue === undefined) searchValue = "";
+    		var corrected_results = result.suggestions.filter((rec) => {
+    		    return rec.data.startsWith(searchValue);
+            });
+    		this.filterView.model.set("anyRecordCategories", _.pluck(corrected_results, "data"));
             this.filterView.render();
 	
             //adding 'saved' class swaps visibility of input field and output/edit buttons
