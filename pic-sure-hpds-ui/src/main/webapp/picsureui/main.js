@@ -15,6 +15,7 @@ require.config({
 		Noty: 'webjars/noty/3.1.4/lib/noty',
 		NotyStyles: 'webjars/noty/3.1.4/lib/noty.css',
 		"jstree":"webjars/jstree/3.3.7/jstree",
+		auth0Lock: "webjars/auth0-lock/11.2.3/build/lock",
 		accessRule: "psamaui/accessRule/",
 		application: "psamaui/application/",
 		connection: "psamaui/connection/",

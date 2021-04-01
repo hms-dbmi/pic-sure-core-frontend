@@ -1,4 +1,4 @@
-define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'loginButtons', 'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login','text!login/connections.json'],
+define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'login/loginButtons', 'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login','text!login/connections.json'],
 		function(session, settings, parseQueryString, $, HBS, loginButtons, notAuthorizedTemplate, overrides, notification, fenceLogin, connectionsStr){
 
 	var connections = JSON.parse(connectionsStr);
@@ -47,29 +47,24 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                 }
                 var clientId = overrides.client_id;
 
-                require.config({
-                    paths: {
-                        'auth0Lock': "webjars/auth0-lock/11.2.3/build/lock",
-                    },
-                    shim: {
-                        "auth0Lock": {
-                            deps:["jquery"],
-                            exports: "Auth0Lock"
-                        }
-                    }
-                });
+//                require.config({
+//                    shim: {
+//                        "auth0Lock": {
+//                            deps:["jquery"],
+//                            exports: "Auth0Lock"
+//                        }
+//                    }
+//                });
                 
                 if (settings.customizeAuth0Login){
-                    require(['auth0Lock'], function(){
-                	   var oauth = {
-                		    client_id : clientId,
-                		    domain : 'avillachlab.auth0.com',
-                		    callbackURL : redirectURI
-                	    };
-                	    $('#main-content').html("<div id='frmAuth0Login'></div>");
-                    	loginButtons.showLockButtons(connections, oauth);
-                        overrides.postRender ? overrides.postRender.apply(this) : undefined;
-                    });
+            	   var oauth = {
+            		    client_id : clientId,
+            		    domain : 'avillachlab.auth0.com',
+            		    callbackURL : redirectURI
+            	    };
+            	    $('#main-content').html("<div id='frmAuth0Login'></div>");
+                	loginButtons.showLockButtons(connections, oauth);
+                    overrides.postRender ? overrides.postRender.apply(this) : undefined;
                 } else {
                     require(['auth0Lock'], function(Auth0Lock){
                         var lock = new Auth0Lock(
