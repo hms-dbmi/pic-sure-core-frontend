@@ -1,13 +1,7 @@
-define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'text!login/login.hbs', 'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login'],
-		function(session, settings, parseQueryString, $, HBS, loginTemplate, notAuthorizedTemplate, overrides, notification, fenceLogin){
+define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'loginButtons', 'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login','text!login/connections.json'],
+		function(session, settings, parseQueryString, $, HBS, loginButtons, notAuthorizedTemplate, overrides, notification, fenceLogin, connectionsStr){
 
-	var loginTemplate = HBS.compile(loginTemplate);
-
-	var loginCss = null
-	$.get("https://avillachlab.us.webtask.io/connection_det`ails_base64?webtask_no_cache=1&css=true", function(css){
-		loginCss = "<style>" + css + "</style";
-	});
-
+	var connections = JSON.parse(connectionsStr);
 	var login = {
 		showLoginPage : function(){
 		    console.log("Auth0-showLoginPage()");
@@ -53,49 +47,30 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                 }
                 var clientId = overrides.client_id;
 
+                require.config({
+                    paths: {
+                        'auth0Lock': "webjars/auth0-lock/11.2.3/build/lock",
+                    },
+                    shim: {
+                        "auth0Lock": {
+                            deps:["jquery"],
+                            exports: "Auth0Lock"
+                        }
+                    }
+                });
+                
                 if (settings.customizeAuth0Login){
-                    require.config({
-                        paths: {
-                            'auth0-js': "webjars/auth0.js/9.2.3/build/auth0"
-                        },
-                        shim: {
-                            "auth0-js": {
-                                deps:["jquery"],
-                                exports: "Auth0Lock"
-                            }
-                        }
+                    require(['auth0Lock'], function(){
+                	   var oauth = {
+                		    client_id : clientId,
+                		    domain : 'avillachlab.auth0.com',
+                		    callbackURL : redirectURI
+                	    };
+                	    $('#main-content').html("<div id='frmAuth0Login'></div>");
+                    	loginButtons.showLockButtons(connections, oauth);
+                        overrides.postRender ? overrides.postRender.apply(this) : undefined;
                     });
-                    require(['auth0-js'], function(){
-                        $.ajax("https://avillachlab.us.webtask.io/connection_details_base64/?webtask_no_cache=1&client_id=" + clientId,
-                        {
-                            dataType: "text",
-                            success : function(scriptResponse){
-                                scriptResponse = scriptResponse.replace("responseType : \"code\"","responseType : \"token\"");
-                                $('#main-content').html(loginTemplate({
-                                    buttonScript : scriptResponse,
-                                    clientId : clientId,
-                                    auth0Subdomain : "avillachlab",
-                                    callbackURL : redirectURI
-                                }));
-                                overrides.postRender ? overrides.postRender.apply(this) : undefined;
-                                $('#main-content').append(loginCss);
-                            }
-                        })
-                    });
-
-
                 } else {
-                    require.config({
-                        paths: {
-                            'auth0Lock': "webjars/auth0-lock/11.2.3/build/lock",
-                        },
-                        shim: {
-                            "auth0Lock": {
-                                deps:["jquery"],
-                                exports: "Auth0Lock"
-                            }
-                        }
-                    });
                     require(['auth0Lock'], function(Auth0Lock){
                         var lock = new Auth0Lock(
                             clientId,
