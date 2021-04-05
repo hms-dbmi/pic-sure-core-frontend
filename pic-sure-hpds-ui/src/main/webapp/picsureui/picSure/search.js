@@ -1,4 +1,4 @@
-define(["common/transportErrors", "overrides/search.js"], function(transportErrors, overrides){
+define(["common/transportErrors", "overrides/search"], function(transportErrors, overrides){
 
     /*
      * A function that takes a PUI that is already split on forward slash and returns
