@@ -108,14 +108,27 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
 
     var sessionInit = function(data) {
         session.authenticated(data.userId, data.token, data.email, data.permissions, data.acceptedTOS, this.handleNotAuthorizedResponse);
-        $.ajax({
-            url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
-            type: 'GET',
-            headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-            contentType: 'application/json',
-            success: function(queryTemplateResponse) {
+        var queryTemplateRequest = function() {
+            return $.ajax({
+                url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
+                type: 'GET',
+                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                contentType: 'application/json'
+            });
+        };
+        var meRequest = function () {
+            return $.ajax({
+                url: window.location.origin + "/psama/user/me",
+                type: 'GET',
+                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                contentType: 'application/json'
+            });
+        };
+        $.when(queryTemplateRequest(), meRequest()).then(
+            function(queryTemplateResponse, meResponse) {
                 var currentSession = JSON.parse(sessionStorage.getItem("session"));
-                currentSession.queryTemplate = queryTemplateResponse.queryTemplate;
+                currentSession.queryTemplate = queryTemplateResponse[0].queryTemplate;
+                currentSession.privileges = meResponse[0].privileges;
                 sessionStorage.setItem("session", JSON.stringify(currentSession));
 
                 if (data.acceptedTOS !== 'true'){
@@ -129,10 +142,13 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                     }
                 }
             }.bind(this),
-            error: function(queryTemplateResponse) {
-                transportErrors.handleAll(queryTemplateResponse, "Cannot retrieve query template with status: " + queryTemplateResponse.status);
+            function(queryTemplateResponse, meResponse) {
+                if (queryTemplateResponse[0].status !== 200)
+                    transportErrors.handleAll(queryTemplateResponse[0], "Cannot retrieve query template with status: " + queryTemplateResponse[0].status);
+                else
+                    transportErrors.handleAll(meResponse[0], "Cannot retrieve user with status: " + meResponse[0].status);
             }
-        });
+        );
     };
 
 	var handleAuthenticationError = function(data){
