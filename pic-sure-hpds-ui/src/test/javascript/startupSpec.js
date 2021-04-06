@@ -1,12 +1,6 @@
-define(["common/startup", "jquery"], function(startup, $){
+define(["jquery"], function($){
 	jasmine.pp = function(obj){return JSON.stringify(obj, undefined, 2);};
 	describe("startup", function(){
-		describe("as a module when not logged in", function(){
-			it("exports a function", function(){
-				expect(typeof startup).toEqual("function");
-			});
-		});
-		
 		describe("when user is not logged in", function(){
 			beforeEach(function(){
 				localStorage.id_token=undefined;
