@@ -1,4 +1,4 @@
-define(["jquery", "underscore", "common/styles"], function($, _){
+define(["jquery", "underscore", "overrides/session", "common/styles"], function($, _, sessionOverrides){
 	var storedSession = JSON.parse(
 			sessionStorage.getItem("session"));
 	
@@ -8,13 +8,30 @@ define(["jquery", "underscore", "common/styles"], function($, _){
 		privileges : [],
 		email : null
 	};
+
+	var expired = function() {
+		return new Date().getTime()/1000 > JSON.parse(atob(JSON.parse(sessionStorage.session).token.split('.')[1])).exp;
+	}
+
+	var handleNotAuthorizedResponse = function() {
+		try {
+			if (expired()) {
+				history.pushState({}, "", "/psamaui/logout");
+			} else {
+				history.pushState({}, "", "/psamaui/not_authorized");
+			}
+		} catch (e) {
+			console.log("Error determining token expiry");
+			history.pushState({}, "", "/psamaui/not_authorized");
+		}
+	};
 	
-	var configureAjax = function(callback){
+	var configureAjax = function(){
 		$.ajaxSetup({
 			headers: {"Authorization": "Bearer " + session.token},
 			statusCode: {
 				401: function(){
-                    callback();
+                    sessionOverrides.handleNotAuthorizedResponse ? sessionOverrides.handleNotAuthorizedResponse() : handleNotAuthorizedResponse();
 				},
 				403: function(){
                     history.pushState({}, "", "/psamaui/not_authorized");
@@ -28,18 +45,22 @@ define(["jquery", "underscore", "common/styles"], function($, _){
 		may : function(permission){
 			return _.contains(permission, session.permissions);
 		},
-		authenticated : function(userId, token, username, permissions, acceptedTOS, callback){
+		authenticated : function(userId, token, username, permissions, acceptedTOS) {
 			session.userId = userId;
 			session.token = token;
 			session.username = username;
 			session.permissions = permissions;
 			session.acceptedTOS = acceptedTOS;
 			sessionStorage.setItem("session", JSON.stringify(session));
-			configureAjax(callback);
+			configureAjax();
 		},
 		isValid : function(){
 			if(session.username){
-			        return (new Date().getTime()/1000) < JSON.parse(atob(session.token.split('.')[1])).exp;
+				var isExpired = expired();
+				if (!isExpired) {
+					configureAjax();
+				}
+				return !isExpired;
 			}else{
 				return false;
 			}

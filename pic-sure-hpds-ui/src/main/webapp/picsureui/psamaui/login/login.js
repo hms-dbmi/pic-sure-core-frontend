@@ -158,20 +158,6 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
 
 	return {
 		showLoginPage : overrides.showLoginPage ? overrides.showLoginPage : showNormalLogin,
-        handleNotAuthorizedResponse : function () {
-            console.log("handleNotAuthorizedResponse()");
-
-            if (JSON.parse(sessionStorage.session).token) {
-                if (sessionStorage.not_authorized_url)
-                    window.location = sessionStorage.not_authorized_url;
-                else
-                    window.location = "/psamaui/not_authorized" + window.location.search;
-            }
-            else {
-                console.log("No token in session, so redirect to logout...");
-                return null; //window.location = "/psamaui/logout" + window.location.search;
-            }
-        },
         displayNotAuthorized : function () {
             console.log("displayNotAuthorized()");
             if (overrides.displayNotAuthorized)
