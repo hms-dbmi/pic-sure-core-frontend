@@ -103,8 +103,8 @@ define(["underscore"],
 							zygosities.push("0/0");
 						}
 					}
-//				}else{
-//					query.query.requiredFields.push(filter.get("searchTerm"));
+				} else if (filter.attributes.valueType==="NUMBER") {
+					query.query.requiredFields.push(filter.get("searchTerm"));
 				}
 
 			}
