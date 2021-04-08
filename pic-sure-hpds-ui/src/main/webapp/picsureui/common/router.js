@@ -66,17 +66,21 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             this.renderHeaderAndFooter();
         },
         login : function(){
+            $(".header-btn.active").removeClass('active');
             login.showLoginPage();
         },
         logout : function(){
+            $(".header-btn.active").removeClass('active');
             sessionStorage.clear();
             localStorage.clear();
             window.location = "/psamaui/login";
         },
         not_authorized : function(){
+            $(".header-btn.active").removeClass('active');
             login.displayNotAuthorized();
         },
         unexpected_error : function(){
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             $('#main-content').html(this.unexpectedErrorTemplate(this.settings))
         },
@@ -90,6 +94,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             $('#footer-content').html(footerView.$el);
         },
         displayUserManagement : function(){
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                     var userMngmt = new userManagement.View({model: new userManagement.Model()});
@@ -98,6 +103,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             });
         },
         displayTOS : function() {
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             var termsOfService = new this.tos.View({model: new this.tos.Model()});
             termsOfService.render();
@@ -105,6 +111,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
 
         },
         displayApplicationManagement : function(){
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
@@ -120,6 +127,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
 
         },
         displayRoleManagement : function(){
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
@@ -135,6 +143,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
 
         },
         displayPrivilegeManagement : function() {
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
@@ -149,6 +158,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             });
         },
         displayAccessRuleManagement : function() {
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.accessRules, function(element){
@@ -163,6 +173,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             });
         },
         displayConnectionManagement : function() {
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
@@ -178,6 +189,9 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
 
         },
         displayQueryBuilder: function() {
+            $(".header-btn.active").removeClass('active');
+            $(".header-btn[data-href='/picsureui/queryBuilder']").addClass('active');
+
             $('#main-content').empty();
             let parsedSettings = this.settings;
             $('#main-content').append(this.layoutTemplate(parsedSettings));
@@ -209,6 +223,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         },
         defaultAction: function() {
             console.log("Default action");
+            $(".header-btn.active").removeClass('active');
             if (routerOverrides.defaultAction)
                 routerOverrides.defaultAction();
             else {
