@@ -50,6 +50,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
         },
        execute: function(callback, args, name){
+           this.renderHeaderAndFooter();
             if (publicRoutes.includes(name)){
                 callback.apply(this, args);
             } else {
@@ -63,7 +64,6 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
                     callback.apply(this, args);
                 }
             }
-            this.renderHeaderAndFooter();
         },
         login : function(){
             $(".header-btn.active").removeClass('active');
