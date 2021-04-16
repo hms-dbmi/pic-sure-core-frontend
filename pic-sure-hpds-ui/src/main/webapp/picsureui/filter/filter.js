@@ -222,25 +222,25 @@ define(["jquery", "picSure/search", "text!filter/searchHelpTooltip.hbs", "overri
 			this.model.set("constrainByValue", constrainByValue)
 			this.model.get("constrainParams").set("constrainByValue", constrainByValue);
 
-			if(constrainByValue){
+            if(constrainByValue){
                 $('.value-operator', this.$el).removeClass("hidden");
                 $('.value-operator', this.$el).show();
                 $('.value-operator-range-label', this.$el).removeClass("hidden");
                 $('.value-operator-range-label', this.$el).show();
- 				var valueOperator = $(".value-type-select", this.$el).val();
-				this.updateConstrainValueVisibility(valueOperator);				
+                var valueOperator = $(".value-type-select", this.$el).val();
+                this.updateConstrainValueVisibility(valueOperator);
             } else {
-				$('.value-operator').hide();
-				$('.value-operator-range-label', this.$el).hide();
-				$('.constrain-value-two', this.$el).hide();
-				$('.constrain-value-two', this.$el).val("");
-				$('.constrain-value-one', this.$el).hide();
-				$('.constrain-value-one', this.$el).val("");
-				$('.validation-message', this.$el).text("");
-				
-				//update model
-				this.onConstrainValuesChange();
-			}
+                $('.value-operator').hide();
+                $('.value-operator-range-label', this.$el).hide();
+                $('.constrain-value-two', this.$el).hide();
+                $('.constrain-value-two', this.$el).val("");
+                $('.constrain-value-one', this.$el).hide();
+                $('.constrain-value-one', this.$el).val("");
+                $('.validation-message', this.$el).text("");
+
+                //update model
+                this.onConstrainValuesChange();
+            }
 		},
 		onConstrainGeneticsSelect: function(event) {
 			var dropdownElement = $("."+event.target.parentElement.parentElement.attributes['aria-labelledby'].value, this.$el);
@@ -413,11 +413,12 @@ define(["jquery", "picSure/search", "text!filter/searchHelpTooltip.hbs", "overri
 			} else {
 				filterEl.html(this.constrainFilterMenuCategoriesTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
 				//Move the selected items to the right box
-				var selectedCategories = this.model.get("constrainParams").get("constrainValueOne"); 
+				var selectedCategories = this.model.get("constrainParams").get("constrainValueOne");
+				var elRef = this.$el;
 				$(".available-categories > option", this.$el).each(function() {
 					if((Array.isArray(selectedCategories) && selectedCategories.includes(this.text))
 							|| selectedCategories == this.text){
-							$(".selected-categories", this.$el).append(this);
+							$(".selected-categories", elRef).append(this);
 					}
                 }); 
                 //this should show the multi-select boxes.  the template should automatically have 'RESTRICT' by value selected.
@@ -511,10 +512,11 @@ define(["jquery", "picSure/search", "text!filter/searchHelpTooltip.hbs", "overri
 			}
 		},
 		isValueInRange: function(value, min, max){
-			if (value < min || value > max)
-				return false;
-			else
-				return true;
+			if (value < min || value > max) {
+                return false;
+            } else {
+                return true;
+            }
 		},
 		geneticSelections: function(searchString){
 			if(/\d+,\d+,.*,.*/.test(searchString)||(/\d+:\d+_.*/.test(searchString))){
