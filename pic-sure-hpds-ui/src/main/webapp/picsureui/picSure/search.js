@@ -109,7 +109,8 @@ define(["common/transportErrors", "overrides/search"], function(transportErrors,
             return this.dictionary(
                 query,
                 function(response) {
-                    var result = mapResponseToResult(query, response.results, JSON.parse(sessionStorage.getItem("session")).queryScopes);
+                    var result = mapResponseToResult(query, response.results, 
+                        (overrides.queryScopeUUID===resourceUUID ? JSON.parse(sessionStorage.getItem("session")).queryScopes : []));
                     searchCache[query.toLowerCase()] = result;
                     done(result);
                 }.bind({
