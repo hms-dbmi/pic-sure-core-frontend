@@ -222,26 +222,26 @@ define(["jquery", "picSure/search", "text!filter/searchHelpTooltip.hbs", "overri
 			this.model.set("constrainByValue", constrainByValue)
 			this.model.get("constrainParams").set("constrainByValue", constrainByValue);
 
-            if(constrainByValue){
-                $('.value-operator', this.$el).removeClass("hidden");
-                $('.value-operator', this.$el).show();
-                $('.value-operator-range-label', this.$el).removeClass("hidden");
-                $('.value-operator-range-label', this.$el).show();
-                var valueOperator = $(".value-type-select", this.$el).val();
-                this.updateConstrainValueVisibility(valueOperator);
-            } else {
-                $('.value-operator').hide();
-                $('.value-operator-range-label', this.$el).hide();
-                $('.constrain-value-two', this.$el).hide();
-                $('.constrain-value-two', this.$el).val("");
-                $('.constrain-value-one', this.$el).hide();
-                $('.constrain-value-one', this.$el).val("");
-                $('.validation-message', this.$el).text("");
+			if(constrainByValue){
+			    $('.value-operator', this.$el).removeClass("hidden");
+			    $('.value-operator', this.$el).show();
+			    $('.value-operator-range-label', this.$el).removeClass("hidden");
+			    $('.value-operator-range-label', this.$el).show();
+			    var valueOperator = $(".value-type-select", this.$el).val();
+			    this.updateConstrainValueVisibility(valueOperator);
+			} else {
+			    $('.value-operator').hide();
+			    $('.value-operator-range-label', this.$el).hide();
+			    $('.constrain-value-two', this.$el).hide();
+			    $('.constrain-value-two', this.$el).val("");
+			    $('.constrain-value-one', this.$el).hide();
+			    $('.constrain-value-one', this.$el).val("");
+			    $('.validation-message', this.$el).text("");
 
-                //update model
+			    //update model
                 this.onConstrainValuesChange();
-            }
-		},
+			}
+        },
 		onConstrainGeneticsSelect: function(event) {
 			var dropdownElement = $("."+event.target.parentElement.parentElement.attributes['aria-labelledby'].value, this.$el);
 			dropdownElement.text(event.target.text);
@@ -393,20 +393,20 @@ define(["jquery", "picSure/search", "text!filter/searchHelpTooltip.hbs", "overri
             $(".value-type-select", this.$el).val(valueOperator);
 		},
 		updateConstrainFilterMenu : function() {
-			var filterEl = $('.constrain-filter', this.$el);
+		    var filterEl = $('.constrain-filter', this.$el);
 
-			if(this.model.attributes.valueType ==="ANYRECORDOF"){
-				console.log("Any Value Filter: " + this.model.attributes);
-				filterEl.html('');
-			} else if(this.model.attributes.concept.columnDataType==="CONTINUOUS"){
-				filterEl.html(this.constrainFilterMenuTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
-				if(this.model.attributes.constrainParams.attributes.constrainByValue){
-					this.updateConstrainValueVisibility(this.model.attributes.constrainParams.attributes.valueOperator);
-				}
-			} else if (this.model.attributes.concept.columnDataType==="VARIANT"){
-				filterEl.html(this.constrainFilterMenuGeneticsTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
-				filterEl.show();
-			//don't need this extra condition any more; INFO are handled mostly the same way as categorical.
+		    if(this.model.attributes.valueType ==="ANYRECORDOF"){
+		        console.log("Any Value Filter: " + this.model.attributes);
+		        filterEl.html('');
+		    } else if(this.model.attributes.concept.columnDataType==="CONTINUOUS"){
+		        filterEl.html(this.constrainFilterMenuTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
+		        if(this.model.attributes.constrainParams.attributes.constrainByValue){
+		            this.updateConstrainValueVisibility(this.model.attributes.constrainParams.attributes.valueOperator);
+		        }
+		    } else if (this.model.attributes.concept.columnDataType==="VARIANT"){
+		        filterEl.html(this.constrainFilterMenuGeneticsTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
+		        filterEl.show();
+		    //don't need this extra condition any more; INFO are handled mostly the same way as categorical.
             } else if (this.model.attributes.concept.columnDataType==="INFO" && this.model.attributes.concept.metadata.continuous){
 //			 	filterEl.html(this.constrainFilterMenuCategoriesTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
                 filterEl.html(this.constrainFilterMenuVariantInfoNumericTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
@@ -512,12 +512,12 @@ define(["jquery", "picSure/search", "text!filter/searchHelpTooltip.hbs", "overri
 			}
 		},
 		isValueInRange: function(value, min, max){
-			if (value < min || value > max) {
-                return false;
-            } else {
-                return true;
-            }
-		},
+		    if (value < min || value > max) {
+		        return false;
+		    } else {
+		        return true;
+		    }
+        },
 		geneticSelections: function(searchString){
 			if(/\d+,\d+,.*,.*/.test(searchString)||(/\d+:\d+_.*/.test(searchString))){
 				console.log(searchString);
