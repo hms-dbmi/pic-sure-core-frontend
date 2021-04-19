@@ -414,13 +414,12 @@ define(["jquery", "picSure/search", "text!filter/searchHelpTooltip.hbs", "overri
 				filterEl.html(this.constrainFilterMenuCategoriesTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
 				//Move the selected items to the right box
 				var selectedCategories = this.model.get("constrainParams").get("constrainValueOne");
-				var elRef = this.$el;
-				$(".available-categories > option", this.$el).each(function() {
-					if((Array.isArray(selectedCategories) && selectedCategories.includes(this.text))
-							|| selectedCategories == this.text){
-							$(".selected-categories", elRef).append(this);
+				$(".available-categories > option", this.$el).each((function(idx, option) {
+					if((Array.isArray(selectedCategories) && selectedCategories.includes(option.text))
+							|| selectedCategories == option.text){
+							$(".selected-categories", this.$el).append(option);
 					}
-                }); 
+                }).bind(this));
                 //this should show the multi-select boxes.  the template should automatically have 'RESTRICT' by value selected.
                	this.updateCategoryFilterVisibility();
 			}
