@@ -1,8 +1,13 @@
-define(['jquery', 'auth0-lock'], 
+define(['jquery', 'auth0Lock'], 
 function($, Auth0Lock) {
 	return{
 		showLockButtons: function(connections, oauth){
-		    var lock = new Auth0Lock(oauth.client_id, oauth.domain);
+			
+			var options = {
+					allowedConnections: _.pluck(connections, 'name')
+			};
+			
+		    var lock = new Auth0Lock(oauth.client_id, oauth.domain, options);
 		    lock.on('signin ready', function() {
 		        $('.a0-iconlist').html('<div style="font-size: 140%">Please click one of the buttons below to log in.</div><br />');
 		        if (connections == null || connections.length == 0) {

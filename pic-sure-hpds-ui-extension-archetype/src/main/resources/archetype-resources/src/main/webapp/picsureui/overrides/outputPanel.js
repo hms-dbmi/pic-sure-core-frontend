@@ -31,6 +31,11 @@ define(["jquery", "handlebars", "backbone"], function($, HBS, BB){
 		/*
 		 * If you want to show your customized error message, please override this
 		 */
-		outputErrorMessage: undefined
+		outputErrorMessage: undefined,
+		
+		/*
+		 * A function to make any necessary updates to the query before submitting
+		 */
+		updateConsentFilters : undefined
 	};
 });
