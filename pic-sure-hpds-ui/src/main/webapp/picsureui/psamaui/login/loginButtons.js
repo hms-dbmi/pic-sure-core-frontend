@@ -4,8 +4,10 @@ function($, Auth0Lock) {
 		showLockButtons: function(connections, oauth){
 			
 			var options = {
-					allowedConnections: _.pluck(connections, 'name')
-			};
+					  theme: {
+					    authButtons: connections
+					  }
+					};
 			
 		    var lock = new Auth0Lock(oauth.client_id, oauth.domain, options);
 		    lock.on('signin ready', function() {
