@@ -41,7 +41,17 @@ define(["jquery", "common/transportErrors", "filter/filterList", "header/header"
 			            outputPanel.update(query);
 			        }.bind(this),
 			        error: function (response) {
-                        transportErrors.handleAll(response, "Cannot retrieve query template with status: " + response.status);
+                        //transportErrors.handleAll(response, "Cannot retrieve query template with status: " + response.status);
+                        console.log("unable to retrieve query template");
+                        
+                        $('#main-content').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
+			            filterList.init();
+			            var outputPanel = output.View;
+			            outputPanel.render();
+			            $('#query-results').append(outputPanel.$el);
+						
+			            var query = queryBuilder.createQuery({});
+			            outputPanel.update(query);
 			        }.bind(this)
 			    });
 
