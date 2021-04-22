@@ -68,11 +68,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.bower</groupId>
-			<artifactId>auth0.js</artifactId>
-			<version>11.2.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars.bower</groupId>
 			<artifactId>auth0-lock</artifactId>
 			<version>11.2.3</version>
 		</dependency>
