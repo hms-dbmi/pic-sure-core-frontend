@@ -1,0 +1,32 @@
+<div id="frmAuth0Login"><div id="a0-lock" class="a0-lock a0-theme-default" dir="auto">
+  <div class="a0-signin">
+    <div class="a0-popup  ">
+      <div class="a0-active">
+        <div class="a0-nocentrix">
+          <div id="a0-onestep" class="a0-panel a0-onestep a0-active">
+    <div class="a0-mode-container"><div class="a0-notloggedin a0-mode">
+        <div class="a0-sso-notice-container a0-hide">
+            <i class="a0-icon-budicon"></i>
+            <span class="a0-sso-notice">Single Sign-on enabled</span>
+        </div>
+        <div class="a0-body-content">
+            <div class="a0-db-actions"><div class="a0-create-account a0-buttons-actions">
+</div></div>
+            <div class="a0-collapse-social">
+                <div class="a0-iconlist"><div style="font-size: 140%">Please click one of the buttons below to log in.</div>
+                <br>
+                {{#each connections}}
+                <a class="a0-zocial a0-{{name}} href="#" style="{{style}}">{{#if logo}}<img src="{{logo}}"/>{{/if}} <span style="text-transform: none">{{displayText}}</span></a>
+                {{/each}}
+            </div>
+                        
+        </div>    
+</div></div>
+    
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
