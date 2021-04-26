@@ -67,9 +67,9 @@
 			<version>1.2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.webjars.npm</groupId>
-			<artifactId>auth0-js</artifactId>
-			<version>9.11.3</version>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>auth0.js</artifactId>
+			<version>9.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.bower</groupId>
