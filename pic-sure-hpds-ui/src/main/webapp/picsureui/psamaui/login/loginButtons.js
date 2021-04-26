@@ -1,9 +1,9 @@
 define(['jquery', 'auth0js', 'handlebars', 'text!login/loginButtons.hbs', 'psamaSettings/settings'], 
 function($, auth0, HBS, buttonsTemplate, settings) {
 	return{
-		showLockButtons: function (connections, oath){
+		showLockButtons: function (connections, oauth){
 			
-			$('#frmAuth0Login').html(HBS.compile(buttonsTemplate)(connections));
+			$('#frmAuth0Login').html(HBS.compile(buttonsTemplate)({connections: connections}));
 			
 			const options = {
 			        domain: oauth.domain,
