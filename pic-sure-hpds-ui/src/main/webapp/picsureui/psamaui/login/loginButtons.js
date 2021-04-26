@@ -14,7 +14,7 @@ function($, auth0, HBS, buttonsTemplate, settings) {
 			
 			_.each(connections, function(item){
 				
-				$(".a0-" + item.name).addEventListener('click', () => {
+				$(".a0-" + item.name).click(function(){
 			        const webAuth = new Auth0.WebAuth(options);
 					
 			        webAuth.authorize({
