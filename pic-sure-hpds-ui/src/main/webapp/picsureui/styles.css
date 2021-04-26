@@ -751,7 +751,6 @@ body {
     margin-left: 15px;
 }
 
-
 .login-logo {
     width:100%;
 }
@@ -790,6 +789,6 @@ body {
 }
 
 .a0-zocial:hover {
-	background: rgba(0,0,0,.2);
+	filter: brightness(85%);
 	color: #fff;
 }
