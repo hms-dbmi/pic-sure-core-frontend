@@ -1,4 +1,4 @@
-define(['jquery', 'auth0js', 'handlebars', 'text!login/loginButtons.hbs', 'psamaSettings/settings'], 
+define(['jquery', 'auth0-js', 'handlebars', 'text!login/loginButtons.hbs', 'psamaSettings/settings'], 
 function($, auth0, HBS, buttonsTemplate, settings) {
 	return{
 		showLockButtons: function (connections, oauth){
@@ -15,7 +15,7 @@ function($, auth0, HBS, buttonsTemplate, settings) {
 			_.each(connections, function(item){
 				
 				$(".a0-" + item.name).click(function(){
-			        const webAuth = new Auth0.WebAuth(options);
+			        const webAuth = new auth0.WebAuth(options);
 					
 			        webAuth.authorize({
 			          responseType: 'token',
