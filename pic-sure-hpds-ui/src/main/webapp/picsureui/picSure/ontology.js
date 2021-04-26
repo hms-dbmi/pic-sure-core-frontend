@@ -1,9 +1,6 @@
 define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "overrides/ontology", "common/transportErrors"],
 		function($, _, settings, resourceMeta, overrides, transportErrors) {
 
-    if (!sessionStorage.getItem("session")) {
-        return {};
-    }
     var allConcepts;
     var allInfoColumns;
 
@@ -214,29 +211,32 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
     // scope filters export tree to authorized root nodes for applications using the the query scope feature.
     var scope = [];
 
-    $.ajax({
-        url: window.location.origin + "/psama/user/me",
-        type: 'GET',
-        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-        contentType: 'application/json',
-        success: function(meResponse){
-            var scopes = meResponse.queryScopes;
-            if(scopes != undefined){
-	            scopes.forEach(function(item, index) {
-	                if ( item.length < 2 || !item.startsWith("\\")) {
-	                    scope.push(item);
-	                } else if(item.length < 3){
-	                    scope.push(item.substr(1,2));
-	                } else {
-	                    scope.push(item.substr(1,item.length - 2));
-	                };
-	            });
-            }
-        }.bind(this),
-        error: function(response){
-            transportErrors.handleAll(response, "error retrieving user info");
-        }.bind(this)
-    });
+    //if we have a session, look up the scopes - this happens when this class is instantiated, unlike the rest of these functions.
+    if (sessionStorage.getItem("session")) {
+	    $.ajax({
+	        url: window.location.origin + "/psama/user/me",
+	        type: 'GET',
+	        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+	        contentType: 'application/json',
+	        success: function(meResponse){
+	            var scopes = meResponse.queryScopes;
+	            if(scopes != undefined){
+		            scopes.forEach(function(item, index) {
+		                if ( item.length < 2 || !item.startsWith("\\")) {
+		                    scope.push(item);
+		                } else if(item.length < 3){
+		                    scope.push(item.substr(1,2));
+		                } else {
+		                    scope.push(item.substr(1,item.length - 2));
+		                };
+		            });
+	            }
+	        }.bind(this),
+	        error: function(response){
+	            transportErrors.handleAll(response, "error retrieving user info");
+	        }.bind(this)
+	    });
+    }
     
     var tree = function(consumer, crossCounts) {
         if (cachedTree) {
