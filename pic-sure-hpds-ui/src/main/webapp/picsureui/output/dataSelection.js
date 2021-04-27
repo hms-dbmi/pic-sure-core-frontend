@@ -14,6 +14,8 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 				"click #copy-queryid-btn" : "copyQueryId"
 			},
 			updateQuery: function(query){
+				if(!query) { return; }
+				
 				this.query = query;
 				this.selectedFields = _.uniq(this.selectedFields.concat(query.query.requiredFields)
 					.concat(query.fields)

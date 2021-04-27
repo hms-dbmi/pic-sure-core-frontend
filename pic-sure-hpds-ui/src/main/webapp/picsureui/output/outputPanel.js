@@ -98,128 +98,126 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 				
 				this.render();
 	
-				if(this.dataSelection){
-					this.dataSelection.updateQuery(query);
-					this.dataSelection.render();
-				}
-	
-				if(overrides.updateConsentFilters){
-					overrides.updateConsentFilters(query, settings);
-				}
 				
 				//run a query for each resource 
 				_.each(outputModelDefaults.resources, function(resource){
-					// make a safe deep copy of the incoming query so we don't modify it
+					// make a safe deep copy (scoped per resource) of the incoming query so we don't modify it
 					var query = JSON.parse(JSON.stringify(incomingQuery));
 					this.model.baseQuery = incomingQuery;
+					
 					query.resourceUUID = JSON.parse(settings).picSureResourceId;
 					query.resourceCredentials = {};
 					query.query.expectedResultType="COUNT";
 				
-				//if this is the base resource, we should update the model
-  				if(resource.additionalPui == undefined) {
-  					this.model.set("query", query);
-  				} else {
-  					query.query.requiredFields.push(resource.additionalPui);
-  				}
-				
-  				// handle 'number of genomic samples'. do not overwrite an existing variant info (likely selected by user)
-  				if(resource.additionalVariantCategory &&  _.isEmpty(query.query.variantInfoFilters[0].categoryVariantInfoFilters)){
-  					query.query.variantInfoFilters[0].categoryVariantInfoFilters = JSON.parse(resource.additionalVariantCategory);
-  				}
+					//if this is the base resource, we should update the model and everything else
+	  				if(resource.additionalPui == undefined) {
+	  					this.model.set("query", query);
+	  					if(this.dataSelection){
+	  						this.dataSelection.updateQuery(query);
+	  						this.dataSelection.render();
+	  					}
+	  		
+	  					if(overrides.updateConsentFilters){
+	  						overrides.updateConsentFilters(query, settings);
+	  					}
+	  				} else {
+	  					query.query.requiredFields.push(resource.additionalPui);
+	  				}
+					
+	  				// handle 'number of genomic samples'. do not overwrite an existing variant info (likely selected by user)
+	  				if(resource.additionalVariantCategory &&  _.isEmpty(query.query.variantInfoFilters[0].categoryVariantInfoFilters)){
+	  					query.query.variantInfoFilters[0].categoryVariantInfoFilters = JSON.parse(resource.additionalVariantCategory);
+	  				}
+	
+	  				var dataCallback = function(result, resultId){
+	  					//if this is the main resource query, set total patients
+	  					if(resource.additionalPui == undefined){
+	  						var count = parseInt(result);
+	  						this.model.set("totalPatients", count);
+	  						this.model.set("queryRan", true);
+	  						this.model.set("spinning", false);
+	  						
+	  						//allow UI overrides the opportunity to customize results (not for sub queries)
+	  		                if(overrides.dataCallback ) {
+	  		                	overrides.dataCallback(query, resultId, this.model);
+	  		                }
+	  					}else{
+	  						// Otherwise just call the subqueries defined
+	  						var count = parseInt(result);
+	  						this.model.get("resources")[resource.id].queryRan = true;
+	  						this.model.get("resources")[resource.id].patientCount = count;
+	  						this.model.get("resources")[resource.id].spinning = false;
+	  					}
+		                this.render();
+		                
+		                if(resource.additionalPui == undefined){
+			            	//then update the data selection if present (but only do this once)
+			    			this.select();
+		                }
+	  				}.bind(this);
 
-  				var dataCallback = function(result, resultId){
-  					//if this is the main resource query, set total patients
-  					if(resource.additionalPui == undefined){
-  						var count = parseInt(result);
-  						this.model.set("totalPatients", count);
-  						this.model.set("queryRan", true);
-  						this.model.set("spinning", false);
-  						
-  						//allow UI overrides the opportunity to customize results (not for sub queries)
-  		                if(overrides.dataCallback ) {
-  		                	overrides.dataCallback(query, resultId, this.model);
-  		                }
-  					}else{
-  						// Otherwise just call the subqueries defined
-  						var count = parseInt(result);
-  						this.model.get("resources")[resource.id].queryRan = true;
-  						this.model.get("resources")[resource.id].patientCount = count;
-  						this.model.get("resources")[resource.id].spinning = false;
-  					}
-  					
-  					
-	                
-	                this.render();
-	                
-	                if(resource.additionalPui == undefined){
-		            	//then update the data selection if present (but only do this once)
-		    			this.select();
-	                }
-  				}.bind(this);
-
-  				var errorCallback = function(message){
-  					if(resource.additionalPui == undefined){
-  						this.model.set("totalPatients", '-');
-  					}else{
-  						this.model.get("resources")[resource.id].queryRan = true;
-  						this.model.get("resources")[resource.id].patientCount = '-';
-  						this.model.get("resources")[resource.id].spinning = false;
-  					}
-  					
-  					if(_.every(this.model.get('resources'), (resource)=>{return resource.spinning==false})){
-						this.model.set("spinning", false);
-						this.model.set("queryRan", true);
-					}
-  					
-  					this.render();
-  					if(resource.additionalPui == undefined){
-  						$("#patient-count").html(message);
-  					} else {
-  						console.log("error in query");
-  					}
-  				}.bind(this);
-
-				$.ajax({
-				 	url: window.location.origin + "/picsure/query/sync",
-				 	type: 'POST',
-				 	headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-				 	contentType: 'application/json',
-				 	data: JSON.stringify(query),
-  				 	success: function(response, textStatus, request){
-  				 		dataCallback(response, request.getResponseHeader("resultId"));
-  						}.bind(this),
-				 	error: function(response){
-						if (!transportErrors.handleAll(response, "Error while processing query")) {
-							response.responseText = "<h4>"
-								+ overrides.outputErrorMessage ? overrides.outputErrorMessage : "There is something wrong when processing your query, please try it later, if this repeats, please contact admin."
-								+ "</h4>";
-					 		errorCallback(response.responseText);
+	  				var errorCallback = function(message){
+	  					if(resource.additionalPui == undefined){
+	  						this.model.set("totalPatients", '-');
+	  					}else{
+	  						this.model.get("resources")[resource.id].queryRan = true;
+	  						this.model.get("resources")[resource.id].patientCount = '-';
+	  						this.model.get("resources")[resource.id].spinning = false;
+	  					}
+	  					
+	  					if(_.every(this.model.get('resources'), (resource)=>{return resource.spinning==false})){
+							this.model.set("spinning", false);
+							this.model.set("queryRan", true);
 						}
-					}
-				});
-			}.bind(this));
-		},
-		copyToken: function(){
-            var sel = getSelection();
-            var range = document.createRange();
-
-            var element = $(".picsure-result-id")[0]
-            // this if for supporting chrome, since chrome will look for value instead of textContent
-            element.value = element.textContent;
-            range.selectNode(element);
-            sel.removeAllRanges();
-            sel.addRange(range);
-            document.execCommand("copy");
-        },
-		render: function(){
-			this.$el.html(this.template(this.model.toJSON()));
-			if(this.dataSelection){
-				this.dataSelection.setElement($("#concept-tree-div",this.$el));
-				this.dataSelection.render();
+	  					
+	  					this.render();
+	  					if(resource.additionalPui == undefined){
+	  						$("#patient-count").html(message);
+	  					} else {
+	  						console.log("error in query");
+	  					}
+	  				}.bind(this);
+	
+					$.ajax({
+					 	url: window.location.origin + "/picsure/query/sync",
+					 	type: 'POST',
+					 	headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+					 	contentType: 'application/json',
+					 	data: JSON.stringify(query),
+	  				 	success: function(response, textStatus, request){
+	  				 		dataCallback(response, request.getResponseHeader("resultId"));
+	  						}.bind(this),
+					 	error: function(response){
+							if (!transportErrors.handleAll(response, "Error while processing query")) {
+								response.responseText = "<h4>"
+									+ overrides.outputErrorMessage ? overrides.outputErrorMessage : "There is something wrong when processing your query, please try it later, if this repeats, please contact admin."
+									+ "</h4>";
+						 		errorCallback(response.responseText);
+							}
+						}
+					});
+				}.bind(this));
+			},
+			copyToken: function(){
+	            var sel = getSelection();
+	            var range = document.createRange();
+	
+	            var element = $(".picsure-result-id")[0]
+	            // this if for supporting chrome, since chrome will look for value instead of textContent
+	            element.value = element.textContent;
+	            range.selectNode(element);
+	            sel.removeAllRanges();
+	            sel.addRange(range);
+	            document.execCommand("copy");
+	        },
+			render: function(){
+				this.$el.html(this.template(this.model.toJSON()));
+				if(this.dataSelection){
+					this.dataSelection.setElement($("#concept-tree-div",this.$el));
+					this.dataSelection.render();
+				}
 			}
-		}
-	});
+		});
 	
 	return {
 		View : new outputView({
