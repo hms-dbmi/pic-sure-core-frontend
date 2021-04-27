@@ -2,7 +2,11 @@ define(['jquery', 'auth0-js', 'handlebars', 'text!login/loginButtons.hbs', 'psam
 function($, auth0, HBS, buttonsTemplate, settings) {
 	return{
 		showLockButtons: function (connections, oauth){
-			
+			/*
+			 * To add additional Auth0 connections, add the desired information to the connections.json file
+			 * in the project-specific repository in the path /picsureui/psamaui/login/.
+			 * A default connection (Google) is included in the base repo to provide an example structure.
+			 */
 			$('#frmAuth0Login').html(HBS.compile(buttonsTemplate)({connections: connections}));
 			
 			const options = {
@@ -23,15 +27,6 @@ function($, auth0, HBS, buttonsTemplate, settings) {
 			        });
 			      });
 			});
-		} ,
-			
-		oldShowButtons: function(connections, oauth){
-			
-		    $('.a0-image').css('display', 'none');
-		    $('#a0-lock.a0-theme-default .a0-panel .a0-icon-container').css('padding-top', '2px');
-		    $('#a0-lock.a0-theme-default .a0-panel .a0-bg-gradient').css('height', '70%');
-		    $('#a0-lock.a0-theme-default .a0-panel .a0-mode form .a0-body-content').css('padding-top', '0px');
-		    $('#a0-lock.a0-theme-default .a0-panel .a0-top-header').css('display', 'none');
 		}
 	};
 });

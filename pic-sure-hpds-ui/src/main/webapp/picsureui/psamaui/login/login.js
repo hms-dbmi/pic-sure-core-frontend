@@ -47,15 +47,10 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                 }
                 var clientId = overrides.client_id;
 
-//                require.config({
-//                    shim: {
-//                        "auth0Lock": {
-//                            deps:["jquery"],
-//                            exports: "Auth0Lock"
-//                        }
-//                    }
-//                });
-                
+                // The setting 'customizeAuth0Login' directs the UI to render individual buttons for the oauth login screen
+                // if this setting is false, then the standard Auth0 Lock (an email/password entry form) is used.
+                // Some institutions require a username instead of an email for login; the Lock workflow would then require
+                // the users to enter their credentials twice;  we can avoid that by using buttons only (customize == true)
                 if (settings.customizeAuth0Login){
             	   var oauth = {
             		    client_id : clientId,
