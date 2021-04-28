@@ -66,7 +66,7 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 			},
 			runQuery: function(incomingQuery){
 				if(overrides.runQuery){
-					overrides.runQuery(this, incomingQuery, dataCallback, errorCallback);
+					overrides.runQuery(this, incomingQuery, this.dataCallback, this.errorCallback);
 				} else {
 					//use the default logic
 					var query = JSON.parse(JSON.stringify(incomingQuery)); //make a safe copy
