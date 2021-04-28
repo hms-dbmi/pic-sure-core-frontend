@@ -1,38 +1,7 @@
-define(["jquery", "text!../settings/settings.json", "output/dataSelection", "text!output/outputPanel.hbs","picSure/resourceMeta", "picSure/ontology", "backbone", "handlebars", "overrides/outputPanel", "common/transportErrors"],
-		function($, settings, dataSelection, outputTemplate, resourceMeta, ontology, BB, HBS, overrides, transportErrors){
+define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars", "overrides/outputPanel", "common/transportErrors"],
+		function($,  dataSelection, outputTemplate, ontology, BB, HBS, overrides, transportErrors){
 
-	var outputModelDefaults = {
-			totalPatients : 0,
-			spinnerClasses: "spinner-medium spinner-medium-center ",
-			spinning: false,
-			resources : {}
-	};
-	
-	_.each(resourceMeta, (resource) => {
-		
-		//base resource first; this will be the 'all patients' or main query
-		outputModelDefaults.resources[resource.id] = {
-				id: resource.id,
-				name: resource.name,
-				patientCount: 0,
-				spinnerClasses: "spinner-center ",
-				spinning: false
-		};
-		
-		//then check to see if we have sub queries for this resource - add those as 'resource' items as well
-		_.each(resource.subQueries, (resource) => {
-  			outputModelDefaults.resources[resource.id] = {
-  					id: resource.id,
-  					name: resource.name,
-  					additionalPui: resource.additionalPui,
-  					patientCount: 0,
-  					spinnerClasses: "spinner-small spinner-small-center ",
-  					spinning: false
-  			};
-		});
-	});
 	var outputModel = overrides.modelOverride ? overrides.modelOverride : BB.Model.extend({
-		defaults: outputModelDefaults,
 		spinAll: function(){
 			this.set('spinning', true);
 			this.set('queryRan', false);
@@ -62,122 +31,46 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 				"click #select-btn": "select"
 			},
 			select: function(event){
-				
-				this.model.set('spinning', true);
 				if(!this.dataSelection){
 					var query = JSON.parse(JSON.stringify(this.model.get("query")));
-					
 					if(!this.dataSelection){
 						this.dataSelection = new dataSelection({query:JSON.parse(JSON.stringify(this.model.baseQuery))});
 						$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
 					} else {
 						this.dataSelection.updateQuery(query);
 					}
-					
-					this.model.set("spinning", false);
 					this.dataSelection.render();
 				}
 			},
 			totalCount: 0,
 			tagName: "div",
-			update: function(incomingQuery){
-				this.model.set("totalPatients",0);
-				this.model.spinAll();
+			dataCallback: function(result){
+				//default function to update a single patient count element in the output panel
 				
-				//clear out the result count for resources/subqueries if we have no filters.  TODO: not sure why this is happening
-				//we can't check for 'required fields' here because the subqueries may use that to drive some selection
-	  			if (incomingQuery.query.requiredFields.length == 0
-					&& _.keys(incomingQuery.query.numericFilters).length==0 
-					&& _.keys(incomingQuery.query.categoryFilters).length==0
-					&& _.keys(incomingQuery.query.variantInfoFilters).length==0
-					&& _.keys(incomingQuery.query.categoryFilters).length==0) {
-	  				_.each(this.model.get('resources'), function(picsureInstance){
-		  					picsureInstance.id.patientCount = 0;
-		  				}.bind(this));
-		  			}
+				var count = parseInt(result);
+				this.model.set("totalPatients", count);
+				this.model.set("queryRan", true);
+				this.model.set("spinning", false);
 				
+				$("#patient-count").html(message);  //do we need to render() instead?
+                //and update the data selection panel
+    			this.select();
+			},
+			errorCallback: function(message){
+				//clear some status flags and make sure we inform the user of errors
+				this.model.set("totalPatients", '-');
+				this.model.set("spinning", false);
+				this.model.set("queryRan", true);
 				this.render();
-	
-				
-				//run a query for each resource 
-				_.each(outputModelDefaults.resources, function(resource){
-					// make a safe deep copy (scoped per resource) of the incoming query so we don't modify it
-					var query = JSON.parse(JSON.stringify(incomingQuery));
-					this.model.baseQuery = incomingQuery;
-					
-					query.resourceUUID = JSON.parse(settings).picSureResourceId;
-					query.resourceCredentials = {};
-					query.query.expectedResultType="COUNT";
-				
-					//if this is the base resource, we should update the model and everything else
-	  				if(resource.additionalPui == undefined) {
-	  					this.model.set("query", query);
-	  					if(this.dataSelection){
-	  						this.dataSelection.updateQuery(query);
-	  						this.dataSelection.render();
-	  					}
-	  		
-	  					if(overrides.updateConsentFilters){
-	  						overrides.updateConsentFilters(query, settings);
-	  					}
-	  				} else {
-	  					query.query.requiredFields.push(resource.additionalPui);
-	  				}
-					
-	  				// handle 'number of genomic samples'. do not overwrite an existing variant info (likely selected by user)
-	  				if(resource.additionalVariantCategory &&  _.isEmpty(query.query.variantInfoFilters[0].categoryVariantInfoFilters)){
-	  					query.query.variantInfoFilters[0].categoryVariantInfoFilters = JSON.parse(resource.additionalVariantCategory);
-	  				}
-	
-	  				var dataCallback = function(result, resultId){
-	  					//if this is the main resource query, set total patients
-	  					if(resource.additionalPui == undefined){
-	  						var count = parseInt(result);
-	  						this.model.set("totalPatients", count);
-	  						this.model.set("queryRan", true);
-	  						this.model.set("spinning", false);
-	  						
-	  						//allow UI overrides the opportunity to customize results (not for sub queries)
-	  		                if(overrides.dataCallback ) {
-	  		                	overrides.dataCallback(query, resultId, this.model);
-	  		                }
-	  					}else{
-	  						// Otherwise just call the subqueries defined
-	  						var count = parseInt(result);
-	  						this.model.get("resources")[resource.id].queryRan = true;
-	  						this.model.get("resources")[resource.id].patientCount = count;
-	  						this.model.get("resources")[resource.id].spinning = false;
-	  					}
-		                this.render();
-		                
-		                if(resource.additionalPui == undefined){
-			            	//then update the data selection if present (but only do this once)
-			    			this.select();
-		                }
-	  				}.bind(this);
-
-	  				var errorCallback = function(message){
-	  					if(resource.additionalPui == undefined){
-	  						this.model.set("totalPatients", '-');
-	  					}else{
-	  						this.model.get("resources")[resource.id].queryRan = true;
-	  						this.model.get("resources")[resource.id].patientCount = '-';
-	  						this.model.get("resources")[resource.id].spinning = false;
-	  					}
-	  					
-	  					if(_.every(this.model.get('resources'), (resource)=>{return resource.spinning==false})){
-							this.model.set("spinning", false);
-							this.model.set("queryRan", true);
-						}
-	  					
-	  					this.render();
-	  					if(resource.additionalPui == undefined){
-	  						$("#patient-count").html(message);
-	  					} else {
-	  						console.log("error in query");
-	  					}
-	  				}.bind(this);
-	
+				$("#patient-count").html(message);
+			},
+			runQuery: function(incomingQuery){
+				if(overrides.runQuery){
+					overrides.runQuery(this, incomingQuery, dataCallback, errorCallback);
+				} else {
+					//use the default logic
+					var query = JSON.parse(JSON.stringify(incomingQuery)); //make a safe copy
+					this.model.baseQuery = query;
 					$.ajax({
 					 	url: window.location.origin + "/picsure/query/sync",
 					 	type: 'POST',
@@ -186,7 +79,7 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 					 	data: JSON.stringify(query),
 	  				 	success: function(response, textStatus, request){
 	  				 		dataCallback(response, request.getResponseHeader("resultId"));
-	  						}.bind(this),
+	  						}, //.bind(this),
 					 	error: function(response){
 							if (!transportErrors.handleAll(response, "Error while processing query")) {
 								response.responseText = "<h4>"
@@ -196,7 +89,13 @@ define(["jquery", "text!../settings/settings.json", "output/dataSelection", "tex
 							}
 						}
 					});
-				}.bind(this));
+				}
+			},
+			//update is the old function with many hooks;  use runQuery instead.
+			update: function(incomingQuery){
+				console.log("OLD UPDATE CALLED");
+				this.model.set("totalPatients",0);
+				this.model.spinAll();
 			},
 			copyToken: function(){
 	            var sel = getSelection();

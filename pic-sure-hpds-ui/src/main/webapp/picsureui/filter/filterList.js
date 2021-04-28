@@ -43,7 +43,7 @@ define(["jquery", "output/outputPanel","picSure/queryBuilder", "filter/filter"],
 	filterList.runQuery = function(){
 		var query = queryBuilder.createQuery(
 				_.pluck(this.filters, "model"));
-		outputPanel.View.update(query);
+		outputPanel.View.runQuery(query);
 		if(_.countBy(this.filters, function(filter){
 			return $(".search-box", filter.$el).is(":visible") ? "visible" : "hidden";
 		}).visible == undefined) {

@@ -36,6 +36,15 @@ define(["jquery", "handlebars", "backbone"], function($, HBS, BB){
 		/*
 		 * A function to make any necessary updates to the query before submitting
 		 */
-		updateConsentFilters : undefined
+		updateConsentFilters : undefined,
+		
+		/*
+		 * The new hook for overriding all custom query logic.  takes 4 parameters:
+		 * outputPanel - default outputPanel object for access to model and other objects, 
+		 * incomingQuery - query object to be executed, 
+		 * dataCallback - default data callback function, 
+		 * errorCallback - default error callback function
+		 */
+		runQuery: undefined
 	};
 });
