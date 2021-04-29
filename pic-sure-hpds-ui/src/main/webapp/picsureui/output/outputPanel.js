@@ -97,18 +97,6 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				this.model.set("totalPatients",0);
 				this.model.spinAll();
 			},
-			copyToken: function(){
-	            var sel = getSelection();
-	            var range = document.createRange();
-	
-	            var element = $(".picsure-result-id")[0]
-	            // this if for supporting chrome, since chrome will look for value instead of textContent
-	            element.value = element.textContent;
-	            range.selectNode(element);
-	            sel.removeAllRanges();
-	            sel.addRange(range);
-	            document.execCommand("copy");
-	        },
 			render: function(){
 				this.$el.html(this.template(this.model.toJSON()));
 				if(this.dataSelection){
