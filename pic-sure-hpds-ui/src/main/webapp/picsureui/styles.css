@@ -786,9 +786,15 @@ body {
 	overflow: hidden;
 	text-decoration: none !important;
 	color: #fff;
+	height: 47px;
 }
 
 .a0-zocial:hover {
 	filter: brightness(85%);
 	color: #fff;
+}
+
+.a0-zocial-icon {
+	max-height: 100%;
+	max-width: 100%;
 }
