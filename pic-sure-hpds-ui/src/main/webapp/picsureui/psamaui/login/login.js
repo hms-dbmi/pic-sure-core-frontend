@@ -1,5 +1,5 @@
-define(['common/session', "picSure/psamaSettings", 'common/searchParser', 'jquery', 'handlebars', 'login/loginButtons', 'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login','text!login/connections.json'],
-		function(session, settings, parseQueryString, $, HBS, loginButtons, notAuthorizedTemplate, overrides, notification, fenceLogin, connectionsStr){
+define(['common/session', "picSure/psamaSettings", "picSure/settings", 'common/searchParser', 'jquery', 'handlebars', 'login/loginButtons', 'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login','text!login/connections.json'],
+		function(session, settings, picsureSettings, parseQueryString, $, HBS, loginButtons, notAuthorizedTemplate, overrides, notification, fenceLogin, connectionsStr){
 
 	var connections = JSON.parse(connectionsStr);
 	var login = {
@@ -101,7 +101,7 @@ define(['common/session', "picSure/psamaSettings", 'common/searchParser', 'jquer
             else {
                 sessionStorage.clear();
                 localStorage.clear();
-                $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:settings.helpLink}));
+                $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:picsureSettings.helpLink}));
             }
         }
     };
