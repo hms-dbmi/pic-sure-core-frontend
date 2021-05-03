@@ -792,6 +792,7 @@ body {
 .a0-zocial:hover {
 	filter: brightness(85%);
 	color: #fff;
+	cursor: pointer;
 }
 
 .a0-zocial-icon {
