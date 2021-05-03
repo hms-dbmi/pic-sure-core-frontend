@@ -1,4 +1,4 @@
-define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'login/loginButtons', 'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login','text!login/connections.json'],
+define(['common/session', "picSure/psamaSettings", 'common/searchParser', 'jquery', 'handlebars', 'login/loginButtons', 'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification', 'psamaui/login/fence_login','text!login/connections.json'],
 		function(session, settings, parseQueryString, $, HBS, loginButtons, notAuthorizedTemplate, overrides, notification, fenceLogin, connectionsStr){
 
 	var connections = JSON.parse(connectionsStr);
@@ -42,10 +42,10 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                     }
                 });
             }else{
-                if (!overrides.client_id){
+                if (!settings.client_id){
                     notification.showFailureMessage("Client_ID is not provided. Please update overrides/login.js file.");
                 }
-                var clientId = overrides.client_id;
+                var clientId = settings.client_id;
 
                 // The setting 'customizeAuth0Login' directs the UI to render individual buttons for the oauth login screen
                 // if this setting is false, then the standard Auth0 Lock (an email/password entry form) is used.
