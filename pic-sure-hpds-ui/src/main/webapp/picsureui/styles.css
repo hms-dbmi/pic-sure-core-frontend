@@ -798,3 +798,7 @@ body {
 	max-height: 100%;
 	max-width: 100%;
 }
+
+.a0-button-text {
+	text-transform: none;
+}
