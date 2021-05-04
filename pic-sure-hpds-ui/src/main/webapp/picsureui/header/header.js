@@ -1,11 +1,12 @@
-define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/header", "text!../settings/settings.json",
-        "text!psamaSettings/settings.json", "common/transportErrors", "text!options/modal.hbs","text!header/userProfile.hbs",
-        "util/notification", "psamaui/overrides/userProfile", "picSure/userFunctions", "picSure/applicationFunctions"],
+define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/header", "picSure/settings",
+        "common/transportErrors", "text!options/modal.hbs","text!header/userProfile.hbs",
+        "util/notification", "psamaui/overrides/userProfile", "picSure/userFunctions"],
 		function($, BB, HBS, template, overrides, settings,
-                 psamaSettings, transportErrors, modalTemplate, userProfileTemplate,
-                 notification, profileOverride, userFunctions, applicationFunctions){
+                 transportErrors, modalTemplate, userProfileTemplate,
+                 notification, profileOverride, userFunctions){
 	var headerView = BB.View.extend({
 		initialize : function(){
+			document.title = settings.pageTitle;
             HBS.registerHelper('not_contains', function (array, object, opts) {
                 var found = _.find(array, function (element) {
                     return (element === object);
@@ -134,13 +135,12 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
             }
         },
 		render : function(){
-			jsonSettings = JSON.parse(settings);
 			this.$el.html(this.template({
 				logoPath: (overrides.logoPath
 					? overrides.logoPath : "/images/logo.png"),
-				helpLink: jsonSettings.helpLink,
-				pdfLink: jsonSettings.pdfLink,
-				videoLink: jsonSettings.videoLink
+				helpLink: settings.helpLink,
+				pdfLink: settings.pdfLink,
+				videoLink: settings.videoLink
 			}));
 			if (sessionStorage.getItem("session")) {
 			    $('.authenticated-visible', this.$el).show();
