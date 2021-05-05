@@ -19,9 +19,9 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				});
 			},
 			
-			events:_.extend({
+			events:{
 				"click #select-btn": "select"
-			}, overrides.events? overrides.events : {} ),
+			},
 			select: function(event){
 				if(this.model.get("query") && !this.dataSelection){
 					var query = JSON.parse(JSON.stringify(this.model.get("query")));
