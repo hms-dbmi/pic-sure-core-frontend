@@ -1,4 +1,4 @@
-define(['jquery', 'auth0-js', 'handlebars', 'text!login/loginButtons.hbs', 'psamaSettings/settings'], 
+define(['jquery', 'auth0-js', 'handlebars', 'text!login/loginButtons.hbs', 'picSure/psamaSettings'], 
 function($, auth0, HBS, buttonsTemplate, settings) {
 	return{
 		showLockButtons: function (connections, oauth){

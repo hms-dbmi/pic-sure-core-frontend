@@ -6,7 +6,9 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                  notification, profileOverride, userFunctions){
 	var headerView = BB.View.extend({
 		initialize : function(){
-			document.title = settings.pageTitle;
+			if(settings.pageTitle){
+				document.title = settings.pageTitle;
+			}
             HBS.registerHelper('not_contains', function (array, object, opts) {
                 var found = _.find(array, function (element) {
                     return (element === object);

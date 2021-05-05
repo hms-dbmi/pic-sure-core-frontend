@@ -23,14 +23,16 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				"click #select-btn": "select"
 			},
 			select: function(event){
-				if(this.model.get("query") && !this.dataSelection){
-					var query = JSON.parse(JSON.stringify(this.model.get("query")));
-					this.dataSelection = new dataSelection({query:JSON.parse(JSON.stringify(this.model.baseQuery))});
-					$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
-				} else {
-					this.dataSelection.updateQuery(query);
+				if(this.model.get("query")){
+					if( !this.dataSelection){
+						var query = JSON.parse(JSON.stringify(this.model.get("query")));
+						this.dataSelection = new dataSelection({query:JSON.parse(JSON.stringify(this.model.baseQuery))});
+						$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
+					} else {
+						this.dataSelection.updateQuery(query);
+					}
+					this.dataSelection.render();
 				}
-				this.dataSelection.render();
 			},
 			totalCount: 0,
 			tagName: "div",
@@ -42,7 +44,7 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				this.model.set("queryRan", true);
 				this.model.set("spinning", false);
 				
-				$("#patient-count").html(message);  //do we need to render() instead?
+				$("#patient-count").html(count);  //do we need to render() instead?
                 //and update the data selection panel
     			this.select();
 			},
@@ -68,16 +70,16 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 					 	contentType: 'application/json',
 					 	data: JSON.stringify(query),
 	  				 	success: function(response, textStatus, request){
-	  				 		dataCallback(response, request.getResponseHeader("resultId"));
-	  						}, //.bind(this),
+	  				 		this.dataCallback(response, request.getResponseHeader("resultId"));
+	  						}.bind(this),
 					 	error: function(response){
 							if (!transportErrors.handleAll(response, "Error while processing query")) {
 								response.responseText = "<h4>"
 									+ overrides.outputErrorMessage ? overrides.outputErrorMessage : "There is something wrong when processing your query, please try it later, if this repeats, please contact admin."
 									+ "</h4>";
-						 		errorCallback(response.responseText);
+						 		this.errorCallback(response.responseText);
 							}
-						}
+						}.bind(this)
 					});
 				}
 			},
