@@ -23,14 +23,16 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				"click #select-btn": "select"
 			},
 			select: function(event){
-				if(this.model.get("query") && !this.dataSelection){
-					var query = JSON.parse(JSON.stringify(this.model.get("query")));
-					this.dataSelection = new dataSelection({query:JSON.parse(JSON.stringify(this.model.baseQuery))});
-					$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
-				} else {
-					this.dataSelection.updateQuery(query);
+				if(this.model.get("query")){
+					if( !this.dataSelection){
+						var query = JSON.parse(JSON.stringify(this.model.get("query")));
+						this.dataSelection = new dataSelection({query:JSON.parse(JSON.stringify(this.model.baseQuery))});
+						$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
+					} else {
+						this.dataSelection.updateQuery(query);
+					}
+					this.dataSelection.render();
 				}
-				this.dataSelection.render();
 			},
 			totalCount: 0,
 			tagName: "div",
