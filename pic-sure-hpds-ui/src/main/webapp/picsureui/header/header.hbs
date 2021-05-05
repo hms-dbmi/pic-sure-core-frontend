@@ -1,5 +1,5 @@
 <div class="row header-row">
-	<img class="logo-img col-md-4" src="{{logoPath}}"></a>
+	<img class="logo-img col-md-4" src="{{logoPath}}">
 </div>
 <div class="row" style="margin-bottom: 5px">
     <span class="col-md-2"></span>
@@ -31,7 +31,7 @@
     <div class="col-md-1 dropdown btn btn-default header-btn authenticated-visible" id="help-dropdown" style="display: none;" >
         <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</span>
         <ul class="dropdown-menu" role="menu">
-         	{{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
+            {{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}">Video Demonstration</a></li>{{/if}}
 	        {{#if pdfLink}}<li class="dropdown"><a href="{{{pdfLink}}}">User Guide</a></li>{{/if}}
             {{#if jupyterExampleLink}}<li class="dropdown"><a href="{{{jupyterExampleLink}}}">Jupyter Examples</a></li>{{/if}}
             {{#if helpLink}}<li class="dropdown"><a href="{{{helpLink}}}">Contact Us</a></li>{{/if}}

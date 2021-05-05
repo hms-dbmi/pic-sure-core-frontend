@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resourceMeta", "overrides/ontology", "common/transportErrors"],
-		function($, _, settings, resourceMeta, overrides, transportErrors) {
+define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ontology", "common/transportErrors"],
+		function($, _, settings, overrides, transportErrors) {
 
     if (!sessionStorage.getItem("session")) {
         return {};
@@ -159,9 +159,7 @@ define(["jquery", "underscore", "text!../settings/settings.json", "picSure/resou
                     });
                 }
             })
-    }.bind({
-        resourceMeta: resourceMeta
-    });
+    };
 
 
     var loadAllConceptsDeferred = function(){

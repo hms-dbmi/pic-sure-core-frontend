@@ -21,6 +21,18 @@ define(["jquery", "common/transportErrors", "filter/filterList", "header/header"
 						}
 					});
 
+					//create the queryBuilder UI after checking for a query template
+					var renderMain = function(){
+			            $('#main-content').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
+			            filterList.init();
+			            var outputPanel = output.View;
+			            outputPanel.render();
+			            $('#query-results').append(outputPanel.$el);
+						
+			            var query = queryBuilder.createQuery({});
+			            outputPanel.runQuery(query);
+					};
+					
 					$.ajax({
 			        url: window.location.origin + "/psama/user/me/queryTemplate/" + JSON.parse(settings).applicationIdForBaseQuery,
 			        type: 'GET',
@@ -30,18 +42,11 @@ define(["jquery", "common/transportErrors", "filter/filterList", "header/header"
 			        	var session = JSON.parse(sessionStorage.getItem("session"));
 			            session.queryTemplate = response.queryTemplate;
 			            sessionStorage.setItem("session", JSON.stringify(session));
-
-			            $('#main-content').append(HBS.compile(layoutTemplate)(JSON.parse(settings)));
-			            filterList.init();
-			            var outputPanel = output.View;
-			            outputPanel.render();
-			            $('#query-results').append(outputPanel.$el);
-						
-			            var query = queryBuilder.createQuery({});
-			            outputPanel.update(query);
+			            renderMain();
 			        }.bind(this),
 			        error: function (response) {
-                        transportErrors.handleAll(response, "Cannot retrieve query template with status: " + response.status);
+                        console.log("unable to retrieve query template"); //don't error here; most instances have no templates
+                        renderMain();
 			        }.bind(this)
 			    });
 

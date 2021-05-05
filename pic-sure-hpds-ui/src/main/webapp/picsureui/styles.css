@@ -751,7 +751,6 @@ body {
     margin-left: 15px;
 }
 
-
 .login-logo {
     width:100%;
 }
@@ -764,4 +763,32 @@ body {
 
 .fence-login-img {
     height:16px;
+}
+
+/* merging webtask code */
+#frmAuth0Login {
+	width: 280px;
+	margin: 30px auto;
+}
+
+.a0-body-content {
+	padding: 30px;
+	border-radius: 0 0 3px 3px;
+	box-shadow: 0 0 2px rgb(17 17 24 / 60%);
+}
+
+.a0-zocial {
+	white-space: nowrap;
+	position: relative;
+	display: block;
+	border-radius: 3px;
+	padding: 0;
+	overflow: hidden;
+	text-decoration: none !important;
+	color: #fff;
+}
+
+.a0-zocial:hover {
+	filter: brightness(85%);
+	color: #fff;
 }

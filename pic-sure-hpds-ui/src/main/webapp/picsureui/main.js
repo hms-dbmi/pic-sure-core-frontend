@@ -15,6 +15,8 @@ require.config({
 		Noty: 'webjars/noty/3.1.4/lib/noty',
 		NotyStyles: 'webjars/noty/3.1.4/lib/noty.css',
 		"jstree":"webjars/jstree/3.3.7/jstree",
+		auth0Lock: "webjars/auth0-lock/11.2.3/build/lock",
+		"auth0-js": "webjars/auth0.js/9.2.3/build/auth0",
 		accessRule: "psamaui/accessRule/",
 		application: "psamaui/application/",
 		connection: "psamaui/connection/",
@@ -39,7 +41,11 @@ require.config({
 		},
 		"jstree": {
 			deps: ["jquery"]
-		}
+		},
+		"auth0-js": {
+            deps:["jquery"],
+            exports: "Auth0"
+        }
 	}
 });
 
