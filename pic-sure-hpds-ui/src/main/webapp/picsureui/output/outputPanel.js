@@ -1,16 +1,7 @@
 define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars", "overrides/outputPanel", "common/transportErrors"],
 		function($,  dataSelection, outputTemplate, ontology, BB, HBS, overrides, transportErrors){
 
-	var outputModel = overrides.modelOverride ? overrides.modelOverride : BB.Model.extend({
-		spinAll: function(){
-			this.set('spinning', true);
-			this.set('queryRan', false);
-  			_.each(this.get('resources'), function(resource){
-  				resource.spinning=true;
-  				resource.queryRan=false;
-  			});
-		}
-	});
+	var outputModel = overrides.modelOverride ? overrides.modelOverride : BB.Model.extend({	});
 
 	var outputView = overrides.viewOverride ? overrides.viewOverride : 
 		BB.View.extend({
@@ -27,20 +18,19 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 					}
 				});
 			},
+			
 			events:{
 				"click #select-btn": "select"
 			},
 			select: function(event){
 				if(this.model.get("query") && !this.dataSelection){
 					var query = JSON.parse(JSON.stringify(this.model.get("query")));
-					if(!this.dataSelection){
-						this.dataSelection = new dataSelection({query:JSON.parse(JSON.stringify(this.model.baseQuery))});
-						$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
-					} else {
-						this.dataSelection.updateQuery(query);
-					}
-					this.dataSelection.render();
+					this.dataSelection = new dataSelection({query:JSON.parse(JSON.stringify(this.model.baseQuery))});
+					$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
+				} else {
+					this.dataSelection.updateQuery(query);
 				}
+				this.dataSelection.render();
 			},
 			totalCount: 0,
 			tagName: "div",
@@ -90,12 +80,6 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 						}.bind(this)
 					});
 				}
-			},
-			//update is the old function with many hooks;  use runQuery instead.
-			update: function(incomingQuery){
-				console.log("OLD UPDATE CALLED");
-				this.model.set("totalPatients",0);
-				this.model.spinAll();
 			},
 			render: function(){
 				this.$el.html(this.template(this.model.toJSON()));
