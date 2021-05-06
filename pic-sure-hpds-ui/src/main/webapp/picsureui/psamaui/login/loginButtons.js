@@ -9,12 +9,6 @@ function($, auth0, HBS, buttonsTemplate) {
 			 */
 			$('#frmAuth0Login').html(HBS.compile(buttonsTemplate)({connections: connections}));
 			
-//			const options = {
-//			        domain: oauth.domain,
-//			        clientID: oauth.client_id,
-//			        redirectUri: settings.redirect_link,
-//			        responseType: 'token'
-//			      };
 			
 			_.each(connections, function(item){
 				
