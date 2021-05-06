@@ -52,13 +52,14 @@ define(['common/session', "picSure/psamaSettings", "picSure/settings", 'common/s
                 // Some institutions require a username instead of an email for login; the Lock workflow would then require
                 // the users to enter their credentials twice;  we can avoid that by using buttons only (customize == true)
                 if (settings.customizeAuth0Login){
-            	   var oauth = {
+            	   var oauthOptions = {
             		    client_id : clientId,
             		    domain : 'avillachlab.auth0.com',
-            		    callbackURL : redirectURI
+            		    redirectUri : redirectURI,
+            		    responseType: 'token'
             	    };
             	    $('#main-content').html("<div id='frmAuth0Login'></div>");
-                	loginButtons.showLockButtons(connections, oauth);
+                	loginButtons.showLockButtons(connections, oauthOptions);
                     overrides.postRender ? overrides.postRender.apply(this) : undefined;
                 } else {
                     require(['auth0Lock'], function(Auth0Lock){
