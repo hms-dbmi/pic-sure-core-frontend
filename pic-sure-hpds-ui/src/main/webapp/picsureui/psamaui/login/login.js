@@ -53,7 +53,7 @@ define(['common/session', "picSure/psamaSettings", "picSure/settings", 'common/s
                 // the users to enter their credentials twice;  we can avoid that by using buttons only (customize == true)
                 if (settings.customizeAuth0Login){
             	   var oauthOptions = {
-            		    client_id : clientId,
+            		    clientID : clientId,
             		    domain : 'avillachlab.auth0.com',
             		    redirectUri : redirectURI,
             		    responseType: 'token'
