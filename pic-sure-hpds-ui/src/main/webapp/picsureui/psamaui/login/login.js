@@ -12,7 +12,7 @@ define(['common/session', "picSure/psamaSettings", "picSure/settings", 'common/s
             var redirectURI = window.location.protocol
                             + "//"+ window.location.hostname
                             + (window.location.port ? ":"+window.location.port : "")
-                            + "/psamaui/login/";
+                            + "/picsureui/";
             if(typeof queryObject.access_token === "string"){
                 $.ajax({
                     url: '/psama/authentication',
@@ -27,7 +27,7 @@ define(['common/session', "picSure/psamaSettings", "picSure/settings", 'common/s
                         if (data.acceptedTOS !== 'true'){
                             history.pushState({}, "", "/psamaui/tos");
                         } else {
-                            if (sessionStorage.redirection_url) {
+                            if (sessionStorage.redirection_url && sessionStorage.redirection_url != 'undefined') {
                                 window.location = sessionStorage.redirection_url;
                             }
                             else {
