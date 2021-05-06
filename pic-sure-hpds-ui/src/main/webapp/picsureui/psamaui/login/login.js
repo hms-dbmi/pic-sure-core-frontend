@@ -12,7 +12,7 @@ define(['common/session', "picSure/psamaSettings", "picSure/settings", 'common/s
             var redirectURI = window.location.protocol
                             + "//"+ window.location.hostname
                             + (window.location.port ? ":"+window.location.port : "")
-                            + "/psamaui/login/";
+                            + "/picsureui/";
             if(typeof queryObject.access_token === "string"){
                 $.ajax({
                     url: '/psama/authentication',
@@ -27,7 +27,7 @@ define(['common/session', "picSure/psamaSettings", "picSure/settings", 'common/s
                         if (data.acceptedTOS !== 'true'){
                             history.pushState({}, "", "/psamaui/tos");
                         } else {
-                            if (sessionStorage.redirection_url) {
+                            if (sessionStorage.redirection_url && sessionStorage.redirection_url != 'undefined') {
                                 window.location = sessionStorage.redirection_url;
                             }
                             else {
@@ -52,13 +52,14 @@ define(['common/session', "picSure/psamaSettings", "picSure/settings", 'common/s
                 // Some institutions require a username instead of an email for login; the Lock workflow would then require
                 // the users to enter their credentials twice;  we can avoid that by using buttons only (customize == true)
                 if (settings.customizeAuth0Login){
-            	   var oauth = {
-            		    client_id : clientId,
+            	   var oauthOptions = {
+            		    clientID : clientId,
             		    domain : 'avillachlab.auth0.com',
-            		    callbackURL : redirectURI
+            		    redirectUri : redirectURI,
+            		    responseType: 'token'
             	    };
             	    $('#main-content').html("<div id='frmAuth0Login'></div>");
-                	loginButtons.showLockButtons(connections, oauth);
+                	loginButtons.showLockButtons(connections, oauthOptions);
                     overrides.postRender ? overrides.postRender.apply(this) : undefined;
                 } else {
                     require(['auth0Lock'], function(Auth0Lock){
