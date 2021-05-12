@@ -45,18 +45,25 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.noResultsTemplate = HBS.compile(noResultsTemplate);
 			
 			$('.search-help-tooltip').tooltip();
-			ontology.allInfoColumnsLoaded.then(function(){
-				
+			let showHelpModal = function(){
+
 				$('.show-help-modal').click(function() {
 					$('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
 					$('#modal-window', this.$el).tooltip();
 					$(".close").click(function(){
-			            $("#search-help-modal").hide();
+						$("#search-help-modal").hide();
 					});
-	                $("#search-help-modal").show();
+					$("#search-help-modal").show();
 				});
-				
-			}.bind(this));
+
+			}.bind(this);
+			if (ontology.allInfoColumnsLoaded) {
+				ontology.allInfoColumnsLoaded.then(showHelpModal);
+			} else {
+				setTimeout(function() {
+					ontology.allInfoColumnsLoaded.then(showHelpModal);
+				}, 1000);
+			}
 		},
 		tagName: "div",
 		className: "filter-list-entry row",
