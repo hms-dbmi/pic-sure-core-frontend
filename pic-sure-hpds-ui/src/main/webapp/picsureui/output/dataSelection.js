@@ -46,7 +46,7 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 					outputOverride.updateConsentFilters(query, settings);
 				}
         
-				if(this.settings.queryExportType == "EXPORT_IMMEDIATE"){
+				if(!this.settings.queryExportType || this.settings.queryExportType == "EXPORT_IMMEDIATE"){
 					this.querySync(query);
 				} else if (this.settings.queryExportType == "EXPORT_ASYNC"){
 					var deferredQueryId = $.Deferred();

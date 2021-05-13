@@ -11,6 +11,6 @@
   "applicationIdForBaseQuery":"",
   "helpLink": "about:blank",
   "advancedSearchLink": "",
-  "queryExportType":"EXPORT_DISABLED",
-  "queryButtonLabel":"Request Data"
+  "queryExportType":"EXPORT_IMMEDIATE",
+  "queryButtonLabel":"Export Data"
 }
