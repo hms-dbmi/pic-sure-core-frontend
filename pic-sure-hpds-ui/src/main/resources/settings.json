@@ -10,5 +10,7 @@
   "picSureResourceId":"",
   "applicationIdForBaseQuery":"",
   "helpLink": "about:blank",
-  "advancedSearchLink": ""
+  "advancedSearchLink": "",
+  "queryExportType":"EXPORT_DISABLED",
+  "queryButtonLabel":"Request Data"
 }
