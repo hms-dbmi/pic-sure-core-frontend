@@ -23,9 +23,8 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				"click #select-btn": "select"
 			},
 			select: function(event){
-				if(this.model.get("query")){
+				if(this.model.get("queryRan")){
 					if( !this.dataSelection){
-						var query = JSON.parse(JSON.stringify(this.model.get("query")));
 						this.dataSelection = new dataSelection({query:JSON.parse(JSON.stringify(this.model.baseQuery))});
 						$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
 					} else {
@@ -46,7 +45,7 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				
 				$("#patient-count").html(count);  //do we need to render() instead?
                 //and update the data selection panel
-    			this.select();
+    			this.delegateEvents();
 			},
 			errorCallback: function(message){
 				//clear some status flags and make sure we inform the user of errors
