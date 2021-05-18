@@ -26,9 +26,10 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				if(this.model.get("queryRan")){
 					if( !this.dataSelection){
 						this.dataSelection = new dataSelection({query:JSON.parse(JSON.stringify(this.model.baseQuery))});
+						$("#select-btn").hide();
 						$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
 					} else {
-						this.dataSelection.updateQuery(query);
+						this.dataSelection.updateQuery(this.model.baseQuery);
 					}
 					this.dataSelection.render();
 				}
@@ -43,8 +44,12 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				this.model.set("queryRan", true);
 				this.model.set("spinning", false);
 				
-				$("#patient-count").html(count);  //do we need to render() instead?
+				$("#patient-count").html(count);  
                 //and update the data selection panel
+				if( this.dataSelection){
+					this.dataSelection.updateQuery(this.model.baseQuery);
+					this.dataSelection.render();
+				}
     			this.delegateEvents();
 			},
 			errorCallback: function(message){
