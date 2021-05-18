@@ -29,7 +29,7 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 						$("#select-btn").hide();
 						$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
 					} else {
-						this.dataSelection.updateQuery(query);
+						this.dataSelection.updateQuery(this.model.baseQuery);
 					}
 					this.dataSelection.render();
 				}
@@ -47,7 +47,7 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				$("#patient-count").html(count);  
                 //and update the data selection panel
 				if( this.dataSelection){
-					this.dataSelection.updateQuery(query);
+					this.dataSelection.updateQuery(this.model.baseQuery);
 					this.dataSelection.render();
 				}
     			this.delegateEvents();
