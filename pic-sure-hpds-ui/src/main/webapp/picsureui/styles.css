@@ -132,12 +132,12 @@
     border-bottom-color: white;
 }
 .header-btn.active {
-     border-bottom: 10px;
-     border-bottom-color: white;
-     border-bottom-style: solid;
+     border-color: #999;
+     border-bottom-left-radius: 0px;
+     border-bottom-right-radius: 0px;
      box-shadow: none;
      -webkit-box-shadow: none;
-     background-color: lightgrey;
+     background-color: #fff;
      color: black;
 }
 .header-btn:hover {

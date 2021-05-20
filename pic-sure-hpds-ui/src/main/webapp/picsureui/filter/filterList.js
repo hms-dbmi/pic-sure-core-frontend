@@ -1,9 +1,13 @@
-define(["jquery", "output/outputPanel","picSure/queryBuilder", "filter/filter"],
-		function($, outputPanel, queryBuilder, filter){
+define(["jquery","picSure/queryBuilder", "filter/filter"],
+		function($, queryBuilder, filter){
 	var filterList = {
-		init : function(){
+		init : function(resourceUUID, outputPanelView, renderHelpCallback, queryTemplate){
 			$('#filter-list').html();
 			this.filters = [];
+			this.resourceUUID = resourceUUID;
+			this.renderHelpCallback = renderHelpCallback;
+			this.outputPanelView = outputPanelView;
+			this.queryTemplate = queryTemplate;
 			this.addFilter();
 		}
 	};
@@ -13,10 +17,15 @@ define(["jquery", "output/outputPanel","picSure/queryBuilder", "filter/filter"],
 			queryCallback : this.runQuery,
 			model : new filter.Model(),
 			removeFilter : this.removeFilter,
+			resourceUUID: this.resourceUUID
 		});
 		newFilter.render();
 		this.filters.push(newFilter);
 		$('#filter-list').append(newFilter.$el);
+
+		if (typeof this.renderHelpCallback !== 'undefined') {
+			this.renderHelpCallback(this);
+		}
 /*
 		var grouped = _.groupBy($('#filter-list').children(), function(child){
 			if($(child).hasClass("variant-info-filter")) return "info";
@@ -41,9 +50,9 @@ define(["jquery", "output/outputPanel","picSure/queryBuilder", "filter/filter"],
 		$('#filter-list').append(grouped.unsaved);*/
 	}.bind(filterList);
 	filterList.runQuery = function(){
-		var query = queryBuilder.createQuery(
-				_.pluck(this.filters, "model"));
-		outputPanel.View.runQuery(query);
+		var query = queryBuilder.generateQuery(
+				_.pluck(this.filters, "model"), this.queryTemplate, this.resourceUUID);
+		this.outputPanelView.runQuery(query);
 		if(_.countBy(this.filters, function(filter){
 			return $(".search-box", filter.$el).is(":visible") ? "visible" : "hidden";
 		}).visible == undefined) {
