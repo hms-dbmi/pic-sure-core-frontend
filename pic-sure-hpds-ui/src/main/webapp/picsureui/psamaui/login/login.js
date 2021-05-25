@@ -1,7 +1,7 @@
-define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jquery', 'handlebars', 'text!login/login.hbs',
+define(['common/session', 'picSure/psamaSettings', 'common/searchParser', 'jquery', 'handlebars', 'login/loginButtons',
         'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification',
         "picSure/settings", 'common/transportErrors','text!login/connections.json'],
-		function(session, psamaSettings, parseQueryString, $, HBS, loginTemplate,
+		function(session, psamaSettings, parseQueryString, $, HBS, loginButtons,
                  notAuthorizedTemplate, overrides, notification,
                  picSureSettings, transportErrors, connectionsStr){
 
@@ -16,7 +16,7 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
         var redirectURI = window.location.protocol
             + "//"+ window.location.hostname
             + (window.location.port ? ":"+window.location.port : "")
-            + "/picsureui/";
+            + "/picsureui/login/";
         if(typeof queryObject.access_token === "string"){
             if (overrides.waitingMessage) {
                 $('#main-content').html(overrides.waitingMessage);
@@ -105,7 +105,7 @@ define(['common/session', 'psamaSettings/settings', 'common/searchParser', 'jque
                         window.location = sessionStorage.redirection_url;
                     }
                     else {
-                        window.location = "/picsureui/queryBuilder"
+                        window.location = "/picsureui/"
                     }
                 }
             }.bind(this),

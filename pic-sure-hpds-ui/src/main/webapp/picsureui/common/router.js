@@ -18,6 +18,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             "psamaui/connectionManagement(/)" : "displayConnectionManagement",
             "psamaui/tos(/)" : "displayTOS",
             "psamaui/login(/)" : "login",
+            "picsureui/login(/)" : "login",
             "psamaui/logout(/)" : "logout",
             "psamaui/not_authorized(/)" : "not_authorized",
             "psamaui/roleManagement(/)" : "displayRoleManagement",
@@ -203,7 +204,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             var parsedSess = JSON.parse(sessionStorage.getItem("session"));
 
             var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), parsedSettings.picSureResourceId);
-            outputPanelView.update(query);
+            outputPanelView.runQuery(query);
 
             // todo: move this somewhere else
             var renderHelpCallback = function(filterView) {
