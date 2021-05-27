@@ -132,7 +132,7 @@ define(['common/session', 'picSure/psamaSettings', 'common/searchParser', 'jquer
             else {
                 sessionStorage.clear();
                 localStorage.clear();
-                $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:psamaSettings.helpLink}));
+                $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:picSureSettings.helpLink}));
             }
         }
     }
