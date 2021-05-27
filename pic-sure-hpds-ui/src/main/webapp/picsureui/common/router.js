@@ -1,29 +1,35 @@
-define(["common/searchParser", "backbone", "common/session", "login/login", 'header/header', 'footer/footer','user/userManagement',
+define(["backbone", "common/session", "login/login", 'header/header', 'footer/footer','user/userManagement',
         'role/roleManagement', 'privilege/privilegeManagement', "application/applicationManagement",
         'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
-        'handlebars', 'psamaui/accessRule/accessRuleManagement', 'common/startup', 'overrides/router'],
-        function(searchParser, Backbone, session, login, header, footer, userManagement,
+        'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
+        "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "text!../settings/settings.json",
+        "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "text!common/unexpected_error.hbs"],
+        function(Backbone, session, login, header, footer, userManagement,
                 roleManagement, privilegeManagement, applicationManagement,
                 connectionManagement, tos, userFunctions,
-                HBS, accessRuleManagement, startup, routerOverrides){
+                HBS, accessRuleManagement, routerOverrides, filterList,
+                 layoutTemplate, queryBuilder, output, settings,
+                 ontology, searchHelpTooltipTemplate, unexpectedErrorTemplate){
+
+        var publicRoutes = ["not_authorized", "login", "logout"];
         var Router = Backbone.Router.extend({
         routes: {
             "psamaui/userManagement(/)" : "displayUserManagement",
             "psamaui/connectionManagement(/)" : "displayConnectionManagement",
             "psamaui/tos(/)" : "displayTOS",
             "psamaui/login(/)" : "login",
+            "picsureui/login(/)" : "login",
             "psamaui/logout(/)" : "logout",
             "psamaui/not_authorized(/)" : "not_authorized",
             "psamaui/roleManagement(/)" : "displayRoleManagement",
             "psamaui/privilegeManagement(/)" : "displayPrivilegeManagement",
             "psamaui/applicationManagement(/)" : "displayApplicationManagement",
             "psamaui/accessRuleManagement(/)" : "displayAccessRuleManagement",
-            "picsureui/queryBuilder" : "displayQueryBuilder",
-            "picsureui/" : "displayQueryBuilder",
+            "picsureui/queryBuilder(/)" : "displayQueryBuilder",
             "picsureui/not_authorized(/)" : "not_authorized",
-
+            "picsureui/unexpected_error(/)" : "unexpected_error",
             // This path must be last in the list
-            "*path" : "displayQueryBuilder"
+            "*path" : "defaultAction"
         },
         initialize: function(){
             for (const routeOverride in routerOverrides.routes) {
@@ -40,15 +46,17 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                 }
                 return pushState.apply(history, arguments);
             }.bind({router:this});
+            this.settings = JSON.parse(settings);
+            this.layoutTemplate = HBS.compile(layoutTemplate);
+            this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
         },
        execute: function(callback, args, name){
-            if ( name === 'not_authorized' ){
+           this.renderHeaderAndFooter();
+            if (publicRoutes.includes(name)){
                 callback.apply(this, args);
             } else {
-                if ( ! session.isValid(login.handleNotAuthorizedResponse)){
-                    this.login();
-                    this.renderHeaderAndFooter();
-                    return false;
+                if (!session.isValid()){
+                    history.pushState({}, "", "/psamaui/logout");
                 }
                 if (!session.acceptedTOS() && name !== 'displayTOS'){
                     history.pushState({}, "", "/psamaui/tos");
@@ -57,33 +65,37 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     callback.apply(this, args);
                 }
             }
-            this.renderHeaderAndFooter();
         },
         login : function(){
+            $(".header-btn.active").removeClass('active');
             login.showLoginPage();
         },
         logout : function(){
+            $(".header-btn.active").removeClass('active');
             sessionStorage.clear();
             localStorage.clear();
-            window.location = "/psamaui/logout";
+            window.location = "/psamaui/login";
         },
         not_authorized : function(){
+            $(".header-btn.active").removeClass('active');
             login.displayNotAuthorized();
         },
+        unexpected_error : function(){
+            $(".header-btn.active").removeClass('active');
+            $('#main-content').empty();
+            $('#main-content').html(this.unexpectedErrorTemplate(this.settings))
+        },
         renderHeaderAndFooter: function(){
-            if ($('#header-content').is(':empty')) {
-                var headerView = header.View;
-                headerView.render();
-                $('#header-content').html(headerView.$el);
-            }
+            var headerView = new header.View({});
+            headerView.render();
+            $('#header-content').html(headerView.$el);
 
-            if ($('#footer-content').is(':empty')) {
-                var footerView = footer.View;
-                footerView.render();
-                $('#footer-content').html(footerView.$el);
-            }
+            var footerView = new footer.View({});
+            footerView.render();
+            $('#footer-content').html(footerView.$el);
         },
         displayUserManagement : function(){
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                     var userMngmt = new userManagement.View({model: new userManagement.Model()});
@@ -92,6 +104,7 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
             });
         },
         displayTOS : function() {
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             var termsOfService = new this.tos.View({model: new this.tos.Model()});
             termsOfService.render();
@@ -99,6 +112,7 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
 
         },
         displayApplicationManagement : function(){
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
@@ -108,12 +122,13 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     appliMngmt.render();
                     $('#main-content').append(appliMngmt.$el);
                 } else {
-                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                    window.history.pushState({}, "", "/psamaui/not_authorized");
                 }
             });
 
         },
         displayRoleManagement : function(){
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
@@ -123,12 +138,13 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     roleMngmt.render();
                     $('#main-content').append(roleMngmt.$el);
                 } else {
-                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                    window.history.pushState({}, "", "/psamaui/not_authorized");
                 }
             });
 
         },
         displayPrivilegeManagement : function() {
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
@@ -138,11 +154,12 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     privMngmt.render();
                     $('#main-content').append(privMngmt.$el);
                 } else {
-                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                    window.history.pushState({}, "", "/psamaui/not_authorized");
                 }
             });
         },
         displayAccessRuleManagement : function() {
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.accessRules, function(element){
@@ -152,11 +169,12 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     accRuleMngmt.render();
                     $('#main-content').append(accRuleMngmt.$el);
                 } else {
-                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                    window.history.pushState({}, "", "/psamaui/not_authorized");
                 }
             });
         },
         displayConnectionManagement : function() {
+            $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
@@ -166,14 +184,52 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     connectionMngmt.render();
                     $('#main-content').append(connectionMngmt.$el);
                 } else {
-                    $('#main-content').html(HBS.compile(notAuthorizedTemplate)({}));
+                    window.history.pushState({}, "", "/psamaui/not_authorized");
                 }
             });
 
         },
         displayQueryBuilder: function() {
+            $(".header-btn.active").removeClass('active');
+            $(".header-btn[data-href='/picsureui/queryBuilder']").addClass('active');
+
             $('#main-content').empty();
-            startup();
+            let parsedSettings = this.settings;
+            $('#main-content').append(this.layoutTemplate(parsedSettings));
+
+            var outputPanelView = new output.View({model: new output.Model()});
+            outputPanelView.render();
+            $('#query-results').append(outputPanelView.$el);
+
+            var parsedSess = JSON.parse(sessionStorage.getItem("session"));
+
+            var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), parsedSettings.picSureResourceId);
+            outputPanelView.runQuery(query);
+
+            // todo: move this somewhere else
+            var renderHelpCallback = function(filterView) {
+                ontology.getInstance().allInfoColumnsLoaded.then(function(){
+                    $('.show-help-modal').click(function() {
+                        $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)(ontology.getInstance().allInfoColumns()));
+                        $('#modal-window', this.$el).tooltip();
+                        $(".close").click(function(){
+                            $("#search-help-modal").hide();
+                        });
+                        $("#search-help-modal").show();
+                    });
+                }.bind(filterView));
+            }
+
+            filterList.init(parsedSettings.picSureResourceId, outputPanelView, renderHelpCallback, JSON.parse(parsedSess.queryTemplate));
+        },
+        defaultAction: function() {
+            console.log("Default action");
+            $(".header-btn.active").removeClass('active');
+            if (routerOverrides.defaultAction)
+                routerOverrides.defaultAction();
+            else {
+                this.displayQueryBuilder();
+            }
         }
 
 

@@ -8,11 +8,24 @@ define(["picSure/queryBuilder", "filter/filter", "jquery"],  function(queryBuild
 		});
 		
 		it("generates a properly formed simple query", function() {
+			sessionStorage.setItem("session", JSON.stringify({queryTemplate:JSON.stringify({
+					  "categoryFilters": {"consent":["TEST_CONSENT"]},
+					  "numericFilters": {},
+					  "requiredFields": [],
+					  "anyRecordOf": [],
+					  "variantInfoFilters": [
+					    {
+					      "categoryVariantInfoFilters": {},
+					      "numericVariantInfoFilters": {}
+					    }
+					  ],
+					  "expectedResultType": "COUNT"
+					})}));
 			var expectedQuery = 
 			{
 					resourceUUID: "02e23f52-f354-4e8b-992c-d37c8b9ba140",
 					    query: {
-					  "categoryFilters": {},
+					  "categoryFilters": {"consent":["TEST_CONSENT"]},
 					  "numericFilters": {},
 					  "requiredFields": [
 					    "Asthma"
@@ -27,7 +40,7 @@ define(["picSure/queryBuilder", "filter/filter", "jquery"],  function(queryBuild
 					  "expectedResultType": "COUNT"
 					}
 			}
-			expect(queryBuilder.createQuery([new filter.Model({inclusive:true,searchTerm:"Asthma",and:false,theList:null,constrainByValue:true,valueType:"STR"})])).toEqual(expectedQuery);
+			expect(queryBuilder.createQuery([new filter.Model({inclusive:true,searchTerm:"Asthma",and:false,theList:null,constrainByValue:true,valueType:"STR"})], "02e23f52-f354-4e8b-992c-d37c8b9ba140")).toEqual(expectedQuery);
 		});
 		
 	});

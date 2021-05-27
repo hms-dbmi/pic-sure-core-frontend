@@ -22,10 +22,25 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 		}
 		var keys = _.keys(data);
 		var aliases = [];
+		var aliasObjects = {}
 		keys.forEach((key) => {
 			var alias = getAliasName(key)
 			if(aliases.indexOf(alias) == -1){
 				aliases.push(alias);
+			}
+			var aliasObj = aliasObjects[alias];
+			if(aliasObj){
+				if(!aliasObj[key]){
+					aliasObj[key] = true;
+					aliasObj.tooltip = aliasObj.tooltip + "\n" + "-----------------------------------" + key;
+				}
+			} else {
+				aliasObj = {
+						alias: alias,
+						tooltip: key
+				}
+				aliasObj[key] = true;
+				aliasObjects[alias] = aliasObj;
 			}
 		});
 		
@@ -35,7 +50,7 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 		filterView.$el.hide();
  		$('.search-tabs', filterView.$el).append(this.searchResultTabs(
  				{filterId: filterView.model.attributes.filterId,
- 				 aliases: aliases}	));
+ 				 aliases: aliasObjects}	));
 		
  		var categorySearchResultsByAlias = {};
 		keys.forEach((key) => {
@@ -79,6 +94,10 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 							filterView: filterView,
 						}));
 					} );
+					
+					//TODO check to see if the key matches and render a result with all the options
+					
+					
 				} else {			
 					categorySearchResultViews.push( new searchResult.View({
 						queryCallback : queryCallback,
@@ -111,6 +130,9 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 				return true; //then we don't need to worry about doing the subcategory work.
 			}
 
+			
+			
+			
 			_.each(categorySearchResultViews, function(newSearchResultRow){
         //something is a little janky here, as we are seeing a funny 'description' string in the value field
 				// for gene info columns.  lets fix it.

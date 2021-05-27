@@ -1,5 +1,5 @@
-define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "overrides/filter", "common/spinner", "backbone", "handlebars", "text!filter/filter.hbs", "text!filter/suggestion.hbs", "text!filter/noResults.hbs", "filter/searchResults", "text!filter/constrainFilterMenu.hbs", "text!filter/constrainFilterMenuCategories.hbs", "text!filter/constrainFilterMenuGenetics.hbs", "text!filter/constrainFilterMenuVariantInfoNumeric.hbs", "text!filter/constrainFilterMenuAnyRecordOf.hbs", "text!settings/settings.json", "autocomplete", "bootstrap"],
-		function($, ontology, searchHelpTooltipTemplate, overrides, spinner, BB, HBS, filterTemplate, suggestionTemplate, noResultsTemplate, searchResults, constrainFilterMenuTemplate, constrainFilterMenuCategoriesTemplate, constrainFilterMenuGeneticsTemplate, constrainFilterMenuVariantInfoNumericTemplate, constrainFilterMenuAnyRecordOfTemplate, settings){
+define(["jquery", "picSure/search", "text!filter/searchHelpTooltip.hbs", "overrides/filter", "common/spinner", "backbone", "handlebars", "text!filter/filter.hbs", "text!filter/suggestion.hbs", "text!filter/noResults.hbs", "filter/searchResults", "text!filter/constrainFilterMenu.hbs", "text!filter/constrainFilterMenuCategories.hbs", "text!filter/constrainFilterMenuGenetics.hbs", "text!filter/constrainFilterMenuVariantInfoNumeric.hbs", "text!filter/constrainFilterMenuAnyRecordOf.hbs", "text!settings/settings.json", "autocomplete", "bootstrap"],
+		function($, search, searchHelpTooltipTemplate, overrides, spinner, BB, HBS, filterTemplate, suggestionTemplate, noResultsTemplate, searchResults, constrainFilterMenuTemplate, constrainFilterMenuCategoriesTemplate, constrainFilterMenuGeneticsTemplate, constrainFilterMenuVariantInfoNumericTemplate, constrainFilterMenuAnyRecordOfTemplate, settings){
 
 	var valueConstrainModel = BB.Model.extend({
 		defaults:{
@@ -37,7 +37,8 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.constrainFilterMenuCategoriesTemplate = HBS.compile(constrainFilterMenuCategoriesTemplate);
 			this.constrainFilterMenuGeneticsTemplate = HBS.compile(constrainFilterMenuGeneticsTemplate);
 			this.constrainFilterMenuVariantInfoNumericTemplate= HBS.compile(constrainFilterMenuVariantInfoNumericTemplate);
-			this.constrainFilterMenuAnyRecordOfTemplate = HBS.compile(constrainFilterMenuAnyRecordOfTemplate);			
+			this.constrainFilterMenuAnyRecordOfTemplate = HBS.compile(constrainFilterMenuAnyRecordOfTemplate);
+			this.resourceUUID = opts.resourceUUID;
 			
 			this.showSearchResults  = overrides.showSearchResults ? overrides.showSearchResults.bind(this) : this.showSearchResults.bind(this);
 			this.onSelect = overrides.onSelect ? overrides.onSelect.bind(this) : this.onSelect.bind(this);
@@ -45,18 +46,6 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.noResultsTemplate = HBS.compile(noResultsTemplate);
 			
 			$('.search-help-tooltip').tooltip();
-			ontology.allInfoColumnsLoaded.then(function(){
-				
-				$('.show-help-modal').click(function() {
-					$('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)(ontology.allInfoColumns()));
-					$('#modal-window', this.$el).tooltip();
-					$(".close").click(function(){
-			            $("#search-help-modal").hide();
-					});
-	                $("#search-help-modal").show();
-				});
-				
-			}.bind(this));
 		},
 		tagName: "div",
 		className: "filter-list-entry row",
@@ -94,7 +83,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.model.set("constrainParams", new valueConstrainModel());
 		},
 		enterButtonEventHandler : function(event){
-			$('.constrain-filter').hide();
+			$('.constrain-filter', this.$el).hide();
 			if(event.keyCode == 13){
 				overrides.enterKeyHandler ? overrides.enterKeyHandler.apply(this)
 						: function(){
@@ -109,18 +98,18 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 		searchTerm : function(term) {
 			if((/rs[0-9]+.*/.test(term))||(/\d+:\d+_.*/.test(term))||(/\d+,\d+,.*/.test(term))){
 				this.showGeneticSelectionOptions(term);
-			}else{
+			} else {
 				var deferredSearchResults = $.Deferred();
 				
 				spinner.small(deferredSearchResults, "#spinner-div", "download-spinner")
-				ontology.autocomplete(term, deferredSearchResults.resolve);
+				search.execute(term, deferredSearchResults.resolve, this.resourceUUID);
 				$.when(deferredSearchResults).then(this.showSearchResults);
 			}
 		},
 		showGeneticSelectionOptions : function(term){
 			$('.autocomplete-suggestions').hide();
 			this.model.set('searching', false);
-			this.model.set("constrainByValue", true)
+			this.model.set("constrainByValue", true);
 			this.model.get("constrainParams").set("constrainByValue", true);
 			this.model.set("searchTerm", term);
 			this.model.get("constrainParams").set("constrainValueOne", term);
@@ -187,17 +176,16 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			$('.constrain-filter', this.$el).html("");
 			if(suggestion && suggestion.value && suggestion.value.trim().length > 0){
 				this.searchTerm(suggestion.value);
-			}
-			else {
+			} else {
 				console.error('Search term is missing, cannot search');
 			}
 		},
 		onSelect : function(event, suggestion){
 			if ( this.model.attributes.valueType === "ANYRECORDOF" ){
 				//model should already be updated.
-			}else if(this.model.attributes.concept.columnDataType==="VARIANT"){
+			} else if(this.model.attributes.concept.columnDataType==="VARIANT"){
 
-			}else{
+			} else {
 				this.model.set("inclusive", $('.filter-qualifier-btn', this.$el).text().trim() === "Must Have");
 				this.model.set("and", $('.filter-boolean-operator-btn', this.$el).text().trim() === "AND");
 				if(suggestion && suggestion.data){
@@ -229,33 +217,31 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.removeFilter(this.cid);
 		},
 		onConstrainTypeSelect: function (event) {
-		
 			var constrainByValue = event.target.value != "Any value";
 			// update both models
 			this.model.set("constrainByValue", constrainByValue)
 			this.model.get("constrainParams").set("constrainByValue", constrainByValue);
 
 			if(constrainByValue){
- 				$('.value-operator', this.$el).removeClass("hidden")
-                                $('.value-operator', this.$el).show();
-				$('.value-operator-range-label', this.$el).removeClass("hidden")
-                                $('.value-operator-range-label', this.$el).show();
- 				var valueOperator = $(".value-type-select", this.$el).val();
-				this.updateConstrainValueVisibility(valueOperator);				
-			 }  else {
-				$('.value-operator').hide();
-				$('.value-operator-range-label', this.$el).hide();
-				$('.constrain-value-two', this.$el).hide();
-				$('.constrain-value-two', this.$el).val("");
-				$('.constrain-value-one', this.$el).hide();
-				$('.constrain-value-one', this.$el).val("");
-				$('.validation-message', this.$el).text("");
-				
-				//update model
-				this.onConstrainValuesChange();
-			}
+			    $('.value-operator', this.$el).removeClass("hidden");
+			    $('.value-operator', this.$el).show();
+			    $('.value-operator-range-label', this.$el).removeClass("hidden");
+			    $('.value-operator-range-label', this.$el).show();
+			    var valueOperator = $(".value-type-select", this.$el).val();
+			    this.updateConstrainValueVisibility(valueOperator);
+			} else {
+			    $('.value-operator').hide();
+			    $('.value-operator-range-label', this.$el).hide();
+			    $('.constrain-value-two', this.$el).hide();
+			    $('.constrain-value-two', this.$el).val("");
+			    $('.constrain-value-one', this.$el).hide();
+			    $('.constrain-value-one', this.$el).val("");
+			    $('.validation-message', this.$el).text("");
 
-		},
+			    //update model
+                this.onConstrainValuesChange();
+			}
+        },
 		onConstrainGeneticsSelect: function(event) {
 			var dropdownElement = $("."+event.target.parentElement.parentElement.attributes['aria-labelledby'].value, this.$el);
 			dropdownElement.text(event.target.text);
@@ -278,50 +264,46 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			}
 		},
         selectAllCategories: function(event) {
-			var existingItems = $(".selected-categories > option");
+			var existingItems = $(".selected-categories > option", this.$el);
                         
             //handle special case where no items in 'selected' control; no logic needed
             if(existingItems.length == 0){
-                    $(".selected-categories").append($(".available-categories > option:visible"));
-                    return;
+                $(".selected-categories", this.$el).append($(".available-categories > option:visible", this.$el));
+                return;
             }
             
             var currentItem = existingItems.first();
-            $(".available-categories > option:visible").each(function() {
+            $(".available-categories > option:visible", this.$el).each(function() {
                 //comparing text, but one is a func because jquery.each() is different than first()/next()
-                
                 if(this.text < currentItem.text()){
-                        $(this).insertBefore(currentItem);
+                    $(this).insertBefore(currentItem);
                 } else {
-                        while(currentItem.next().length > 0 && this.text > currentItem.next().text()){
-                                currentItem = currentItem.next();
-                        }
-                        
-                        $(this).insertAfter(currentItem);
+                    while(currentItem.next().length > 0 && this.text > currentItem.next().text()){
+                        currentItem = currentItem.next();
+                    }
+                    $(this).insertAfter(currentItem);
                 }
             });
 
         },
         clearCategorySelection: function(event) {
-			var existingItems = $(".available-categories > option");
+			var existingItems = $(".available-categories > option", this.$el);
 			
 			//handle special case where no items in 'available' control; no logic needed
 			if(existingItems.length == 0){
-				$(".available-categories").append($(".selected-categories > option"));
+				$(".available-categories", this.$el).append($(".selected-categories > option", this.$el));
 				return;
 			}
 
 			var currentItem = existingItems.first();
-			$(".selected-categories > option").each(function() {
+			$(".selected-categories > option", this.$el).each(function() {
 				//comparing text, but one is a func because jquery.each() is different than first()/next()
-
 				if(this.text < currentItem.text()){
 					$(this).insertBefore(currentItem);
 				} else {
 					while(currentItem.next().length > 0 && this.text > currentItem.next().text()){
 						currentItem = currentItem.next();
-					} 
-
+					}
 					$(this).insertAfter(currentItem);
 				}
 			});
@@ -333,28 +315,27 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			if(event.target.parentElement.classList.contains("available-categories")){
 				//maintain ordered list of options
 				var foundPlace = false;
-                $(".selected-categories > option").each(function() { 
-                        if(this.text > event.target.text){
-                                $(event.target).insertBefore(this);
-                                foundPlace = true;
-                                return false;
-                        }
-
+                $(".selected-categories > option", this.$el).each(function() {
+                    if(this.text > event.target.text){
+                        $(event.target).insertBefore(this);
+                        foundPlace = true;
+                        return false;
+                    }
                 });     
-                if( !foundPlace) {
-                        $(".selected-categories", this.$el).append(event.target);
+                if(!foundPlace) {
+                    $(".selected-categories", this.$el).append(event.target);
                 }
 			} else {
 				//maintain ordered list of options
 				var foundPlace = false;
-				$(".available-categories > option").each(function() { 
+				$(".available-categories > option", this.$el).each(function() {
 					if(this.text > event.target.text){
 						$(event.target).insertBefore(this);
 						foundPlace = true;
 						return false;
 					}
 				});
-				if( !foundPlace) {
+				if(!foundPlace) {
 					$(".available-categories", this.$el).append(event.target);
 				}
 			}
@@ -366,16 +347,15 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.model.get("constrainParams").set("constrainByValue", constrainByValue);
 		},
 		onCategoryFilterChange : function (event) {
-	    		$(".available-categories > option").each(function() {
+	    		$(".available-categories > option", this.$el).each(function() {
                 if(this.text.includes(event.target.value)){
-                        $(this).show();
+                    $(this).show();
                 } else {
-                        $(this).hide();
+                    $(this).hide();
                 }
             });
 		},
 		onValueTypeSelect : function (event) {
-
 			var valueOperator = event.target.value;
 			var constrainModel = this.model.get("constrainParams");
 			constrainModel.set("valueOperator", valueOperator);
@@ -388,64 +368,61 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.model.get("constrainParams").set("constrainValueTwo", $('.constrain-value-two', this.$el).val());
 		},
 		updateConstrainValueVisibility : function(valueOperator) {
-		   $('.field-invalid').removeClass('field-invalid');
-		   $('.validation-message', this.$el).text("");
-           if( valueOperator == "BETWEEN" ){
-                    $('.constrain-range-separator', this.$el).removeClass("hidden")
-                    $('.constrain-range-separator', this.$el).show();
-                    $('.constrain-value-one', this.$el).removeClass("hidden");
-                    $('.constrain-value-one', this.$el).show();
-                    $('.constrain-value-two', this.$el).removeClass("hidden");
-                    $('.constrain-value-two', this.$el).show();
+            $('.field-invalid', this.$el).removeClass('field-invalid');
+            $('.validation-message', this.$el).text("");
+            if( valueOperator == "BETWEEN" ){
+                $('.constrain-range-separator', this.$el).removeClass("hidden")
+                $('.constrain-range-separator', this.$el).show();
+                $('.constrain-value-one', this.$el).removeClass("hidden");
+                $('.constrain-value-one', this.$el).show();
+                $('.constrain-value-two', this.$el).removeClass("hidden");
+                $('.constrain-value-two', this.$el).show();
             } else {
-                    $('.constrain-range-separator', this.$el).hide();
+                $('.constrain-range-separator', this.$el).hide();
             }
 
             if( valueOperator == "LT" || valueOperator == "GT" ){
-                    $('.constrain-value-one', this.$el).removeClass("hidden");
-                    $('.constrain-value-one', this.$el).show();
+                $('.constrain-value-one', this.$el).removeClass("hidden");
+                $('.constrain-value-one', this.$el).show();
 
-                    $('.constrain-value-two', this.$el).hide();
-					$('.constrain-value-two', this.$el).val("");
-					this.model.get("constrainParams").set("constrainValueOne", $('.constrain-value-one', this.$el).val());
-					this.model.get("constrainParams").set("constrainValueTwo", "");
+                $('.constrain-value-two', this.$el).hide();
+                $('.constrain-value-two', this.$el).val("");
+                this.model.get("constrainParams").set("constrainValueOne", $('.constrain-value-one', this.$el).val());
+                this.model.get("constrainParams").set("constrainValueTwo", "");
             }
-            $(".value-type-select").val(valueOperator);
-
+            $(".value-type-select", this.$el).val(valueOperator);
 		},
 		updateConstrainFilterMenu : function() {
+		    var filterEl = $('.constrain-filter', this.$el);
 
-			var filterEl = $('.constrain-filter', this.$el);
-
-			if(this.model.attributes.valueType ==="ANYRECORDOF"){
-				console.log("Any Value Filter: " + this.model.attributes);
-				filterEl.html('');
-			}else if(this.model.attributes.concept.columnDataType==="CONTINUOUS"){
-				filterEl.html(this.constrainFilterMenuTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
-				if(this.model.attributes.constrainParams.attributes.constrainByValue){
-					this.updateConstrainValueVisibility(this.model.attributes.constrainParams.attributes.valueOperator);
-				}
-			}else if (this.model.attributes.concept.columnDataType==="VARIANT"){
-				filterEl.html(this.constrainFilterMenuGeneticsTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
-				filterEl.show();
-			//don't need this extra condition any more; INFO are handled mostly the same way as categorical.
-			 }else if (this.model.attributes.concept.columnDataType==="INFO" && this.model.attributes.concept.metadata.continuous){
+		    if(this.model.attributes.valueType ==="ANYRECORDOF"){
+		        console.log("Any Value Filter: " + this.model.attributes);
+		        filterEl.html('');
+		    } else if(this.model.attributes.concept.columnDataType==="CONTINUOUS"){
+		        filterEl.html(this.constrainFilterMenuTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
+		        if(this.model.attributes.constrainParams.attributes.constrainByValue){
+		            this.updateConstrainValueVisibility(this.model.attributes.constrainParams.attributes.valueOperator);
+		        }
+		    } else if (this.model.attributes.concept.columnDataType==="VARIANT"){
+		        filterEl.html(this.constrainFilterMenuGeneticsTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
+		        filterEl.show();
+		    //don't need this extra condition any more; INFO are handled mostly the same way as categorical.
+            } else if (this.model.attributes.concept.columnDataType==="INFO" && this.model.attributes.concept.metadata.continuous){
 //			 	filterEl.html(this.constrainFilterMenuCategoriesTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
-				 filterEl.html(this.constrainFilterMenuVariantInfoNumericTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
-			}else {
+                filterEl.html(this.constrainFilterMenuVariantInfoNumericTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
+			} else {
 				filterEl.html(this.constrainFilterMenuCategoriesTemplate(_.extend(this.model.attributes.constrainParams.attributes,this.model.attributes.concept)));
 				//Move the selected items to the right box
-				var selectedCategories = this.model.get("constrainParams").get("constrainValueOne"); 
-				$(".available-categories > option").each(function() {
-					if((Array.isArray(selectedCategories) && selectedCategories.includes(this.text))
-							|| selectedCategories == this.text){
-							$(".selected-categories", this.$el).append(this);
+				var selectedCategories = this.model.get("constrainParams").get("constrainValueOne");
+				$(".available-categories > option", this.$el).each((function(idx, option) {
+					if((Array.isArray(selectedCategories) && selectedCategories.includes(option.text))
+							|| selectedCategories == option.text){
+							$(".selected-categories", this.$el).append(option);
 					}
-                }); 
+                }).bind(this));
                 //this should show the multi-select boxes.  the template should automatically have 'RESTRICT' by value selected.
                	this.updateCategoryFilterVisibility();
 			}
-
 			filterEl.show();
 		},
 		validateConstrainFilterFields : function () {
@@ -487,13 +464,12 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			//iterate over all selected elements and turn them into an array
 			if(this.model.get("concept").columnDataType == "CATEGORICAL" || 
 				(this.model.get("concept").columnDataType == "INFO" && !this.model.get("concept").metadata.continuous )){
-				if($(".category-filter-restriction").val() == "RESTRICT"){
+				if($(".category-filter-restriction", this.$el).val() == "RESTRICT"){
 				    this.model.get("constrainParams").set("valueOperatorLabel", $(".category-filter-restriction option:selected", this.$el).text());
 					var selectedCategories = [];
-					$(".selected-categories > option").each(function() {
+					$(".selected-categories > option", this.$el).each(function() {
 						selectedCategories.push(this.text);
 					});
-
 					this.model.get("constrainParams").set("constrainValueOne", selectedCategories);
 				} else {
 					this.model.get("constrainParams").set("constrainValueOne",[]);
@@ -502,9 +478,7 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			}
 		},
 		onConstrainApplyButtonClick : function (event) {
-
 			this.updateModel();
-
 			if (this.validateConstrainFilterFields()) {
 				$('.validation-message', this.$el).text("");
 				if(this.model.attributes.concept.columnDataType==="INFO"){
@@ -513,10 +487,10 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 						// (this.model.get("constrainParams").get("constrainValueOne")?this.model.get("constrainParams").get("constrainValueOne"):this.model.attributes.concept.metadata.min)
 						// + " - "
 						// + (this.model.get("constrainParams").get("constrainValueTwo")?this.model.get("constrainParams").get("constrainValueTwo"):this.model.attributes.concept.metadata.max));
-				}else if(this.model.attributes.concept.columnDataType==="VARIANT"){
+				} else if(this.model.attributes.concept.columnDataType==="VARIANT"){
 					this.model.get("constrainParams").set("constrainValueTwo", $(".value-constraint-genetics-btn", this.$el).text());
 					$('.search-value', this.$el).html(this.model.get("constrainParams").get("constrainValueTwo") + " : " + this.model.get("searchTerm"));
-				}else{
+				} else {
 					var constrains = this.model.get("constrainParams");
 					if (constrains.get("constrainByValue") && 
 					!(constrains.get("constrainValueOne")=="" && constrains.get("constrainValueTwo")=="") ){
@@ -537,11 +511,12 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			}
 		},
 		isValueInRange: function(value, min, max){
-			if (value < min || value > max)
-				return false;
-			else
-				return true;
-		},
+		    if (value < min || value > max) {
+		        return false;
+		    } else {
+		        return true;
+		    }
+        },
 		geneticSelections: function(searchString){
 			if(/\d+,\d+,.*,.*/.test(searchString)||(/\d+:\d+_.*/.test(searchString))){
 				console.log(searchString);
@@ -558,9 +533,9 @@ define(["jquery", "picSure/ontology", "text!filter/searchHelpTooltip.hbs", "over
 			this.$el.html(this.template(this.model.attributes));
 
 			// show "AND" if we have more than one filter applied
-            if ($("#filter-list .filter-list-entry").length > 1) {
+            if ($("#filter-list .filter-list-entry", this.$el).length > 1) {
                 if ($(this.$el).closest(".filter-list-entry")[0].nextSibling !== null) {
-                    $(".filter-boolean-operator", this.$el).removeClass("hidden")
+                    $(".filter-boolean-operator", this.$el).removeClass("hidden");
                 }
             }
 

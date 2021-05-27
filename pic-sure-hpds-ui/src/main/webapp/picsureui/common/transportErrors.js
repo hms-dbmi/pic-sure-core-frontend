@@ -1,15 +1,20 @@
-define(["jquery"],
-    function($) {
-        var transportErrorHandlers = {};
-        transportErrorHandlers.redirectionUrl = "/psamaui/login?redirection_url=" + "/picsureui/";
+define(["jquery", "common/session"],
+    function($, session) {
+        var transportErrorHandlers = {
+            session: session
+        };
 
-        transportErrorHandlers.handleAll = function (response, logMsg) {
-            console.debug(logMsg);
-            console.dir(response);
+        transportErrorHandlers.redirectionUrl = "/psamaui/login?redirection_url=/picsureui/";
+
+        transportErrorHandlers.handleAll = function (response, message) {
             var hasError = false;
-            // list of all error handlers here
             if (this.handle401(response)) {
+                console.debug("Captured HTTP 401 response");
                 hasError = true;
+            }
+            console.log(message);
+            if(!message || message==='error'){
+                history.pushState({}, "Unexpected Error", "/picsureui/unexpected_error");
             }
             return hasError;
         }.bind(transportErrorHandlers);
@@ -18,9 +23,11 @@ define(["jquery"],
         transportErrorHandlers.handle401 = function (response, redirectionUrl = false) {
             if (redirectionUrl === false) redirectionUrl = this.redirectionUrl;
             if (response.status === 401) {
-                sessionStorage.clear();
-                window.location = redirectionUrl;
-                return true;
+                if (this.session.isValid()) {
+                    history.pushState({}, "Not Authorized", "/psamaui/not_authorized");
+                } else {
+                    history.pushState({}, "Login", "/psamaui/logout");
+                }
             }
             return false;
         }.bind(transportErrorHandlers);

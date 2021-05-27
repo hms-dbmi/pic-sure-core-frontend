@@ -1,5 +1,5 @@
-define(["underscore", "text!../settings/settings.json"], 
-		function(_, settings){
+define(["underscore"],
+		function(_){
 
     var queryTemplate = {
         categoryFilters: {},
@@ -15,22 +15,22 @@ define(["underscore", "text!../settings/settings.json"],
         expectedResultType: "COUNT"
     };
 
-	var createQuery = function(filters){
+	var createQuery = function(filters, resourceUUID){
 		var parsedSess = JSON.parse(sessionStorage.getItem("session"));
 		if(parsedSess.queryTemplate){
-			return generateQuery(filters,JSON.parse(parsedSess.queryTemplate));
+			return generateQuery(filters,JSON.parse(parsedSess.queryTemplate), resourceUUID);
 		} else {
-			return generateQuery(filters,JSON.parse(JSON.stringify(queryTemplate)));
+			return generateQuery(filters,JSON.parse(JSON.stringify(queryTemplate)), resourceUUID);
 		}
 	};
 
-	var generateQuery = function(filters, template) {
+	var generateQuery = function(filters, template, resourceUUID) {
 		if (!template)
-			template = JSON.parse(JSON.stringify(queryTemplate));
+			template = queryTemplate;
 
 		var query = {
-			resourceUUID: JSON.parse(settings).picSureResourceId,
-			query: template};
+			resourceUUID: resourceUUID,
+			query:  JSON.parse(JSON.stringify(template))};
 
 		_.each(filters, function(filter){
 			if(filter.get("searchTerm").trim().length !== 0){
@@ -103,8 +103,8 @@ define(["underscore", "text!../settings/settings.json"],
 							zygosities.push("0/0");
 						}
 					}
-//				}else{
-//					query.query.requiredFields.push(filter.get("searchTerm"));
+				} else if (filter.attributes.valueType==="NUMBER") {
+					query.query.requiredFields.push(filter.get("searchTerm"));
 				}
 
 			}
@@ -115,6 +115,8 @@ define(["underscore", "text!../settings/settings.json"],
 
 
 	return {
-		createQuery:createQuery
+		// TODO: update tests to test generateQuery and remove createQuery
+		createQuery:createQuery,
+		generateQuery: generateQuery
 	}
 });

@@ -97,8 +97,7 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 		});
 	
 	return {
-		View : new outputView({
-			model: new outputModel()
-		})
+			View : (overrides.viewOverride ? overrides.viewOverride : outputView),
+			Model: (overrides.modelOverride ? overrides.modelOverride : outputModel)
 	}
 });
