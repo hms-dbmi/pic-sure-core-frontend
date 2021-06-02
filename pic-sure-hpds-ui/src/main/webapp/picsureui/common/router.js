@@ -50,7 +50,7 @@ define(["common/searchParser", "backbone", "common/session", "login/login", 'hea
                     this.renderHeaderAndFooter();
                     return false;
                 }
-                if (!session.acceptedTOS() && name !== 'displayTOS'){
+                if (!(session.acceptedTOS() == true || session.acceptedTOS() == 'true') && name !== 'displayTOS'){
                     history.pushState({}, "", "/psamaui/tos");
                 }
                 else if (callback) {
