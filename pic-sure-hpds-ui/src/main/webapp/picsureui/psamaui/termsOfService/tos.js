@@ -1,5 +1,5 @@
-define(["backbone","handlebars", "text!termsOfService/tos.hbs", "picSure/picsureFunctions", 'common/session'],
-    function(BB, HBS, template, picsureFunctions, session){
+define(["backbone","handlebars", "text!termsOfService/tos.hbs", "picSure/picsureFunctions", "picSure/settings", 'common/session'],
+    function(BB, HBS, template, picsureFunctions, picSureSettings, session){
         var tosModel = BB.Model.extend({
         });
 
@@ -12,12 +12,49 @@ define(["backbone","handlebars", "text!termsOfService/tos.hbs", "picSure/picsure
                 picsureFunctions.acceptTOS(function(){
                     this.toggleNavigationButtons(false);
                     session.setAcceptedTOS();
-                    if (sessionStorage.redirection_url) {
-                        window.location = sessionStorage.redirection_url;
-                    }
-                    else {
-                        history.pushState({}, "", "psamaui/userManagement");
-                    }
+                    
+                    //need to update the template and user data - see login.js
+                    var queryTemplateRequest = function() {
+        	            return $.ajax({
+        	                url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
+        	                type: 'GET',
+        	                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+        	                contentType: 'application/json'
+        	            });
+        	        };
+        	        var meRequest = function () {
+        	            return $.ajax({
+        	                url: window.location.origin + "/psama/user/me",
+        	                type: 'GET',
+        	                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+        	                contentType: 'application/json'
+        	            });
+        	        };
+        	        $.when(queryTemplateRequest(), meRequest()).then(
+        	            function(queryTemplateResponse, meResponse) {
+        	                var currentSession = JSON.parse(sessionStorage.getItem("session"));
+        	                currentSession.queryTemplate = queryTemplateResponse[0].queryTemplate;
+        	                currentSession.privileges = meResponse[0].privileges;
+        	                sessionStorage.setItem("session", JSON.stringify(currentSession));
+        	
+        	                if (sessionStorage.redirection_url && sessionStorage.redirection_url != 'undefined') {
+        	                    window.location = sessionStorage.redirection_url;
+        	                }
+        	                else {
+        	                	 history.pushState({}, "", "/picsureui/");
+        	                }
+        	            }.bind(this),
+        	            function(queryTemplateResponse, meResponse) {
+        	                if (queryTemplateResponse[0] && queryTemplateResponse[0].status !== 200)
+        	                    transportErrors.handleAll(queryTemplateResponse[0], "Cannot retrieve query template with status: " + queryTemplateResponse[0].status);
+        	                else
+        	                    transportErrors.handleAll(meResponse[0], "Cannot retrieve user with status: " + meResponse[0].status);
+        	            }
+        	        );
+                    
+                    
+                    
+                    
                 }.bind(this))
             },
             toggleNavigationButtons: function(disable) {

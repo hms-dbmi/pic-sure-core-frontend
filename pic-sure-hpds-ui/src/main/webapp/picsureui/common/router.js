@@ -58,7 +58,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
                 if (!session.isValid()){
                     history.pushState({}, "", "/psamaui/logout");
                 }
-                if (!session.acceptedTOS() && name !== 'displayTOS'){
+                if (!(session.acceptedTOS() == true || session.acceptedTOS() == 'true') && name !== 'displayTOS'){
                     history.pushState({}, "", "/psamaui/tos");
                 }
                 else if (callback) {
