@@ -1,5 +1,5 @@
-define(["backbone","handlebars", "text!termsOfService/tos.hbs", "picSure/picsureFunctions", 'common/session'],
-    function(BB, HBS, template, picsureFunctions, session){
+define(["backbone","handlebars", "text!termsOfService/tos.hbs", "picSure/picsureFunctions", "picSure/settings", 'common/session'],
+    function(BB, HBS, template, picsureFunctions, picSureSettings, session){
         var tosModel = BB.Model.extend({
         });
 
@@ -41,7 +41,7 @@ define(["backbone","handlebars", "text!termsOfService/tos.hbs", "picSure/picsure
         	                    window.location = sessionStorage.redirection_url;
         	                }
         	                else {
-        	                	 history.pushState({}, "", "psamaui/userManagement");
+        	                	 history.pushState({}, "", "/picsureui/");
         	                }
         	            }.bind(this),
         	            function(queryTemplateResponse, meResponse) {
