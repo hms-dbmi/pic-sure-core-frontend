@@ -33,7 +33,7 @@ define(["underscore"],
 			query:  JSON.parse(JSON.stringify(template))};
 
 		if (Array.isArray(query.query.expectedResultType)) {
-			query.query.expectedResultType = query.query.expectedResultType[0];
+			query.query.expectedResultType = "COUNT";
 		}
 
 		_.each(filters, function(filter){
