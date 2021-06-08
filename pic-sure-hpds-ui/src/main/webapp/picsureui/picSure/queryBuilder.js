@@ -32,6 +32,10 @@ define(["underscore"],
 			resourceUUID: resourceUUID,
 			query:  JSON.parse(JSON.stringify(template))};
 
+		if (Array.isArray(query.query.expectedResultType)) {
+			query.query.expectedResultType = query.query.expectedResultType[0];
+		}
+
 		_.each(filters, function(filter){
 			if(filter.get("searchTerm").trim().length !== 0){
 				if ( filter.attributes.valueType === "ANYRECORDOF" ){
