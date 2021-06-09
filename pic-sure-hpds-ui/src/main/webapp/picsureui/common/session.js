@@ -85,10 +85,10 @@ define(["jquery", "underscore", "overrides/session", "common/styles"], function(
 		// 	return JSON.parse(sessionStorage.session).currentUserMode;
 		// },
 		acceptedTOS : function(){
-			return JSON.parse(sessionStorage.session).acceptedTOS;
+			return sessionStorage.session? JSON.parse(sessionStorage.session).acceptedTOS : undefined;
 		},
 		privileges: function(){
-			return JSON.parse(sessionStorage.session).privileges;
+			return sessionStorage.session? JSON.parse(sessionStorage.session).privileges : undefined;
 		},
 		activity : _.throttle(function(activity){
 			if(typeof activity !== "string"){
