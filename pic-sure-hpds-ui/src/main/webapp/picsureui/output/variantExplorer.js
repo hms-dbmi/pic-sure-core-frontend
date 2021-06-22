@@ -1,11 +1,7 @@
-define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars",
-        "overrides/outputPanel", "common/transportErrors", "common/config", "text!output/variantTable.hbs",
-        "text!options/modal.hbs", "picSure/settings", "text!output/variantExplorer.hbs"],
-    function($,  dataSelection, outputTemplate, ontology, BB, HBS,
-             overrides, transportErrors, config, variantTableTemplate,
-             modalTemplate, settings, variantExplorerTemplate){
-
-        const variantExplorerStatus = overrides.variantExplorerStatus ? overrides.variantExplorerStatus : config.VariantExplorerStatusEnum.disabled;
+define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "text!options/modal.hbs", "picSure/settings",
+        "text!output/variantExplorer.hbs"],
+    function($, BB, HBS, variantTableTemplate, modalTemplate, settings,
+             variantExplorerTemplate){
 
         let variantExplorerView = BB.View.extend({
             initialize: function() {
@@ -19,9 +15,7 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
             updateQuery: function(query) {
                 this.baseQuery = query;
 
-                if(variantExplorerStatus === config.VariantExplorerStatusEnum.enabled
-                    && this.baseQuery
-                    && this.baseQuery.query.variantInfoFilters.length > 0){
+                if(this.baseQuery && this.baseQuery.query.variantInfoFilters.length > 0){
                     _.each(this.baseQuery.query.variantInfoFilters, function(variantHolder){
                         if(Object.keys(variantHolder.categoryVariantInfoFilters).length != 0 ||
                             Object.keys(variantHolder.numericVariantInfoFilters).length != 0){
@@ -33,44 +27,42 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
             },
             // Check the number of variants in the query and show a modal if valid.
             variantdata: function(event){
-                if (variantExplorerStatus === config.VariantExplorerStatusEnum.enabled) {
-                    this.render();
-                    // make a safe deep copy of the incoming query so we don't modify it
-                    var query = JSON.parse(JSON.stringify(this.baseQuery));
+                this.render();
+                // make a safe deep copy of the incoming query so we don't modify it
+                var query = JSON.parse(JSON.stringify(this.baseQuery));
 
-                    //this query type counts the number of variants described by the query.
-                    query.query.expectedResultType="VARIANT_COUNT_FOR_QUERY";
+                //this query type counts the number of variants described by the query.
+                query.query.expectedResultType="VARIANT_COUNT_FOR_QUERY";
 
-                    $.ajax({
-                        url: window.location.origin + "/picsure/query/sync",
-                        type: 'POST',
-                        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-                        contentType: 'application/json',
-                        data: JSON.stringify(query),
-                        dataType: 'text',
-                        success: function(response){
+                $.ajax({
+                    url: window.location.origin + "/picsure/query/sync",
+                    type: 'POST',
+                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                    contentType: 'application/json',
+                    data: JSON.stringify(query),
+                    dataType: 'text',
+                    success: function(response){
 
-                            //If there are fewer variants than the limit, show the modal
-                            maxVariantCount =  settings.maxVariantCount ? settings.maxVariantCount : 1000;
+                        //If there are fewer variants than the limit, show the modal
+                        maxVariantCount =  settings.maxVariantCount ? settings.maxVariantCount : 1000;
 
-                            //responseJson = JSON.parse(response);
-                            // use this to test vs current udn production
-                            var responseJson = {count: parseInt(response)}
+                        //responseJson = JSON.parse(response);
+                        // use this to test vs current udn production
+                        var responseJson = {count: parseInt(response)}
 
-                            if( responseJson.count == 0 ){
-                                this.showBasicModal("Variant Data", "No Variant Data Available.  " + responseJson.message);
-                            } else if( responseJson.count <= maxVariantCount ){
-                                this.showVariantDataModal(query);
-                            } else {
-                                this.showBasicModal("Variant Data", "Too many variants!  Found " + parseInt(response) + ", but cannot display more than " + maxVariantCount + " variants.")
-                            }
-                        }.bind(this),
-                        error: function(response){
-                            this.render();
-                            console.log("ERROR: " + response);
+                        if( responseJson.count == 0 ){
+                            this.showBasicModal("Variant Data", "No Variant Data Available.  " + responseJson.message);
+                        } else if( responseJson.count <= maxVariantCount ){
+                            this.showVariantDataModal(query);
+                        } else {
+                            this.showBasicModal("Variant Data", "Too many variants!  Found " + parseInt(response) + ", but cannot display more than " + maxVariantCount + " variants.")
                         }
-                    });
-                }
+                    }.bind(this),
+                    error: function(response){
+                        this.render();
+                        console.log("ERROR: " + response);
+                    }
+                });
             },
             showBasicModal: function(titleStr, content){
                 $("#modal-window").html(this.modalTemplate({title: titleStr}));

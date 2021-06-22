@@ -7,8 +7,6 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 
 	var outputModel = overrides.modelOverride ? overrides.modelOverride : BB.Model.extend({	});
 
-	const variantExplorerStatus = overrides.variantExplorerStatus ? overrides.variantExplorerStatus : config.VariantExplorerStatusEnum.disabled;
-
 	var outputView = overrides.viewOverride ? overrides.viewOverride : 
 		BB.View.extend({
 			ontology: ontology,
@@ -104,7 +102,7 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 					this.dataSelection.render();
 				}
 
-				if (variantExplorerStatus === config.VariantExplorerStatusEnum.enabled) {
+				if (settings.variantExplorerStatus === config.VariantExplorerStatusEnum.enabled) {
 					if (!this.variantExplorerView) {
 						this.variantExplorerView = new variantExplorer.View(new variantExplorer.Model());
 						this.variantExplorerView.setElement($("#variant-data-container",this.$el));
