@@ -55,7 +55,7 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
                         } else if( responseJson.count <= maxVariantCount ){
                             this.showVariantDataModal(query);
                         } else {
-                            this.showBasicModal("Variant Data", "Too many variants!  Found " + parseInt(response) + ", but cannot display more than " + maxVariantCount + " variants.")
+                            this.showBasicModal("Variant Data", "Too many variants!  Found " + responseJson.count + ", but cannot display more than " + maxVariantCount + " variants.")
                         }
                     }.bind(this),
                     error: function(response){
