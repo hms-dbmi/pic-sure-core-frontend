@@ -1,0 +1,18 @@
+<table class="variantTable">
+    <thead>
+    <tr>
+        {{#each headers}}
+            <th>{{this}}</th>
+        {{/each}}
+    </tr>
+    </thead>
+    <tbody>
+    {{#each variants}}
+        <tr>
+            {{#each ../headers}}
+                <td>{{lookup .. this}}</td>
+            {{/each}}
+        </tr>
+    {{/each}}
+    </tbody>
+</table>

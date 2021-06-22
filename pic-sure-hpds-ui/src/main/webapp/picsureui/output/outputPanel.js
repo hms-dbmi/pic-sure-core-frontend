@@ -1,5 +1,9 @@
-define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars", "overrides/outputPanel", "common/transportErrors"],
-		function($,  dataSelection, outputTemplate, ontology, BB, HBS, overrides, transportErrors){
+define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars",
+		"overrides/outputPanel", "common/transportErrors", "common/config", "text!output/variantTable.hbs",
+		"text!options/modal.hbs", "picSure/settings", "output/variantExplorer"],
+		function($,  dataSelection, outputTemplate, ontology, BB, HBS,
+				 overrides, transportErrors, config, variantTableTemplate,
+				 modalTemplate, settings, variantExplorer){
 
 	var outputModel = overrides.modelOverride ? overrides.modelOverride : BB.Model.extend({	});
 
@@ -18,7 +22,6 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 					}
 				});
 			},
-			
 			events:{
 				"click #select-btn": "select"
 			},
@@ -50,6 +53,11 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 					this.dataSelection.updateQuery(this.model.baseQuery);
 					this.dataSelection.render();
 				}
+
+				if (this.variantExplorerView) {
+					this.variantExplorerView.updateQuery(this.model.baseQuery);
+				}
+
     			this.delegateEvents();
 			},
 			errorCallback: function(message){
@@ -93,11 +101,19 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 					this.dataSelection.setElement($("#concept-tree-div",this.$el));
 					this.dataSelection.render();
 				}
+
+				if (settings.variantExplorerStatus === config.VariantExplorerStatusEnum.enabled) {
+					if (!this.variantExplorerView) {
+						this.variantExplorerView = new variantExplorer.View(new variantExplorer.Model());
+						this.variantExplorerView.setElement($("#variant-data-container",this.$el));
+						this.variantExplorerView.render();
+					}
+				}
 			}
 		});
 	
 	return {
-			View : (overrides.viewOverride ? overrides.viewOverride : outputView),
+			View : outputView,
 			Model: (overrides.modelOverride ? overrides.modelOverride : outputModel)
 	}
 });

@@ -2,9 +2,8 @@
 	<img class="logo-img col-md-4" src="{{logoPath}}">
 </div>
 <div class="row" style="margin-top:6px">
-    <span class="col-md-2"></span>
     {{#not_empty applications}}
-    <div class="col-md-2 dropdown" id="applications-dropdown">
+    <div class="col dropdown" id="applications-dropdown">
         <button class="btn btn-secondary dropdown-toggle header-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Applications</button>
         <ul class="dropdown-menu" role="menu">
         {{#each applications}}
@@ -15,8 +14,8 @@
     {{/not_empty}}
 
     {{#contains privileges "SUPER_ADMIN"}}
-        <div class="col-md-1 dropdown btn btn-default header-btn super-admin-visible" id="super-admin-dropdown">
-            <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
+        <div class="col dropdown btn btn-default header-btn super-admin-visible" id="super-admin-dropdown">
+            <span class="dropdown-toggle col" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
             <ul class="dropdown-menu" role="menu">
                 <li class="dropdown"><a id="appMgmt-super-admin" class="header-navigation" data-href="/psamaui/applicationManagement" href="#">Applications</a></li>
                 <li class="dropdown"><a id="connMgmt-super-admin" class="header-navigation" data-href="/psamaui/connectionManagement">Connections</a></li>
@@ -27,24 +26,24 @@
     {{/contains}}
 
     {{#if authenticated}}
-        <a class="col-md-2 btn btn-default header-btn authenticated-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn">Query Builder</a>
+        <a class="col btn btn-default header-btn authenticated-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn">Query Builder</a>
     {{/if}}
 
     {{#contains privileges 'ADMIN'}}
-        <a class="col-md-1 btn btn-default header-btn header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#">Users</a>
+        <a class="col btn btn-default header-btn header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#">Users</a>
     {{/contains}}
 
     {{#if authenticated}}
-        <a id="user-profile-btn" class="col-md-1 btn btn-default header-btn authenticated-visible" href="#">User Profile</a>
-        <div class="col-md-1 dropdown btn btn-default header-btn authenticated-visible" id="help-dropdown">
-            <span class="dropdown-toggle col-md-12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</span>
+        <a id="user-profile-btn" class="col btn btn-default header-btn authenticated-visible" href="#">User Profile</a>
+        <div class="col dropdown btn btn-default header-btn authenticated-visible" id="help-dropdown">
+            <span class="dropdown-toggle col" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</span>
             <ul class="dropdown-menu" role="menu">
                 {{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}" target="_blank">Video Demonstration</a></li>{{/if}}
                 {{#if pdfLink}}<li class="dropdown"><a href="{{{pdfLink}}}" target="_blank">User Guide</a></li>{{/if}}
                 {{#if jupyterExampleLink}}<li class="dropdown"><a href="{{{jupyterExampleLink}}}" target="_blank">Jupyter Examples</a></li>{{/if}}
                 {{#if helpLink}}<li class="dropdown"><a href="{{{helpLink}}}" target="_blank">Contact Us</a></li>{{/if}}
         </div>
-        <a id="logout-btn" class="col-md-1 btn btn-default header-btn authenticated-visible">Log Out</a>
+        <a id="logout-btn" class="col btn btn-default header-btn authenticated-visible">Log Out</a>
     {{/if}}
 
 </div>

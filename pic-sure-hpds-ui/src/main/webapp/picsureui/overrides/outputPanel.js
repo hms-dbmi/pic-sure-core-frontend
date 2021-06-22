@@ -1,4 +1,4 @@
-define(["jquery", "handlebars", "backbone"], function($, HBS, BB){
+define(["jquery", "handlebars", "backbone", "common/config"], function($, HBS, BB, config){
 	return {
 		/*
 		 * This should be a function that returns the name of a Handlebars partial
@@ -45,6 +45,8 @@ define(["jquery", "handlebars", "backbone"], function($, HBS, BB){
 		 * dataCallback - default data callback function, 
 		 * errorCallback - default error callback function
 		 */
-		runQuery: undefined
+		runQuery: undefined,
+
+		variantExplorerStatus: config.VariantExplorerStatus.disabled
 	};
 });
