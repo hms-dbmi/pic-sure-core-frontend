@@ -1,7 +1,7 @@
 define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "text!options/modal.hbs", "picSure/settings",
-        "text!output/variantExplorer.hbs"],
+        "text!output/variantExplorer.hbs", "common/config"],
     function($, BB, HBS, variantTableTemplate, modalTemplate, settings,
-             variantExplorerTemplate){
+             variantExplorerTemplate, config){
 
         let variantExplorerView = BB.View.extend({
             initialize: function() {
@@ -78,7 +78,13 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
 
                 //we expect an object that has already been parsed/copied from the model.
                 //update the result type to get the variant data
-                query.query.expectedResultType="VCF_EXCERPT";
+                if (settings.variantExplorerStatus === config.VariantExplorerStatusEnum.enabled) {
+                    query.query.expectedResultType="VCF_EXCERPT";
+                } else if (settings.variantExplorerStatus === config.VariantExplorerStatusEnum.aggregate) {
+                    query.query.expectedResultType="AGGREGATE_VCF_EXCERPT";
+                } else {
+                    throw "variantExplorerStatus must be enabled or aggregate";
+                }
 
                 $.ajax({
                     url: window.location.origin + "/picsure/query/sync",
