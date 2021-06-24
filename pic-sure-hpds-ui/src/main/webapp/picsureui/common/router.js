@@ -206,21 +206,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), parsedSettings.picSureResourceId);
             outputPanelView.runQuery(query);
 
-            // todo: move this somewhere else
-            var renderHelpCallback = function(filterView) {
-                ontology.getInstance().allInfoColumnsLoaded.then(function(){
-                    $('.show-help-modal').click(function() {
-                        $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)(ontology.getInstance().allInfoColumns()));
-                        $('#modal-window', this.$el).tooltip();
-                        $(".close").click(function(){
-                            $("#search-help-modal").hide();
-                        });
-                        $("#search-help-modal").show();
-                    });
-                }.bind(filterView));
-            }
-
-            filterList.init(parsedSettings.picSureResourceId, outputPanelView, renderHelpCallback, JSON.parse(parsedSess.queryTemplate));
+            filterList.init(parsedSettings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
         },
         defaultAction: function() {
             console.log("Default action");

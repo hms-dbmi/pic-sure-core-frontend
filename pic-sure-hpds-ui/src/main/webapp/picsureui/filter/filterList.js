@@ -1,11 +1,25 @@
-define(["jquery","picSure/queryBuilder", "filter/filter"],
-		function($, queryBuilder, filter){
+define(["jquery","picSure/queryBuilder", "filter/filter", "overrides/filterList"],
+		function($, queryBuilder, filter, overrides){
+
+	var renderHelpCallback = function(filterView) {
+        ontology.getInstance().allInfoColumnsLoaded.then(function(){
+            $('.show-help-modal').click(function() {
+                $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)(ontology.getInstance().allInfoColumns()));
+                $('#modal-window', this.$el).tooltip();
+                $(".close").click(function(){
+                    $("#search-help-modal").hide();
+                });
+                $("#search-help-modal").show();
+            });
+        }.bind(filterView));
+    };
+	
 	var filterList = {
-		init : function(resourceUUID, outputPanelView, renderHelpCallback, queryTemplate){
+		init : function(resourceUUID, outputPanelView, queryTemplate){
 			$('#filter-list').html();
 			this.filters = [];
 			this.resourceUUID = resourceUUID;
-			this.renderHelpCallback = renderHelpCallback;
+			this.renderHelpCallback = overrides.renderHelpCallback ? overrides.renderHelpCallback : renderHelpCallback;
 			this.outputPanelView = outputPanelView;
 			this.queryTemplate = queryTemplate;
 			this.addFilter();
@@ -26,28 +40,6 @@ define(["jquery","picSure/queryBuilder", "filter/filter"],
 		if (typeof this.renderHelpCallback !== 'undefined') {
 			this.renderHelpCallback(this);
 		}
-/*
-		var grouped = _.groupBy($('#filter-list').children(), function(child){
-			if($(child).hasClass("variant-info-filter")) return "info";
-			if($(child).hasClass("saved")) return "pheno";
-			if($(child).hasClass("filter-grouping")) return "filter-grouping";
-			return "unsaved";
-		});
-		$('#filter-list .filter-grouping').remove();
-		$('#filter-list').children().detach();
-		if(grouped.info && grouped.info.length > 0){
-			$('#filter-list').append("<h1 class='filter-grouping'>Variant Info Filters</h1>");
-			$('#filter-list').append("<h3 class='filter-grouping'>Patients who do not have at least one variant matching all of these filters will be excluded from results.</h3>");
-			$('#filter-list').append(grouped.info);
-		}
-		if(grouped.pheno && grouped.pheno.length > 0){
-			$('#filter-list').append("<h1 class='filter-grouping'>Phenotype Filters</h1>");
-			$('#filter-list').append("<h3 class='filter-grouping'>Patients who do not match all of these filters will be excluded from results.</h3>");
-			$('#filter-list').append(grouped.pheno);
-		}
-		$('#filter-list').append("<h1 class='filter-grouping'>Add Filter</h1>");
-		$('#filter-list').append("<h3 class='filter-grouping'>Use the search box to add new filters.</h3>");
-		$('#filter-list').append(grouped.unsaved);*/
 	}.bind(filterList);
 	filterList.runQuery = function(){
 		var query = queryBuilder.generateQuery(
