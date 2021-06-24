@@ -1,5 +1,5 @@
-define(["jquery","picSure/queryBuilder", "filter/filter", "overrides/filterList"],
-		function($, queryBuilder, filter, overrides){
+define(["jquery","picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList"],
+		function($, queryBuilder, filter, ontology, overrides){
 
 	var renderHelpCallback = function(filterView) {
         ontology.getInstance().allInfoColumnsLoaded.then(function(){
