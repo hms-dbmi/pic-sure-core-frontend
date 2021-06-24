@@ -46,9 +46,7 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
                         //If there are fewer variants than the limit, show the modal
                         maxVariantCount =  settings.maxVariantCount ? settings.maxVariantCount : 1000;
 
-                        //responseJson = JSON.parse(response);
-                        // use this to test vs current udn production
-                        var responseJson = {count: parseInt(response)}
+                        let responseJson = JSON.parse(response);
 
                         if( responseJson.count == 0 ){
                             this.showBasicModal("Variant Data", "No Variant Data Available.  " + responseJson.message);
