@@ -1,7 +1,16 @@
 define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars", "overrides/outputPanel", "common/transportErrors"],
 		function($,  dataSelection, outputTemplate, ontology, BB, HBS, overrides, transportErrors){
 
-	var outputModel = overrides.modelOverride ? overrides.modelOverride : BB.Model.extend({	});
+	var defaultModel = BB.Model.extend({
+		defaults: {
+			totalPatients : 0,
+			spinnerClasses: "spinner-medium spinner-medium-center ",
+			spinning: false,
+			resources : {}
+		}
+	});
+
+	var outputModel = overrides.modelOverride ? overrides.modelOverride : defaultModel;
 
 	var outputView = overrides.viewOverride ? overrides.viewOverride : 
 		BB.View.extend({
@@ -34,15 +43,24 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 					this.dataSelection.render();
 				}
 			},
+			queryRunning: function(){
+				this.model.set('spinning', true);
+				this.model.set('queryRan', false);
+				this.render();
+			},
+			queryFinished: function(totalPatients){
+				this.model.set("totalPatients", totalPatients);
+				this.model.set('spinning', false);
+				this.model.set('queryRan', true);
+				this.render();
+			},
 			totalCount: 0,
 			tagName: "div",
 			dataCallback: function(result){
 				//default function to update a single patient count element in the output panel
 				
 				var count = parseInt(result);
-				this.model.set("totalPatients", count);
-				this.model.set("queryRan", true);
-				this.model.set("spinning", false);
+				this.queryFinished(count);
 				
 				$("#patient-count").html(count);  
                 //and update the data selection panel
@@ -54,16 +72,14 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 			},
 			errorCallback: function(message){
 				//clear some status flags and make sure we inform the user of errors
-				this.model.set("totalPatients", '-');
-				this.model.set("spinning", false);
-				this.model.set("queryRan", true);
-				this.render();
+				this.queryFinished("-");
 				$("#patient-count").html(message);
 			},
 			runQuery: function(incomingQuery){
 				if(overrides.runQuery){
 					overrides.runQuery(this, incomingQuery, this.dataCallback.bind(this), this.errorCallback.bind(this));
 				} else {
+					this.queryRunning();
 					//use the default logic
 					var query = JSON.parse(JSON.stringify(incomingQuery)); //make a safe copy
 					this.model.baseQuery = query;
