@@ -1,5 +1,6 @@
-define(["jquery","picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList"],
-		function($, queryBuilder, filter, ontology, overrides){
+define(["jquery","picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList",
+			"text!filter/searchHelpTooltip.hbs"],
+		function($, queryBuilder, filter, ontology, overrides, searchHelpTooltipTemplate){
 
 	var renderHelpCallback = function(filterView) {
         ontology.getInstance().allInfoColumnsLoaded.then(function(){

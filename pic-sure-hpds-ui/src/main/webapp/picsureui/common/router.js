@@ -3,13 +3,13 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
         'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
         "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "text!../settings/settings.json",
-        "text!filter/searchHelpTooltip.hbs", "text!common/unexpected_error.hbs"],
+        "text!common/unexpected_error.hbs"],
         function(Backbone, session, login, header, footer, userManagement,
                 roleManagement, privilegeManagement, applicationManagement,
                 connectionManagement, tos, userFunctions,
                 HBS, accessRuleManagement, routerOverrides, filterList,
                  layoutTemplate, queryBuilder, output, settings,
-                 searchHelpTooltipTemplate, unexpectedErrorTemplate){
+                 unexpectedErrorTemplate){
 
         var publicRoutes = ["not_authorized", "login", "logout"];
         var Router = Backbone.Router.extend({
