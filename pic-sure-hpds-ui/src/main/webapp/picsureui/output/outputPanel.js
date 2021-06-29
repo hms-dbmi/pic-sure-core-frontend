@@ -106,9 +106,9 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 					|| settings.variantExplorerStatus === config.VariantExplorerStatusEnum.aggregate) {
 					if (!this.variantExplorerView) {
 						this.variantExplorerView = new variantExplorer.View(new variantExplorer.Model());
-						this.variantExplorerView.setElement($("#variant-data-container",this.$el));
-						this.variantExplorerView.render();
 					}
+					this.variantExplorerView.setElement($("#variant-data-container",this.$el));
+					this.variantExplorerView.render();
 				}
 			}
 		});
