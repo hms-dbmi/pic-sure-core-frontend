@@ -1,7 +1,7 @@
 define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "text!options/modal.hbs", "picSure/settings",
-        "text!output/variantExplorer.hbs"],
+        "text!output/variantExplorer.hbs", "common/config"],
     function($, BB, HBS, variantTableTemplate, modalTemplate, settings,
-             variantExplorerTemplate){
+             variantExplorerTemplate, config){
 
         let variantExplorerView = BB.View.extend({
             initialize: function() {
@@ -14,20 +14,26 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
             },
             updateQuery: function(query) {
                 this.baseQuery = query;
-
+                this.displayVariantButton();
+            },
+            displayVariantButton: function() {
+                var showVariantButton = false;
                 if(this.baseQuery && this.baseQuery.query.variantInfoFilters.length > 0){
                     _.each(this.baseQuery.query.variantInfoFilters, function(variantHolder){
                         if(Object.keys(variantHolder.categoryVariantInfoFilters).length != 0 ||
                             Object.keys(variantHolder.numericVariantInfoFilters).length != 0){
-                            $("#variant-data-btn").removeClass("hidden");
-                            return false;
+                            showVariantButton = true;
                         }
                     });
+                }
+                if (showVariantButton) {
+                    $("#variant-data-btn").removeClass("hidden");
+                } else {
+                    $("#variant-data-btn").addClass("hidden");
                 }
             },
             // Check the number of variants in the query and show a modal if valid.
             variantdata: function(event){
-                this.render();
                 // make a safe deep copy of the incoming query so we don't modify it
                 var query = JSON.parse(JSON.stringify(this.baseQuery));
 
@@ -78,7 +84,13 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
 
                 //we expect an object that has already been parsed/copied from the model.
                 //update the result type to get the variant data
-                query.query.expectedResultType="VCF_EXCERPT";
+                if (settings.variantExplorerStatus === config.VariantExplorerStatusEnum.enabled) {
+                    query.query.expectedResultType="VCF_EXCERPT";
+                } else if (settings.variantExplorerStatus === config.VariantExplorerStatusEnum.aggregate) {
+                    query.query.expectedResultType="AGGREGATE_VCF_EXCERPT";
+                } else {
+                    throw "variantExplorerStatus must be enabled or aggregate";
+                }
 
                 $.ajax({
                     url: window.location.origin + "/picsure/query/sync",
@@ -138,6 +150,7 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
             },
             render: function() {
                 this.$el.html(this.template({}));
+                this.displayVariantButton();
             }
         });
 
