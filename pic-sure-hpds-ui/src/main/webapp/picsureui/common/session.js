@@ -10,7 +10,11 @@ define(["jquery", "underscore", "overrides/session", "common/styles"], function(
 	};
 
 	var expired = function() {
-		return new Date().getTime()/1000 > JSON.parse(atob(JSON.parse(sessionStorage.session).token.split('.')[1])).exp;
+		if (sessionStorage.session){
+			return new Date().getTime()/1000 > JSON.parse(atob(JSON.parse(sessionStorage.session).token.split('.')[1])).exp;
+		}
+		//no session -> no token --> session has expired or does not exist.
+		return true;
 	}
 
 	var handleNotAuthorizedResponse = function() {
