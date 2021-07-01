@@ -14,20 +14,26 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
             },
             updateQuery: function(query) {
                 this.baseQuery = query;
-
+                this.displayVariantButton();
+            },
+            displayVariantButton: function() {
+                var showVariantButton = false;
                 if(this.baseQuery && this.baseQuery.query.variantInfoFilters.length > 0){
                     _.each(this.baseQuery.query.variantInfoFilters, function(variantHolder){
                         if(Object.keys(variantHolder.categoryVariantInfoFilters).length != 0 ||
                             Object.keys(variantHolder.numericVariantInfoFilters).length != 0){
-                            $("#variant-data-btn").removeClass("hidden");
-                            return false;
+                            showVariantButton = true;
                         }
                     });
+                }
+                if (showVariantButton) {
+                    $("#variant-data-btn").removeClass("hidden");
+                } else {
+                    $("#variant-data-btn").addClass("hidden");
                 }
             },
             // Check the number of variants in the query and show a modal if valid.
             variantdata: function(event){
-                this.render();
                 // make a safe deep copy of the incoming query so we don't modify it
                 var query = JSON.parse(JSON.stringify(this.baseQuery));
 
@@ -144,6 +150,7 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
             },
             render: function() {
                 this.$el.html(this.template({}));
+                this.displayVariantButton();
             }
         });
 
