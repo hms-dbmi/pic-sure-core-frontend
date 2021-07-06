@@ -18,12 +18,12 @@ define(["backbone", "handlebars", "user/connections", "picSure/userFunctions", "
 	        	$(".error-email").show();
 	        	$("#save-user-button").prop( "disabled", true);
         	} else {
-        		var users = _.pluck(this.connections, "users");
+        		var users = _.pluck(this.connections, "users").flat();
     			var emails = _.pluck(users, "email")
-    			if(emails.contains($("#email").val())){
+    			if(emails.includes($("#email").val())){
     				$('#error-email').html('That email address is already in use.');
     				$(".error-email").show();
-    				$("input[name=email]").attr('disabled', true);
+    				$("#save-user-button").prop( "disabled", true);
     			} else {
     				//happy path - valid and unique
     				$(".error-email").hide();
