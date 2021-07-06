@@ -12,13 +12,23 @@ define(["backbone", "handlebars", "user/connections", "picSure/userFunctions", "
 			"input #email": "validateEmail"
 		},
 		validateEmail: function(event){
-			$(".error").hide();
 	        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 	        if(!emailReg.test($('input[name=email]').val())) {
-	        	$('input[name=email]').after('<span class="error">Enter a valid email address.</span>');
+	        	$('#error-email').html('Enter a valid email address.');
+	        	$(".error-email").show();
 	        	$("#save-user-button").prop( "disabled", true);
         	} else {
-        		$("#save-user-button").prop( "disabled", false);
+        		var users = _.pluck(this.connections, "users");
+    			var emails = _.pluck(users, "email")
+    			if(emails.contains($("#email").val())){
+    				$('#error-email').html('That email address is already in use.');
+    				$(".error-email").show();
+    				$("input[name=email]").attr('disabled', true);
+    			} else {
+    				//happy path - valid and unique
+    				$(".error-email").hide();
+    				$("#save-user-button").prop( "disabled", false);
+    			}
         	}
 		},
 		createUser: function(event){

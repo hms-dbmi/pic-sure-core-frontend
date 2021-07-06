@@ -600,9 +600,6 @@ body {
 }
 
 
-
-
-
 -- Following styles mported from psamaui as part of ALS-1636
 .table-picsure {
     border-collapse: collapse;
@@ -798,4 +795,8 @@ body {
 
 .a0-button-text {
 	text-transform: none;
+}
+
+.hidden {
+	display: none;
 }
