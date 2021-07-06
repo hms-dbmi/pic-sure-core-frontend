@@ -15,18 +15,18 @@ define(["backbone", "handlebars", "user/connections", "picSure/userFunctions", "
 	        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 	        if(!emailReg.test($('input[name=email]').val())) {
 	        	$('#error-email').html('Enter a valid email address.');
-	        	$(".error-email").show();
+	        	$("#error-email").show();
 	        	$("#save-user-button").prop( "disabled", true);
         	} else {
         		var users = _.pluck(this.connections, "users").flat();
     			var emails = _.pluck(users, "email")
     			if(emails.includes($("#email").val())){
     				$('#error-email').html('That email address is already in use.');
-    				$(".error-email").show();
+    				$("#error-email").show();
     				$("#save-user-button").prop( "disabled", true);
     			} else {
     				//happy path - valid and unique
-    				$(".error-email").hide();
+    				$("#error-email").hide();
     				$("#save-user-button").prop( "disabled", false);
     			}
         	}
