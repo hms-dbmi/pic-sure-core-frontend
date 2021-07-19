@@ -3,6 +3,7 @@
 		<div class='row'>
 			<label for={{this.id}}>{{this.label}} (required)</label>
 			<input type="text" required name="{{this.id}}" id="{{this.id}}" style="width: 100%;">
+			<span id="error-{{this.id}}" class="intitially-hidden"></span>
 		</div>
 	{{/each}}
 	{{#each connection.optionalFields}}
