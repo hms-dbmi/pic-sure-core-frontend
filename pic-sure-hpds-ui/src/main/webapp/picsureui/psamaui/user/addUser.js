@@ -19,7 +19,7 @@ define(["backbone", "handlebars", "user/connections", "picSure/userFunctions", "
 	        	$("#save-user-button").prop( "disabled", true);
         	} else {
         		//only check the current connection's users; unique per connection
-    			var emails = _.pluck(this.connections.users, "email")
+    			var emails = _.pluck(this.connection.users, "email")
     			if(emails.includes($("#email").val())){
     				$('#error-email').html('That email address is already in use.');
     				$("#error-email").show();
