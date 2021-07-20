@@ -43,7 +43,7 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 				
 				//we can only clear the unused consents AFTER adding the fields
 				if(outputOverride.updateConsentFilters){
-					outputOverride.updateConsentFilters(query, settings);
+					outputOverride.updateConsentFilters(query, this.settings);
 				}
         
 				if(!this.settings.queryExportType || this.settings.queryExportType == "EXPORT_IMMEDIATE"){
