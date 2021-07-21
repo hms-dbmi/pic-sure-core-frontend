@@ -81,5 +81,10 @@
 			<artifactId>jstree</artifactId>
 			<version>3.3.7</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>datatables</artifactId>
+		    <version>1.10.25</version>
+		</dependency>
 	</dependencies>
 </project>
