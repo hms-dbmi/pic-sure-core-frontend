@@ -23,3 +23,9 @@ RUN mkdir /usr/local/apache2/logs/ssl_mutex
 COPY target/webjars/META-INF/resources/webjars /usr/local/apache2/htdocs/picsureui/webjars
 COPY src/main/webapp/picsureui /usr/local/apache2/htdocs/picsureui
 COPY src/main/resources /usr/local/apache2/htdocs/picsureui/settings
+
+COPY target/webjars/META-INF/resources/webjars/datatables/1.10.25/images/sort_both.png /usr/local/apache2/htdocs/images/sort_both.png
+COPY target/webjars/META-INF/resources/webjars/datatables/1.10.25/images/sort_asc.png /usr/local/apache2/htdocs/images/sort_asc.png
+COPY target/webjars/META-INF/resources/webjars/datatables/1.10.25/images/sort_desc.png /usr/local/apache2/htdocs/images/sort_desc.png
+COPY target/webjars/META-INF/resources/webjars/datatables/1.10.25/images/sort_asc_disabled.png /usr/local/apache2/htdocs/images/sort_asc_disabled.png
+COPY target/webjars/META-INF/resources/webjars/datatables/1.10.25/images/sort_desc_disabled.png /usr/local/apache2/htdocs/images/sort_desc_disabled.png
