@@ -65,7 +65,7 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
                     error: function(response){
                         this.render();
                         console.log("ERROR: " + response);
-                    }
+                    }.bind(this)
                 });
             },
             showBasicModal: function(titleStr, content){
@@ -145,7 +145,7 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
                     error: function(response){
                         console.log("ERROR: " + response);
                         this.render();
-                    }
+                    }.bind(this)
                 });
             },
             render: function() {
