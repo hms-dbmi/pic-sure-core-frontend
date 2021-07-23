@@ -71,7 +71,7 @@ define(["jquery", "datatables", "backbone", "handlebars", "text!output/variantTa
                         this.render();
                         console.log("ERROR: " + response);
                         this.renderComplete.resolve();
-                    }
+                    }.bind(this)
                 });
             },
             showBasicModal: function(titleStr, content){
@@ -167,7 +167,7 @@ define(["jquery", "datatables", "backbone", "handlebars", "text!output/variantTa
                         console.log("ERROR: " + response);
                         this.render();
                         this.renderComplete.resolve();
-                    }
+                    }.bind(this)
                 });
             },
             render: function() {
