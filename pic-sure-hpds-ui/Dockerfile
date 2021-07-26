@@ -20,12 +20,8 @@ RUN sed -i '/^#LoadModule rewrite_module modules\/mod_rewrite.so/s/^#//' ${HTTPD
 RUN sed -i '/^#LoadModule socache_shmcb_module modules\/mod_socache_shmcb.so/s/^#//' ${HTTPD_PREFIX}/conf/httpd.conf
 RUN mkdir /usr/local/apache2/logs/ssl_mutex
 
+RUN sed -i 's/\.\.\/images\//\/picsureui\/webjars\/datatables\/1\.10\.25\/images\//g' ${HTTPD_PREFIX}/htdocs/picsureui/webjars/datatables/1.10.25/css/jquery.dataTables.min.css
+
 COPY target/webjars/META-INF/resources/webjars /usr/local/apache2/htdocs/picsureui/webjars
 COPY src/main/webapp/picsureui /usr/local/apache2/htdocs/picsureui
 COPY src/main/resources /usr/local/apache2/htdocs/picsureui/settings
-
-COPY target/webjars/META-INF/resources/webjars/datatables/1.10.25/images/sort_both.png /usr/local/apache2/htdocs/images/sort_both.png
-COPY target/webjars/META-INF/resources/webjars/datatables/1.10.25/images/sort_asc.png /usr/local/apache2/htdocs/images/sort_asc.png
-COPY target/webjars/META-INF/resources/webjars/datatables/1.10.25/images/sort_desc.png /usr/local/apache2/htdocs/images/sort_desc.png
-COPY target/webjars/META-INF/resources/webjars/datatables/1.10.25/images/sort_asc_disabled.png /usr/local/apache2/htdocs/images/sort_asc_disabled.png
-COPY target/webjars/META-INF/resources/webjars/datatables/1.10.25/images/sort_desc_disabled.png /usr/local/apache2/htdocs/images/sort_desc_disabled.png
