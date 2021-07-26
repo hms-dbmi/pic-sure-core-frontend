@@ -46,9 +46,6 @@ require.config({
 		"auth0-js": {
             deps:["jquery"],
             exports: "Auth0"
-        },
-		"datatablesFixedColumns": {
-			deps:["datatables"]
         }
 	}
 });
