@@ -1,7 +1,7 @@
-define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "text!options/modal.hbs", "picSure/settings",
-        "text!output/variantExplorer.hbs", "common/config"],
-    function($, BB, HBS, variantTableTemplate, modalTemplate, settings,
-             variantExplorerTemplate, config){
+define(["jquery", "datatables", "backbone", "handlebars", "text!output/variantTable.hbs", "text!options/modal.hbs", "picSure/settings",
+        "text!output/variantExplorer.hbs", "common/config", "common/spinner"],
+    function($, datatables, BB, HBS, variantTableTemplate, modalTemplate, settings,
+             variantExplorerTemplate, config, spinner){
 
         let variantExplorerView = BB.View.extend({
             initialize: function() {
@@ -40,6 +40,9 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
                 //this query type counts the number of variants described by the query.
                 query.query.expectedResultType="VARIANT_COUNT_FOR_QUERY";
 
+                this.renderComplete = $.Deferred();
+                spinner.medium(this.renderComplete, "#variant-spinner", "spinner-medium spinner-medium-center ");
+
                 $.ajax({
                     url: window.location.origin + "/picsure/query/sync",
                     type: 'POST',
@@ -56,15 +59,18 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
 
                         if( responseJson.count == 0 ){
                             this.showBasicModal("Variant Data", "No Variant Data Available.  " + responseJson.message);
+                            this.renderComplete.resolve();
                         } else if( responseJson.count <= maxVariantCount ){
                             this.showVariantDataModal(query);
                         } else {
                             this.showBasicModal("Variant Data", "Too many variants!  Found " + responseJson.count + ", but cannot display more than " + maxVariantCount + " variants.")
+                            this.renderComplete.resolve();
                         }
                     }.bind(this),
                     error: function(response){
                         this.render();
                         console.log("ERROR: " + response);
+                        this.renderComplete.resolve();
                     }.bind(this)
                 });
             },
@@ -73,7 +79,6 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
                 $(".close").click(function(){
                     $("#modalDialog").hide();
                 });
-
                 $("#modalDialog").show();
                 $(".modal-body").html(content);
                 this.render();
@@ -100,7 +105,6 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
                     data: JSON.stringify(query),
                     dataType: 'text',
                     success: function(response){
-    //				 		console.log(response);
 
                         //default message if no data
                         variantHtml = "No Variant Data Available"
@@ -115,15 +119,11 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
                             output["variants"] = []
                             //read the tsv lines into an object that we can sent to Handlebars template
                             for(i = 1; i < lines.length; i++){
-                                variantData = {};
                                 values = lines[i].split("\t");
-                                for(j=0; j < values.length; j++){
-                                    variantData[headers[j]] = values[j];
+                                if(values.length > 1){
+                                    output["variants"].push(values);
                                 }
-                                output["variants"].push(variantData);
                             }
-                            //render the template!
-                            variantHtml = this.variantTableTemplate(output);
                         }
 
                         //lines ends up with a trailing empty object; strip that and the header row for the count
@@ -131,8 +131,25 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
                         $(".close").click(function(){
                             $("#modalDialog").hide();
                         });
+
                         $("#modalDialog").show();
-                        $(".modal-body").html(variantHtml);
+                        $(".modal-body").html("<style scoped>th{width:auto !important;}</style> <table id='vcfData' class='display stripe' ></table>");
+
+                        $('#vcfData').DataTable( {
+                            data: output["variants"],
+                            columns: _.map(output['headers'],(header)=>{
+                                return {title:header }
+                            }),columnDefs: [
+                                {
+                                    targets: '_all',
+                                    className: 'dt-center'
+                                }
+                              ],
+                            deferRender: true,
+                            drawCallback: function(){
+                                this.renderComplete.resolve();
+                            }.bind(this)
+                        } );
 
                         //now add a handy download link!
                         $(".modal-header").append("<a id='variant-download-btn'>Download Variant Data</a>");
@@ -141,10 +158,12 @@ define(["jquery", "backbone", "handlebars", "text!output/variantTable.hbs", "tex
                         $("#variant-download-btn", $(".modal-header")).attr("href", responseDataUrl);
                         $("#variant-download-btn", $(".modal-header")).attr("download", "variantData.tsv");
                         this.render();
+                        this.renderComplete.resolve();
                     }.bind(this),
                     error: function(response){
                         console.log("ERROR: " + response);
                         this.render();
+                        this.renderComplete.resolve();
                     }.bind(this)
                 });
             },
