@@ -105,7 +105,6 @@ define(["jquery", "datatables", "backbone", "handlebars", "text!output/variantTa
                     data: JSON.stringify(query),
                     dataType: 'text',
                     success: function(response){
-    //				 		console.log(response);
 
                         //default message if no data
                         variantHtml = "No Variant Data Available"
@@ -125,8 +124,6 @@ define(["jquery", "datatables", "backbone", "handlebars", "text!output/variantTa
                                     output["variants"].push(values);
                                 }
                             }
-                            //render the template!
-                            //variantHtml = this.variantTableTemplate(output);
                         }
 
                         //lines ends up with a trailing empty object; strip that and the header row for the count
