@@ -1,8 +1,8 @@
-define(["jquery","picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList",
+define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList",
 			"text!filter/searchHelpTooltip.hbs"],
-		function($, queryBuilder, filter, ontology, overrides, searchHelpTooltipTemplate){
+		function($, HBS, queryBuilder, filter, ontology, overrides, searchHelpTooltipTemplate){
 
-	var renderHelpCallback = function(filterView) {
+	var defaultRenderHelpCallback = function(filterView) {
         ontology.getInstance().allInfoColumnsLoaded.then(function(){
             $('.show-help-modal').click(function() {
                 $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)(ontology.getInstance().allInfoColumns()));
@@ -16,11 +16,16 @@ define(["jquery","picSure/queryBuilder", "filter/filter", "picSure/ontology", "o
     };
 	
 	var filterList = {
-		init : function(resourceUUID, outputPanelView, queryTemplate){
+			//BDC has two different help callbacks, so we can't use the basic 'overrides' mechanism
+		init : function(resourceUUID, outputPanelView, queryTemplate, renderHelpCallbackOverride){
 			$('#filter-list').html();
 			this.filters = [];
 			this.resourceUUID = resourceUUID;
-			this.renderHelpCallback = overrides.renderHelpCallback ? overrides.renderHelpCallback : renderHelpCallback;
+			if(renderHelpCallbackOverride){
+				this.renderHelpCallback = renderHelpCallbackOverride
+			} else {
+				this.renderHelpCallback = overrides.renderHelpCallback ? overrides.renderHelpCallback : defaultRenderHelpCallback;
+			}
 			this.outputPanelView = outputPanelView;
 			this.queryTemplate = queryTemplate;
 			this.addFilter();
