@@ -1,11 +1,12 @@
 define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList",
-			"text!filter/searchHelpTooltip.hbs"],
-		function($, HBS, queryBuilder, filter, ontology, overrides, searchHelpTooltipTemplate){
+			"picSure/settings", "text!filter/searchHelpTooltip.hbs"],
+		function($, HBS, queryBuilder, filter, ontology, overrides, settings, searchHelpTooltipTemplate){
 
 	var defaultRenderHelpCallback = function(filterView) {
         ontology.getInstance().allInfoColumnsLoaded.then(function(){
             $('.show-help-modal').click(function() {
-                $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)(ontology.getInstance().allInfoColumns()));
+                $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)({infoColumns: ontology.getInstance().allInfoColumns(),
+										queryButtonLabel: settings.queryButtonLabel));
                 $('#modal-window', this.$el).tooltip();
                 $(".close").click(function(){
                     $("#search-help-modal").hide();
