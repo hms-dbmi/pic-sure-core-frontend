@@ -1,9 +1,9 @@
-define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataSelection.hbs", "jstree", "output/tree", "text!../settings/settings.json", "overrides/outputPanel", "common/transportErrors" ],
+define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataSelection.hbs", "jstree", "output/tree", "picSure/settings", "overrides/outputPanel", "common/transportErrors" ],
 		function($, spinner, BB, HBS, template, jstree, tree, settings, outputOverride, transportErrors){
 			//don't need to reference jstree, just need to load it.
 		return BB.View.extend({
 			template: HBS.compile(template),
-			settings: JSON.parse(settings),
+			settings: settings,
 			initialize: function(opts){
 				this.selectedFields = [];
 				this.updateQuery(opts.query);

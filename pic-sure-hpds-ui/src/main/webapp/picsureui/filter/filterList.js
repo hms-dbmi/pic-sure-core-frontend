@@ -6,7 +6,7 @@ define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSu
         ontology.getInstance().allInfoColumnsLoaded.then(function(){
             $('.show-help-modal').click(function() {
                 $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)({infoColumns: ontology.getInstance().allInfoColumns(),
-										queryButtonLabel: settings.queryButtonLabel));
+																			queryButtonLabel: settings.queryButtonLabel}));
                 $('#modal-window', this.$el).tooltip();
                 $(".close").click(function(){
                     $("#search-help-modal").hide();
