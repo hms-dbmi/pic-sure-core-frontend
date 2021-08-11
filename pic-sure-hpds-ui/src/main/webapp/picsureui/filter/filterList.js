@@ -5,6 +5,9 @@ define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSu
 	var defaultRenderHelpCallback = function(filterView) {
         ontology.getInstance().allInfoColumnsLoaded.then(function(){
             $('.show-help-modal').click(function() {
+            	Handlebars.registerHelper('eq', function(arg1, arg2, options) {
+            	    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+            	});
                 $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)({infoColumns: ontology.getInstance().allInfoColumns(),
 																			queryButtonLabel: settings.queryButtonLabel}));
                 $('#modal-window', this.$el).tooltip();
