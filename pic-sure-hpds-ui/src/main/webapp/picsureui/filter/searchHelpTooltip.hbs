@@ -14,9 +14,10 @@
       	{{#if (eq settings.queryExportType "EXPORT_IMMEDIATE")}}
       		<p>Once you have filtered your subset of participants, you can click the "Select Data for Export" button at which time you will be presented with a data selection tree. Check the boxes you wish to export data for and click the "{{#if queryButtonLabel}}{{queryButtonLabel}}{{else}}Export Data{{/if}}" button. This will create an export for only the participants that are in your filtered subset with only the variables you have selected.  No matter what checkboxes you click, your results will always include phenotypes that were used in filters as well as the ID of each participant.</p>
       		
-      	{{else #if (eq settings.queryExportType "EXPORT_ASYNC")}}
+      	{{else}} 
+      		{{#if (eq settings.queryExportType "EXPORT_ASYNC")}}
       		<p>Once you have filtered your subset of participants, you can click the "Select Data for Export" button at which time you will be presented with a data selection tree. Check the boxes you wish to export data for and click the "{{#if queryButtonLabel}}{{queryButtonLabel}}{{else}}Export Data{{/if}}" button. This will create an export for only the participants that are in your filtered subset with only the variables you have selected. Once the "Download" button appears, click it to receive your data. No matter what checkboxes you click, your results will always include phenotypes that were used in filters as well as the ID of each participant.</p>
-      		
+      		{{/if}}
       	{{/if}}
       	
       	<p>Phenotype result tabs start with a number and are separated by underscores. Variant INFO result tabs are typically 2 capital letter abbreviations. There is a full listing and explanation of the INFO columns below.</p>
