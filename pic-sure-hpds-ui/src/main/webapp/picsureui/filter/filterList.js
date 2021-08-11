@@ -9,7 +9,8 @@ define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSu
             	    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
             	});
                 $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)({infoColumns: ontology.getInstance().allInfoColumns(),
-																			queryButtonLabel: settings.queryButtonLabel}));
+																			queryButtonLabel: settings.queryButtonLabel,
+																			queryExportType: settings.queryExportType}));
                 $('#modal-window', this.$el).tooltip();
                 $(".close").click(function(){
                     $("#search-help-modal").hide();
