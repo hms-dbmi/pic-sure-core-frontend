@@ -1,11 +1,17 @@
 <div id="user-profile">
     <div class="bordered-block">
         Token:
-        <button id="user-token-copy-button" type="button" class="btn-small btn-success" uuid="{{user.uuid}}" style="border-radius: 4px;">COPY</button>
-        <button id="user-token-reveal-button" type="button" class="btn-small btn-info" uuid="{{user.uuid}}" style="border-radius: 4px;">REVEAL</button>
-        <button id="user-token-refresh-button" type="button" class="btn-small btn-warning" uuid="{{user.uuid}}" style="float: right; border-radius: 4px;">Refresh</button>
+        <button id="user-token-copy-button" type="button" class="btn-small btn btn-secondary" tabindex="11" uuid="{{user.uuid}}" alt="Copy">Copy</button>
+        <button id="user-token-reveal-button" type="button" class="btn-small btn btn-secondary" tabindex="12" uuid="{{user.uuid}}" alt="Reveal">Reveal</button>
+        <button id="user-token-refresh-button" type="button" class="btn-small btn btn-secondary" tabindex="13" uuid="{{user.uuid}}"
+                style="float: right; border-radius: 4px;" alt="Refresh">Refresh</button>
+        <div id="user-token-refresh-confirm-container" style="float: right; display: none;">
+            Refresh will inactivate the old token. Do you want to continue?
+            <button id="user-token-yes-button" type="button" class="btn-small btn btn-secondary" tabindex="14" alt="Yes">Yes</button>
+            <button id="user-token-no-button" type="button" class="btn-small btn btn-secondary" tabindex="15" alt="No">No</button>
+        </div>
         <br>
-        <div class="bordered-block" id="user_token_textarea" style="width: 100%; margin-top: 8px; word-wrap: break-word;" token="{{user.token}}">**************************************************************************************************************************************************************************************************************************************************************************************</div>
+        <div tabindex="16" class="bordered-block" id="user_token_textarea" style="width: 100%; margin-top: 8px; word-wrap: break-word;" token="{{user.token}}">**************************************************************************************************************************************************************************************************************************************************************************************</div>
         <div id="user_token_expiration">Token expiration time: {{{tokenExpiration user.token}}}</div>
         <b></b>
     </div>

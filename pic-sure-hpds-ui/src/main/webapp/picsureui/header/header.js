@@ -90,6 +90,7 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 	                $("#user-token-refresh-button").click(this.refreshToken);
 	                $('#user-token-reveal-button').click(this.revealToken);
 	                $('.close').click(this.closeDialog);
+	                this.createTabLoop($('#close-modal-button'), $('#user_token_textarea'));
 	            }.bind(this));
         	}
         },
@@ -109,35 +110,63 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
             sel.addRange(range);
             document.execCommand("copy");
 
-            $("#user-token-copy-button").html("COPIED");
+            $("#user-token-copy-button").html("Copied");
 
             document.getElementById("user_token_textarea").textContent
                 = document.getElementById("user_token_textarea").value
                 = originValue;
         },
         refreshToken: function(){
-            notification.showConfirmationDialog(function () {
+		    $('#user-token-refresh-button').hide();
+		    $('#user-token-refresh-confirm-container').show();
+		    $('#user-token-no-button').click(function() {
+                $('#user-token-refresh-button').show();
+                $('#user-token-refresh-confirm-container').hide();
+            });
+		    $('#user-token-yes-button').click(function() {
                 userFunctions.refreshUserLongTermToken(this, function(result){
-                    if ($('#user-token-reveal-button').html() == "HIDE"){
+                    if ($('#user-token-reveal-button').html() == "Hide"){
                         $("#user_token_textarea").html(result.userLongTermToken);
                     }
 
                     document.getElementById("user_token_textarea").attributes.token.value = result.userLongTermToken;
 
-                    $("#user-token-copy-button").html("COPY");
+                    $("#user-token-copy-button").html("Copy");
                     $('#user-profile-btn').click()
                 }.bind(this));
-            }.bind(this), 'center', 'Refresh will inactivate the old token!! Do you want to continue?');
+            });
+        },
+        createTabLoop: function(firstFocusableElement, lastFocusableElement) {
+            document.addEventListener('keydown', function(e) {
+                let isTabPressed = e.key === 'Tab' || e.keyCode === 9;
+
+                if (!isTabPressed) {
+                    return;
+                }
+
+                if (e.shiftKey) { // if shift key pressed for shift + tab combination
+                    if ($(document.activeElement).is(firstFocusableElement)) {
+                        lastFocusableElement.focus(); // add focus for the last focusable element
+                        e.preventDefault();
+                    }
+                } else { // if tab key is pressed
+                    if ($(document.activeElement).is(lastFocusableElement)) { // if focused has reached to last focusable element then focus first focusable element after pressing tab
+                        firstFocusableElement.focus(); // add focus for the first focusable element
+                        e.preventDefault();
+                    }
+                }
+            });
+            firstFocusableElement.focus();
         },
         revealToken: function(event){
             var type = $('#user-token-reveal-button').html();
-            if (type == "REVEAL"){
+            if (type == "Reveal"){
                 var token = $('#user_token_textarea')[0].attributes.token.value;
                 $("#user_token_textarea").html(token);
-                $("#user-token-reveal-button").html("HIDE");
+                $("#user-token-reveal-button").html("Hide");
             } else {
                 $("#user_token_textarea").html("**************************************************************************************************************************************************************************************************************************************************************************************");
-                $("#user-token-reveal-button").html("REVEAL");
+                $("#user-token-reveal-button").html("Reveal");
             }
         },
         closeDialog: function () {
