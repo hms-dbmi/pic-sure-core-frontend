@@ -1,17 +1,17 @@
 <div id="user-profile">
     <div class="bordered-block">
         Token:
-        <button id="user-token-copy-button" type="button" class="btn-small btn btn-success" tabindex="11" uuid="{{user.uuid}}" alt="Copy">Copy</button>
-        <button id="user-token-reveal-button" type="button" class="btn-small btn btn-info" tabindex="12" uuid="{{user.uuid}}" alt="Reveal">Reveal</button>
-        <button id="user-token-refresh-button" type="button" class="btn-small btn btn-warning" tabindex="13" uuid="{{user.uuid}}"
+        <button id="user-token-copy-button" type="button" class="btn-small btn btn-success" tabindex="3001" uuid="{{user.uuid}}" alt="Copy">Copy</button>
+        <button id="user-token-reveal-button" type="button" class="btn-small btn btn-info" tabindex="3002" uuid="{{user.uuid}}" alt="Reveal">Reveal</button>
+        <button id="user-token-refresh-button" type="button" class="btn-small btn btn-warning" tabindex="3003" uuid="{{user.uuid}}"
                 style="float: right; border-radius: 4px;" alt="Refresh">Refresh</button>
         <div id="user-token-refresh-confirm-container" style="float: right; display: none;">
             Refresh will inactivate the old token. Do you want to continue?
-            <button id="user-token-yes-button" type="button" class="btn-small btn btn-success" tabindex="14" alt="Yes">Yes</button>
-            <button id="user-token-no-button" type="button" class="btn-small btn btn-danger" tabindex="15" alt="No">No</button>
+            <button id="user-token-yes-button" type="button" class="btn-small btn btn-success" tabindex="3004" alt="Yes">Yes</button>
+            <button id="user-token-no-button" type="button" class="btn-small btn btn-danger" tabindex="3005" alt="No">No</button>
         </div>
         <br>
-        <div tabindex="16" class="bordered-block" id="user_token_textarea" style="width: 100%; margin-top: 8px; word-wrap: break-word;" token="{{user.token}}">**************************************************************************************************************************************************************************************************************************************************************************************</div>
+        <div tabindex="3006" class="bordered-block" id="user_token_textarea" style="width: 100%; margin-top: 8px; word-wrap: break-word;" token="{{user.token}}">**************************************************************************************************************************************************************************************************************************************************************************************</div>
         <div id="user_token_expiration">Token expiration time: {{{tokenExpiration user.token}}}</div>
         <b/>
     </div>
