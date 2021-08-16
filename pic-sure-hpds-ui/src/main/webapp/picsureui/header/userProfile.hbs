@@ -1,24 +1,24 @@
 <div id="user-profile">
     <div class="bordered-block">
         Token:
-        <button id="user-token-copy-button" type="button" class="btn-small btn btn-secondary" tabindex="11" uuid="{{user.uuid}}" alt="Copy">Copy</button>
-        <button id="user-token-reveal-button" type="button" class="btn-small btn btn-secondary" tabindex="12" uuid="{{user.uuid}}" alt="Reveal">Reveal</button>
-        <button id="user-token-refresh-button" type="button" class="btn-small btn btn-secondary" tabindex="13" uuid="{{user.uuid}}"
+        <button id="user-token-copy-button" type="button" class="btn-small btn btn-success" tabindex="11" uuid="{{user.uuid}}" alt="Copy">Copy</button>
+        <button id="user-token-reveal-button" type="button" class="btn-small btn btn-info" tabindex="12" uuid="{{user.uuid}}" alt="Reveal">Reveal</button>
+        <button id="user-token-refresh-button" type="button" class="btn-small btn btn-warning" tabindex="13" uuid="{{user.uuid}}"
                 style="float: right; border-radius: 4px;" alt="Refresh">Refresh</button>
         <div id="user-token-refresh-confirm-container" style="float: right; display: none;">
             Refresh will inactivate the old token. Do you want to continue?
-            <button id="user-token-yes-button" type="button" class="btn-small btn btn-secondary" tabindex="14" alt="Yes">Yes</button>
-            <button id="user-token-no-button" type="button" class="btn-small btn btn-secondary" tabindex="15" alt="No">No</button>
+            <button id="user-token-yes-button" type="button" class="btn-small btn btn-success" tabindex="14" alt="Yes">Yes</button>
+            <button id="user-token-no-button" type="button" class="btn-small btn btn-danger" tabindex="15" alt="No">No</button>
         </div>
         <br>
         <div tabindex="16" class="bordered-block" id="user_token_textarea" style="width: 100%; margin-top: 8px; word-wrap: break-word;" token="{{user.token}}">**************************************************************************************************************************************************************************************************************************************************************************************</div>
         <div id="user_token_expiration">Token expiration time: {{{tokenExpiration user.token}}}</div>
-        <b></b>
+        <b/>
     </div>
 
     <div class="bordered-block">
         Email:<br>
         <input uuid="{{user.uuid}}" type="text" name="user_email" style="width: 100%;" required readonly disabled value="{{user.email}}">
-        <br>
+        <br/>
     </div>
 </div>

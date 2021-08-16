@@ -40,10 +40,10 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                     badgeClass = "danger";
                     badgeMessage = "EXPIRED"
                 } else if ( daysLeftOnToken < 7 ) {
-                    badgeClass = "warning";
+                    badgeClass = "danger";
                     badgeMessage = "EXPIRING SOON";
                 } else {
-                    badgeClass = "success";
+                    badgeClass = "primary";
                     badgeMessage = "Valid for " + daysLeftOnToken + " more days";
                 }
                 return new Date(expirationTime).toString().substring(0,24) + " <span class='badge badge-" + badgeClass + "'>" + badgeMessage + "</span>";
@@ -116,12 +116,16 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                 = document.getElementById("user_token_textarea").value
                 = originValue;
         },
-        refreshToken: function(){
+        refreshToken: function(event){
 		    $('#user-token-refresh-button').hide();
 		    $('#user-token-refresh-confirm-container').show();
-		    $('#user-token-no-button').click(function() {
-                $('#user-token-refresh-button').show();
+            $('#user-token-yes-button').focus();
+
+            $('#user-token-no-button').click(function(e) {
                 $('#user-token-refresh-confirm-container').hide();
+                $('#user-token-refresh-button').show();
+                $('#user-token-refresh-button').focus();
+                e.preventDefault();
             });
 		    $('#user-token-yes-button').click(function() {
                 userFunctions.refreshUserLongTermToken(this, function(result){
@@ -135,6 +139,7 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                     $('#user-profile-btn').click()
                 }.bind(this));
             });
+		    event.preventDefault();
         },
         createTabLoop: function(firstFocusableElement, lastFocusableElement) {
             document.addEventListener('keydown', function(e) {
