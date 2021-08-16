@@ -1,11 +1,10 @@
 define(["jquery", "datatables", "backbone", "handlebars", "text!output/variantTable.hbs", "text!options/modal.hbs", "picSure/settings",
-        "text!output/variantExplorer.hbs", "common/config", "common/spinner"],
+        "common/config", "common/spinner"],
     function($, datatables, BB, HBS, variantTableTemplate, modalTemplate, settings,
-             variantExplorerTemplate, config, spinner){
+             config, spinner){
 
         let variantExplorerView = BB.View.extend({
             initialize: function() {
-                this.template = HBS.compile(variantExplorerTemplate);
                 this.variantTableTemplate = HBS.compile(variantTableTemplate);
                 this.modalTemplate = HBS.compile(modalTemplate);
             },
@@ -168,8 +167,6 @@ define(["jquery", "datatables", "backbone", "handlebars", "text!output/variantTa
                 });
             },
             render: function() {
-                this.$el.html(this.template({}));
-                this.displayVariantButton();
             }
         });
 
