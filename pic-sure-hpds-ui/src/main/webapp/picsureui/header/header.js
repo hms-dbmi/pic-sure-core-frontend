@@ -62,8 +62,15 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 		events : {
 			"click #logout-btn" : "gotoLogin",
             "click #user-profile-btn": "userProfile",
-            "click .header-navigation": "headerClick"
+            "click .header-navigation": "headerClick",
+            "keypress #help-dropdown": "helpDropdownFocused"
 		},
+        helpDropdownFocused: function(event){
+            if(event.keyCode===13){
+                $("#help-dropdown-toggle").click();
+                event.preventDefault();
+            }
+        },
         logout: function (event) {
         	//save redirection URL so we can log back in after logging out
         	redirection_url = sessionStorage.redirection_url;
@@ -84,7 +91,7 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 	                    $('#main-content').append('<div id="modal-window"></div>');
                     }
 	                $("#modal-window").html(this.modalTemplate({title: "User Profile"}));
-	                $("#modalDialog").show();
+	                $("#modalDialog").modal({keyboard:true});
 	                $(".modal-body").html(this.userProfileTemplate({user:user}));
 	                $("#user-token-copy-button").click(this.copyToken);
 	                $("#user-token-refresh-button").click(this.refreshToken);
