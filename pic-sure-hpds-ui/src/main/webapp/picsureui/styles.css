@@ -761,6 +761,13 @@ body {
 	text-transform: none;
 }
 
+/* default hidden class is flagged as important, so can't be unset with show() */
 .intitially-hidden {
 	display: none;
+}
+
+.output-button-container {
+	width: 90%;
+}
+
 }
