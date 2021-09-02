@@ -592,7 +592,7 @@ body {
 }
 
 
--- Following styles mported from psamaui as part of ALS-1636
+/* Following styles mported from psamaui as part of ALS-1636 */
 .table-picsure {
     border-collapse: collapse;
     width: 100%;
@@ -770,4 +770,3 @@ body {
 	width: 90%;
 }
 
-}
