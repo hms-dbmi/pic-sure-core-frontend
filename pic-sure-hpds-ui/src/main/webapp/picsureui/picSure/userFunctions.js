@@ -1,4 +1,4 @@
-define(["util/notification", "picSure/psamaSettings"],
+define(["util/notification", "picSure/settings"],
 		function(notification, settings){
     var userFunctions = {
         init: function () {}
@@ -6,7 +6,7 @@ define(["util/notification", "picSure/psamaSettings"],
     userFunctions.fetchUsers = function (object, callback) {
         var failureMessage = "Failed to load users. ";
         $.ajax({
-            url: window.location.origin + settings.basePath + '/user',
+            url: window.location.origin + settings.psamaPath + '/user',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -21,7 +21,7 @@ define(["util/notification", "picSure/psamaSettings"],
     userFunctions.showUserDetails = function (uuid, callback) {
         var failureMessage = 'Failed to load user details. ';
         $.ajax({
-            url: window.location.origin + settings.basePath + '/user/' + uuid,
+            url: window.location.origin + settings.psamaPath + '/user/' + uuid,
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -37,7 +37,7 @@ define(["util/notification", "picSure/psamaSettings"],
         var successMessage = requestType == 'POST' ? 'User created. ' : 'User updated. ';
         var failureMessage = requestType == 'POST' ? 'Failed to create user. ' : 'Failed to update user. ';
         $.ajax({
-            url: window.location.origin + settings.basePath + '/user',
+            url: window.location.origin + settings.psamaPath + '/user',
             type: requestType,
             contentType: 'application/json',
             data: JSON.stringify(user),
@@ -54,7 +54,7 @@ define(["util/notification", "picSure/psamaSettings"],
     userFunctions.getAvailableRoles = function (callback) {
         var failureMessage = 'Failed to load roles. ';
         $.ajax({
-            url: window.location.origin + settings.basePath + '/role',
+            url: window.location.origin + settings.psamaPath + '/role',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -69,7 +69,7 @@ define(["util/notification", "picSure/psamaSettings"],
 
     userFunctions.me = function (object, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/user/me',
+            url: window.location.origin + settings.psamaPath + '/user/me',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -82,7 +82,7 @@ define(["util/notification", "picSure/psamaSettings"],
 
     userFunctions.meWithToken = function (object, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/user/me?hasToken',
+            url: window.location.origin + settings.psamaPath + '/user/me?hasToken',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -95,7 +95,7 @@ define(["util/notification", "picSure/psamaSettings"],
 
     userFunctions.refreshUserLongTermToken = function (object, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/user/me/refresh_long_term_token',
+            url: window.location.origin + settings.psamaPath + '/user/me/refresh_long_term_token',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){

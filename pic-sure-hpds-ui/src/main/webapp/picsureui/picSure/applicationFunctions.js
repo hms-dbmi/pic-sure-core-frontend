@@ -1,11 +1,11 @@
-define(["util/notification", "picSure/psamaSettings"],
+define(["util/notification", "picSure/settings"],
 		function(notification, settings){
     var applicationFunctions = {
         init: function () {}
     };
     applicationFunctions.fetchApplications = function (object, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/application',
+            url: window.location.origin + settings.psamaPath + '/application',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -19,7 +19,7 @@ define(["util/notification", "picSure/psamaSettings"],
 
     applicationFunctions.showApplicationDetails = function (uuid, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/application/' + uuid,
+            url: window.location.origin + settings.psamaPath + '/application/' + uuid,
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -35,7 +35,7 @@ define(["util/notification", "picSure/psamaSettings"],
         var successMessage = requestType == 'POST' ? 'Application created' : 'Application updated';
         var failureMessage = requestType == 'POST' ? 'Failed to create application' : 'Failed to update application';
         $.ajax({
-            url: window.location.origin + settings.basePath + '/application',
+            url: window.location.origin + settings.psamaPath + '/application',
             type: requestType,
             contentType: 'application/json',
             data: JSON.stringify(application),
@@ -51,7 +51,7 @@ define(["util/notification", "picSure/psamaSettings"],
 
     applicationFunctions.deleteApplication = function (uuid, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/application/' + uuid,
+            url: window.location.origin + settings.psamaPath + '/application/' + uuid,
             type: 'DELETE',
             contentType: 'application/json',
             success: function(response){
@@ -66,7 +66,7 @@ define(["util/notification", "picSure/psamaSettings"],
 
     applicationFunctions.refreshToken = function (uuid, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/application/refreshToken/' + uuid,
+            url: window.location.origin + settings.psamaPath + '/application/refreshToken/' + uuid,
             type: 'GET',
             contentType: 'application/json',
             success: function(response){

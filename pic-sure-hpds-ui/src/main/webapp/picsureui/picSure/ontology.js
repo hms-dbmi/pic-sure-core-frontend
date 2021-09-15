@@ -1,4 +1,4 @@
-define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ontology",
+define(["jquery", "underscore", "picSure/settings", "overrides/ontology",
         "picSure/search"],
 		function($, _, settings, overrides,
                  search) {
@@ -11,12 +11,12 @@ define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ont
 	    search.dictionary("\\", function(allConceptsRetrieved) {
 	        allConcepts = allConceptsRetrieved;
 	        allConceptsDeferred.resolve();
-	    }, {}, JSON.parse(settings).picSureResourceId);
+	    }, {}, settings.picSureResourceId);
 	    return allConceptsDeferred;
     }
 
     var allInfoColumnsQuery = {
-        resourceUUID: JSON.parse(settings).picSureResourceId,
+        resourceUUID: settings.picSureResourceId,
         query: {
             expectedResultType: "INFO_COLUMN_LISTING"
         }

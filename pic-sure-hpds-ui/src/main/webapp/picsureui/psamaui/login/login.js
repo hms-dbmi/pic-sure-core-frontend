@@ -1,9 +1,9 @@
-define(['common/session', 'picSure/psamaSettings', 'common/searchParser', 'jquery', 'handlebars', 'login/loginButtons',
+define(['common/session', 'common/searchParser', 'jquery', 'handlebars', 'login/loginButtons',
         'text!login/not_authorized.hbs', 'psamaui/overrides/login', 'util/notification',
         "picSure/settings", 'common/transportErrors','text!login/connections.json'],
-		function(session, psamaSettings, parseQueryString, $, HBS, loginButtons,
+		function(session, parseQueryString, $, HBS, loginButtons,
                  notAuthorizedTemplate, overrides, notification,
-                 picSureSettings, transportErrors, connectionsStr){
+                 settings, transportErrors, connectionsStr){
 
     var connections = JSON.parse(connectionsStr);
 
@@ -33,16 +33,16 @@ define(['common/session', 'picSure/psamaSettings', 'common/searchParser', 'jquer
                 error: handleAuthenticationError
             });
         } else{
-            if (!psamaSettings.client_id){
+            if (!settings.client_id){
                 notification.showFailureMessage("Client_ID is not provided. Please update overrides/login.js file.");
             }
-            var clientId = psamaSettings.client_id;
+            var clientId = settings.client_id;
 
             // The setting 'customizeAuth0Login' directs the UI to render individual buttons for the oauth login screen
             // if this setting is false, then the standard Auth0 Lock (an email/password entry form) is used.
             // Some institutions require a username instead of an email for login; the Lock workflow would then require
             // the users to enter their credentials twice;  we can avoid that by using buttons only (customize == true)
-            if (psamaSettings.customizeAuth0Login){
+            if (settings.customizeAuth0Login){
                 var oauthOptions = {
                     clientID : clientId,
                     domain : 'avillachlab.auth0.com',
@@ -56,7 +56,7 @@ define(['common/session', 'picSure/psamaSettings', 'common/searchParser', 'jquer
                 require(['auth0Lock'], function(Auth0Lock){
                     var lock = new Auth0Lock(
                         clientId,
-                        psamaSettings.auth0domain + ".auth0.com",
+                        settings.auth0domain + ".auth0.com",
                         {
                             auth: {
                                 redirectUrl: redirectURI,
@@ -80,7 +80,7 @@ define(['common/session', 'picSure/psamaSettings', 'common/searchParser', 'jquer
         } else {
 	        var queryTemplateRequest = function() {
 	            return $.ajax({
-	                url: window.location.origin + "/psama/user/me/queryTemplate/" + picSureSettings.applicationIdForBaseQuery,
+	                url: window.location.origin + "/psama/user/me/queryTemplate/" + settings.applicationIdForBaseQuery,
 	                type: 'GET',
 	                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
 	                contentType: 'application/json'
@@ -132,7 +132,7 @@ define(['common/session', 'picSure/psamaSettings', 'common/searchParser', 'jquer
             else {
                 sessionStorage.clear();
                 localStorage.clear();
-                $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:picSureSettings.helpLink}));
+                $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:settings.helpLink}));
             }
         }
     }
