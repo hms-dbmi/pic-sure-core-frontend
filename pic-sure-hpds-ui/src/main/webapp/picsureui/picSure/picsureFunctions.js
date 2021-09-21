@@ -15,7 +15,7 @@ define(["util/notification", "picSure/settings"],
                 callback(connections);
         }else{
             $.ajax({
-                url: window.location.origin + settings.psamaPath + '/connection/' + (connectionUuid ? connectionUuid : ''),
+                url: window.location.origin + '/psama/connection/' + (connectionUuid ? connectionUuid : ''),
                 type: 'GET',
                 contentType: 'application/json',
                 success: function(response){
@@ -33,7 +33,7 @@ define(["util/notification", "picSure/settings"],
         var successMessage = 'Successfully added a connection.';
         var failureMessage = 'Failed to add a connection.';
         $.ajax({
-            url: window.location.origin + settings.psamaPath + '/connection',
+            url: window.location.origin + '/psama/connection',
             type: requestType,
             contentType: 'application/json',
             data: JSON.stringify(connections),
@@ -52,7 +52,7 @@ define(["util/notification", "picSure/settings"],
         var successMessage = 'Successfully deleted connection.';
         var failureMessage = 'Failed to delete connection.';
         $.ajax({
-            url: window.location.origin + settings.psamaPath + '/connection/' + uuid,
+            url: window.location.origin + '/psama/connection/' + uuid,
             type: 'DELETE',
             contentType: 'application/json',
             success: function(response){
@@ -67,7 +67,7 @@ define(["util/notification", "picSure/settings"],
 
     picsureFunctions.getLatestTOS = function (callback) {
         $.ajax({
-            url: window.location.origin + settings.psamaPath + '/tos/latest',
+            url: window.location.origin + '/psama/tos/latest',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -81,7 +81,7 @@ define(["util/notification", "picSure/settings"],
 
     picsureFunctions.acceptTOS = function (callback) {
         $.ajax({
-            url: window.location.origin + settings.psamaPath + '/tos/accept',
+            url: window.location.origin + '/psama/tos/accept',
             type: 'POST',
             contentType: 'application/json',
             success: function(response){

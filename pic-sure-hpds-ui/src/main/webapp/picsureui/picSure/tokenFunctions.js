@@ -6,7 +6,7 @@ define(["util/notification", "picSure/settings"],
     tokenFunctions.refreshToken = function (object, callback) {
         var failureMessage = "Failed to refresh tokens.";
         $.ajax({
-            url: window.location.origin + settings.psamaPath + '/token/refresh',
+            url: window.location.origin + '/psama/token/refresh',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){

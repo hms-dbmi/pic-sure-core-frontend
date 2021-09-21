@@ -1,7 +1,6 @@
 {
   "customizeAuth0Login": true,
   "client_id": "__AUTH0_CLIENT_ID__",
-  "psamaPath": "/psama",
   "resources": [
     {
             "id" : "hpds",

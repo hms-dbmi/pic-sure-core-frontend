@@ -5,7 +5,7 @@ define(["util/notification", "picSure/settings"],
     };
     applicationFunctions.fetchApplications = function (object, callback) {
         $.ajax({
-            url: window.location.origin + settings.psamaPath + '/application',
+            url: window.location.origin + '/psama/application',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -19,7 +19,7 @@ define(["util/notification", "picSure/settings"],
 
     applicationFunctions.showApplicationDetails = function (uuid, callback) {
         $.ajax({
-            url: window.location.origin + settings.psamaPath + '/application/' + uuid,
+            url: window.location.origin + '/psama/application/' + uuid,
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -35,7 +35,7 @@ define(["util/notification", "picSure/settings"],
         var successMessage = requestType == 'POST' ? 'Application created' : 'Application updated';
         var failureMessage = requestType == 'POST' ? 'Failed to create application' : 'Failed to update application';
         $.ajax({
-            url: window.location.origin + settings.psamaPath + '/application',
+            url: window.location.origin + '/psama/application',
             type: requestType,
             contentType: 'application/json',
             data: JSON.stringify(application),
@@ -51,7 +51,7 @@ define(["util/notification", "picSure/settings"],
 
     applicationFunctions.deleteApplication = function (uuid, callback) {
         $.ajax({
-            url: window.location.origin + settings.psamaPath + '/application/' + uuid,
+            url: window.location.origin + '/psama/application/' + uuid,
             type: 'DELETE',
             contentType: 'application/json',
             success: function(response){
@@ -66,7 +66,7 @@ define(["util/notification", "picSure/settings"],
 
     applicationFunctions.refreshToken = function (uuid, callback) {
         $.ajax({
-            url: window.location.origin + settings.psamaPath + '/application/refreshToken/' + uuid,
+            url: window.location.origin + '/psama/application/refreshToken/' + uuid,
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
