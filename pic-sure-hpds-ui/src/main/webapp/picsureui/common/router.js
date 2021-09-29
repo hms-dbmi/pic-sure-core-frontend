@@ -2,7 +2,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         'role/roleManagement', 'privilege/privilegeManagement', "application/applicationManagement",
         'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
         'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
-        "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "text!../settings/settings.json",
+        "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
         "text!common/unexpected_error.hbs"],
         function(Backbone, session, login, header, footer, userManagement,
                 roleManagement, privilegeManagement, applicationManagement,
@@ -46,7 +46,6 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
                 }
                 return pushState.apply(history, arguments);
             }.bind({router:this});
-            this.settings = JSON.parse(settings);
             this.layoutTemplate = HBS.compile(layoutTemplate);
             this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
         },
@@ -83,7 +82,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         unexpected_error : function(){
             $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
-            $('#main-content').html(this.unexpectedErrorTemplate(this.settings))
+            $('#main-content').html(this.unexpectedErrorTemplate(settings))
         },
         renderHeaderAndFooter: function(){
             var headerView = new header.View({});
@@ -194,8 +193,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             $(".header-btn[data-href='/picsureui/queryBuilder']").addClass('active');
 
             $('#main-content').empty();
-            let parsedSettings = this.settings;
-            $('#main-content').append(this.layoutTemplate(parsedSettings));
+            $('#main-content').append(this.layoutTemplate(settings));
 
             var outputPanelView = new output.View({model: new output.Model()});
             outputPanelView.render();
@@ -203,10 +201,10 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
 
             var parsedSess = JSON.parse(sessionStorage.getItem("session"));
 
-            var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), parsedSettings.picSureResourceId);
+            var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), settings.picSureResourceId);
             outputPanelView.runQuery(query);
 
-            filterList.init(parsedSettings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
+            filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
         },
         defaultAction: function() {
             console.log("Default action");

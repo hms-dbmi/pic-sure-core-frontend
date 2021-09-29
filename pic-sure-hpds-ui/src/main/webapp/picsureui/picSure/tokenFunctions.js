@@ -1,4 +1,4 @@
-define(["util/notification", "picSure/psamaSettings"],
+define(["util/notification", "picSure/settings"],
 		function(notification, settings){
     var tokenFunctions = {
         init: function () {}
@@ -6,7 +6,7 @@ define(["util/notification", "picSure/psamaSettings"],
     tokenFunctions.refreshToken = function (object, callback) {
         var failureMessage = "Failed to refresh tokens.";
         $.ajax({
-            url: window.location.origin + settings.basePath + '/token/refresh',
+            url: window.location.origin + '/psama/token/refresh',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){

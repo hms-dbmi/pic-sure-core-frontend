@@ -1,11 +1,11 @@
-define(["util/notification", "picSure/psamaSettings"],
+define(["util/notification", "picSure/settings"],
 		function(notification, settings){
     var roleFunctions = {
         init: function () {}
     };
     roleFunctions.fetchRoles = function (object, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/role',
+            url: window.location.origin + '/psama/role',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -19,7 +19,7 @@ define(["util/notification", "picSure/psamaSettings"],
 
     roleFunctions.showRoleDetails = function (uuid, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/role/' + uuid,
+            url: window.location.origin + '/psama/role/' + uuid,
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -35,7 +35,7 @@ define(["util/notification", "picSure/psamaSettings"],
         var successMessage = requestType == 'POST' ? 'Role created' : 'Role updated';
         var failureMessage = requestType == 'POST' ? 'Failed to create role' : 'Failed to update role';
         $.ajax({
-            url: window.location.origin + settings.basePath + '/role',
+            url: window.location.origin + '/psama/role',
             type: requestType,
             contentType: 'application/json',
             data: JSON.stringify(role),
@@ -51,7 +51,7 @@ define(["util/notification", "picSure/psamaSettings"],
 
     roleFunctions.deleteRole = function (uuid, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/role/' + uuid,
+            url: window.location.origin + '/psama/role/' + uuid,
             type: 'DELETE',
             contentType: 'application/json',
             success: function(response){

@@ -1,7 +1,5 @@
-define(["jquery", "underscore", "text!../settings/settings.json", "overrides/ontology",
-        "picSure/ontology"],
-    function($, _, settings, overrides,
-             ontology) {
+define(["jquery", "underscore", "picSure/ontology"],
+    function($, _, ontology) {
         var cachedTree;
         var tree = function(consumer, crossCounts) {
             if (cachedTree) {

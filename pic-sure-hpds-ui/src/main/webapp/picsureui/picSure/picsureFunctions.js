@@ -1,5 +1,5 @@
 // Util functions get data to/from picsure
-define(["util/notification", "picSure/psamaSettings"],
+define(["util/notification", "picSure/settings"],
 		function(notification, settings){
     var picsureFunctions = {
         init: function () {}
@@ -15,7 +15,7 @@ define(["util/notification", "picSure/psamaSettings"],
                 callback(connections);
         }else{
             $.ajax({
-                url: window.location.origin + settings.basePath + '/connection/' + (connectionUuid ? connectionUuid : ''),
+                url: window.location.origin + '/psama/connection/' + (connectionUuid ? connectionUuid : ''),
                 type: 'GET',
                 contentType: 'application/json',
                 success: function(response){
@@ -33,7 +33,7 @@ define(["util/notification", "picSure/psamaSettings"],
         var successMessage = 'Successfully added a connection.';
         var failureMessage = 'Failed to add a connection.';
         $.ajax({
-            url: window.location.origin + settings.basePath + '/connection',
+            url: window.location.origin + '/psama/connection',
             type: requestType,
             contentType: 'application/json',
             data: JSON.stringify(connections),
@@ -52,7 +52,7 @@ define(["util/notification", "picSure/psamaSettings"],
         var successMessage = 'Successfully deleted connection.';
         var failureMessage = 'Failed to delete connection.';
         $.ajax({
-            url: window.location.origin + settings.basePath + '/connection/' + uuid,
+            url: window.location.origin + '/psama/connection/' + uuid,
             type: 'DELETE',
             contentType: 'application/json',
             success: function(response){
@@ -67,7 +67,7 @@ define(["util/notification", "picSure/psamaSettings"],
 
     picsureFunctions.getLatestTOS = function (callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/tos/latest',
+            url: window.location.origin + '/psama/tos/latest',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -81,7 +81,7 @@ define(["util/notification", "picSure/psamaSettings"],
 
     picsureFunctions.acceptTOS = function (callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/tos/accept',
+            url: window.location.origin + '/psama/tos/accept',
             type: 'POST',
             contentType: 'application/json',
             success: function(response){
