@@ -63,24 +63,29 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 			
 			_.each(data[key], function(value){
 				var matchedSelections = [];
-				// For categorical or INFO columns, we want to render a search result for each value that matches the search term
-				if(value.columnDataType == "INFO"){
-					_.each(value.metadata.values, function(categoryValue){
-						//use unshift here to make sure exact matches are ranked higher than partial matches
-						if(categoryValue.toLowerCase() == searchTerm){
-							matchedSelections.unshift(categoryValue);
-						} else if (categoryValue.toLowerCase().includes(searchTerm)){
-							matchedSelections.push(categoryValue);
-						}
-					});
-				} else if ( value.columnDataType == "CATEGORICAL"	 ) {
-					_.each(value.metadata.categoryValues, function(categoryValue){
-						if(categoryValue.toLowerCase() == searchTerm){
-							matchedSelections.unshift(categoryValue);
-						} else if (categoryValue.toLowerCase().includes(searchTerm)){
-							matchedSelections.push(categoryValue);
-						}
-					});
+				
+				//if the search term matches the concept path, don't bother checking the values; we want to show them all'
+				if( ! value.data.toLowerCase().includes(searchTerm)){
+					
+					// For categorical or INFO columns, we want to render a search result for each value that matches the search term
+					if(value.columnDataType == "INFO"){
+						_.each(value.metadata.values, function(categoryValue){
+							//use unshift here to make sure exact matches are ranked higher than partial matches
+							if(categoryValue.toLowerCase() == searchTerm){
+								matchedSelections.unshift(categoryValue);
+							} else if (categoryValue.toLowerCase().includes(searchTerm)){
+								matchedSelections.push(categoryValue);
+							}
+						});
+					} else if ( value.columnDataType == "CATEGORICAL"	 ) {
+						_.each(value.metadata.categoryValues, function(categoryValue){
+							if(categoryValue.toLowerCase() == searchTerm){
+								matchedSelections.unshift(categoryValue);
+							} else if (categoryValue.toLowerCase().includes(searchTerm)){
+								matchedSelections.push(categoryValue);
+							}
+						});
+					}
 				}
 				//now build the objects (View/Model) for the results
 				if(matchedSelections.length > 0){
@@ -93,9 +98,6 @@ define(["jquery", "filter/searchResult", "handlebars", "text!filter/searchResult
 							filterView: filterView,
 						}));
 					} );
-					
-					//TODO check to see if the key matches and render a result with all the options
-					
 					
 				} else {			
 					categorySearchResultViews.push( new searchResult.View({
