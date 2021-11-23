@@ -50,13 +50,14 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
         },
        execute: function(callback, args, name){
-           this.renderHeaderAndFooter();
             if (publicRoutes.includes(name)){
+            	this.renderHeaderAndFooter();
                 callback.apply(this, args);
             } else {
                 if (!session.isValid()){
                     history.pushState({}, "", "/psamaui/logout");
                 }
+                this.renderHeaderAndFooter();
                 if (!(session.acceptedTOS() == true || session.acceptedTOS() == 'true') && name !== 'displayTOS'){
                     history.pushState({}, "", "/psamaui/tos");
                 }

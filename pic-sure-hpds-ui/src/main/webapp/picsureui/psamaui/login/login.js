@@ -29,7 +29,7 @@ define(['common/session', 'common/searchParser', 'jquery', 'handlebars', 'login/
                     redirectURI: redirectURI
                 }),
                 contentType: 'application/json',
-                success: sessionInit,
+                success: session.sessionInit,
                 error: handleAuthenticationError
             });
         } else{
@@ -70,51 +70,6 @@ define(['common/session', 'common/searchParser', 'jquery', 'handlebars', 'login/
                     lock.show();
                 });
             }
-        }
-    };
-
-    var sessionInit = function(data) {
-        session.authenticated(data.userId, data.token, data.email, data.permissions, data.acceptedTOS, this.handleNotAuthorizedResponse);
-        if (data.acceptedTOS !== 'true'){
-            history.pushState({}, "", "/psamaui/tos");
-        } else {
-	        var queryTemplateRequest = function() {
-	            return $.ajax({
-	                url: window.location.origin + "/psama/user/me/queryTemplate/" + settings.applicationIdForBaseQuery,
-	                type: 'GET',
-	                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-	                contentType: 'application/json'
-	            });
-	        };
-	        var meRequest = function () {
-	            return $.ajax({
-	                url: window.location.origin + "/psama/user/me",
-	                type: 'GET',
-	                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-	                contentType: 'application/json'
-	            });
-	        };
-	        $.when(queryTemplateRequest(), meRequest()).then(
-	            function(queryTemplateResponse, meResponse) {
-	                var currentSession = JSON.parse(sessionStorage.getItem("session"));
-	                currentSession.queryTemplate = queryTemplateResponse[0].queryTemplate;
-	                currentSession.privileges = meResponse[0].privileges;
-	                sessionStorage.setItem("session", JSON.stringify(currentSession));
-	
-	                if (sessionStorage.redirection_url && sessionStorage.redirection_url != 'undefined') {
-	                    window.location = sessionStorage.redirection_url;
-	                }
-	                else {
-	                    window.location = "/picsureui/"
-	                }
-	            }.bind(this),
-	            function(queryTemplateResponse, meResponse) {
-	                if (queryTemplateResponse[0] && queryTemplateResponse[0].status !== 200)
-	                    transportErrors.handleAll(queryTemplateResponse[0], "Cannot retrieve query template with status: " + queryTemplateResponse[0].status);
-	                else
-	                    transportErrors.handleAll(meResponse[0], "Cannot retrieve user with status: " + meResponse[0].status);
-	            }
-	        );
         }
     };
 
