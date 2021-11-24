@@ -79,6 +79,9 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
                 var currentSession = JSON.parse(sessionStorage.getItem("session"));
                 currentSession.queryTemplate = queryTemplateResponse[0].queryTemplate;
                 currentSession.privileges = meResponse[0].privileges;
+                currentSession.acceptedTOS = meResponse[0].acceptedTOS;
+                currentSession.username = meResponse[0].email;
+                
                 sessionStorage.setItem("session", JSON.stringify(currentSession));
 
                 if (sessionStorage.redirection_url && sessionStorage.redirection_url != 'undefined') {
