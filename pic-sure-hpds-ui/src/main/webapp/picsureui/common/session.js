@@ -1,4 +1,7 @@
-define(["jquery", "underscore", "overrides/session", "common/styles"], function($, _, sessionOverrides){
+define(["jquery", "underscore", "overrides/session", "picSure/settings", "common/styles"], 
+		 function($, _, sessionOverrides, settings){
+	//Styles are loaded here (and only here) for some reason; we don't need to reference the module, just load it
+	
 	var storedSession = JSON.parse(
 			sessionStorage.getItem("session"));
 	
@@ -54,7 +57,7 @@ define(["jquery", "underscore", "overrides/session", "common/styles"], function(
 		configureAjax();
 	};
 	
-	var updatePermissions = function(){
+	var updatePrivileges = function(){
         var queryTemplateRequest = function() {
             return $.ajax({
                 url: window.location.origin + "/psama/user/me/queryTemplate/" + settings.applicationIdForBaseQuery,
@@ -104,6 +107,10 @@ define(["jquery", "underscore", "overrides/session", "common/styles"], function(
 				var isExpired = expired();
 				if (!isExpired) {
 					configureAjax();
+					
+					if( session.privileges == undefined ){
+						updatePrivileges();
+					}
 				}
 				return !isExpired;
 			}else{
@@ -161,7 +168,7 @@ define(["jquery", "underscore", "overrides/session", "common/styles"], function(
 	        if (data.acceptedTOS !== 'true'){
 	            history.pushState({}, "", "/psamaui/tos");
 	        } else {
-	        	updatePermissions();
+	        	updatePrivileges();
 	        }
 	    }
 	    
