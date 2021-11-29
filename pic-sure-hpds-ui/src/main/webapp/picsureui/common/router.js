@@ -55,7 +55,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
                 callback.apply(this, args);
             } else {
             	var deferred = $.Deferred();
-                if (!session.isValid()){
+                if (!session.isValid(deferred)){
                     history.pushState({}, "", "/psamaui/logout");
                 }
                 $.when(deferred).then(function() {

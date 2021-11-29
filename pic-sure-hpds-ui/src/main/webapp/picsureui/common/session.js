@@ -110,17 +110,19 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 		may : function(permission){
 			return _.contains(permission, session.permissions);
 		},
-		isValid : function(){
+		isValid : function(deferred){
 			if(session.token){
 				var isExpired = expired();
 				if (!isExpired) {
 					configureAjax();
 					
 					if( session.privileges == undefined ){
-						updatePrivileges();
+						updatePrivileges(deferred);
 					}
+					deferred.resolve();
+					return true;
 				}
-				return !isExpired;
+				return false;
 			}else{
 				return false;
 			}
