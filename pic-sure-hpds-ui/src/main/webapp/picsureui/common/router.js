@@ -54,16 +54,19 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             	this.renderHeaderAndFooter();
                 callback.apply(this, args);
             } else {
+            	var deferred = $.Deferred();
                 if (!session.isValid()){
                     history.pushState({}, "", "/psamaui/logout");
                 }
-                this.renderHeaderAndFooter();
-                if (!(session.acceptedTOS() == true || session.acceptedTOS() == 'true') && name !== 'displayTOS'){
-                    history.pushState({}, "", "/psamaui/tos");
-                }
-                else if (callback) {
-                    callback.apply(this, args);
-                }
+                $.when(deferred).then(function() {
+	                this.renderHeaderAndFooter();
+	                if (!(session.acceptedTOS() == true || session.acceptedTOS() == 'true') && name !== 'displayTOS'){
+	                    history.pushState({}, "", "/psamaui/tos");
+	                }
+	                else if (callback) {
+	                    callback.apply(this, args);
+	                }
+                });
             }
         },
         login : function(){

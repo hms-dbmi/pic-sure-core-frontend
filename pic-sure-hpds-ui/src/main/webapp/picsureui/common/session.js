@@ -57,8 +57,8 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 		configureAjax();
 	};
 	
-	var updatePrivileges = function(){
-        var queryTemplateRequest = function() {
+	var updatePrivileges = function(deferred){
+		var queryTemplateRequest = function() {
             return $.ajax({
                 url: window.location.origin + "/psama/user/me/queryTemplate/" + settings.applicationIdForBaseQuery,
                 type: 'GET',
@@ -92,10 +92,15 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
                 }
             },
             function(queryTemplateResponse, meResponse) {
-                if (queryTemplateResponse[0] && queryTemplateResponse[0].status !== 200)
+                if (queryTemplateResponse[0] && queryTemplateResponse[0].status !== 200){
                     transportErrors.handleAll(queryTemplateResponse[0], "Cannot retrieve query template with status: " + queryTemplateResponse[0].status);
-                else
+                }
+                else {
                     transportErrors.handleAll(meResponse[0], "Cannot retrieve user with status: " + meResponse[0].status);
+                }
+                if(deferred){
+                	deferred.resolve();
+                }
             }
         );
     };
