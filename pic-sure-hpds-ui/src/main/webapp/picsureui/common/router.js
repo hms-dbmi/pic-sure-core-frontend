@@ -66,7 +66,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
 	                else if (callback) {
 	                    callback.apply(this, args);
 	                }
-                });
+                }.bind(this));
             }
         },
         login : function(){
