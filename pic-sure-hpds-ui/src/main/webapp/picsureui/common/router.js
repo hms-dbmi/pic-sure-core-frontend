@@ -50,19 +50,23 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
             this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
         },
        execute: function(callback, args, name){
-           this.renderHeaderAndFooter();
             if (publicRoutes.includes(name)){
+            	this.renderHeaderAndFooter();
                 callback.apply(this, args);
             } else {
-                if (!session.isValid()){
+            	var deferred = $.Deferred();
+                if (!session.isValid(deferred)){
                     history.pushState({}, "", "/psamaui/logout");
                 }
-                if (!(session.acceptedTOS() == true || session.acceptedTOS() == 'true') && name !== 'displayTOS'){
-                    history.pushState({}, "", "/psamaui/tos");
-                }
-                else if (callback) {
-                    callback.apply(this, args);
-                }
+                $.when(deferred).then(function() {
+	                this.renderHeaderAndFooter();
+	                if (!(session.acceptedTOS() == true || session.acceptedTOS() == 'true') && name !== 'displayTOS'){
+	                    history.pushState({}, "", "/psamaui/tos");
+	                }
+	                else if (callback) {
+	                    callback.apply(this, args);
+	                }
+                }.bind(this));
             }
         },
         login : function(){

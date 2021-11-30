@@ -19,7 +19,7 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                     return opts.fn(this);
             });
             HBS.registerHelper('contains', function(list, element, options) {
-                if(list.indexOf(element) > -1) {
+                if(list != undefined && list.indexOf(element) > -1) {
                     return options.fn(this);
                 }
                 return options.inverse(this);
