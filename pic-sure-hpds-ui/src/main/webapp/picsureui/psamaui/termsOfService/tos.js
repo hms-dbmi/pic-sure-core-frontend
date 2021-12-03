@@ -13,9 +13,7 @@ define(["backbone","handlebars", "text!termsOfService/tos.hbs", "picSure/picsure
                     this.toggleNavigationButtons(false);
                     session.setAcceptedTOS();
                     
-                    if( ! session.isValid()){
-                    	history.pushState({}, "", "/psamaui/not_authorized");
-                    }
+                    window.location = "/picsureui/";
                     
                 }.bind(this))
             },
