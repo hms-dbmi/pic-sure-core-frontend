@@ -116,10 +116,13 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 				if (!isExpired) {
 					configureAjax();
 					
-					if( session.privileges == undefined ){
+					if((session.privileges == undefined || session.privileges.length == 0) && ! window.location.href.includes("/psamaui/tos")){
 						updatePrivileges(deferred);
+					} else {
+						if(deferred){
+		                	deferred.resolve();
+		                }
 					}
-					deferred.resolve();
 					return true;
 				}
 				return false;
