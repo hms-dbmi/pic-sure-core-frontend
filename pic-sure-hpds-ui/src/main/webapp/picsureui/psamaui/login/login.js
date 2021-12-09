@@ -45,7 +45,7 @@ define(['common/session', 'common/searchParser', 'jquery', 'handlebars', 'login/
             if (settings.customizeAuth0Login){
                 var oauthOptions = {
                     clientID : clientId,
-                    domain : 'avillachlab.auth0.com',
+                    domain :  settings.auth0domain + '.auth0.com',
                     redirectUri : redirectURI,
                     responseType: 'token'
                 };
