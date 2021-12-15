@@ -25,7 +25,7 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                 return options.inverse(this);
             });
             HBS.registerHelper('partial_match', function(list, element, options) {
-                if(list != undefined && list.filter(x => x.title.toLowerCase().includes(searchStr.toLowerCase())).length > 0) {
+                if(list != undefined && list.filter(x => x.includes(element)).length > 0) {
                     return options.fn(this);
                 }
                 return options.inverse(this);
