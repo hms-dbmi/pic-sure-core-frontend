@@ -5,6 +5,11 @@ define([], function(){
 		 * 
 		 * This should be a String value.
 		 */
-		logoPath : undefined
+		logoPath : undefined,
+		
+		/*
+		 * This is used to add extra logic after the main header has rendered
+		 */
+		render: undefined
 	};
 });
