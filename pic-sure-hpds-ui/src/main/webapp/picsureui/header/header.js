@@ -200,6 +200,10 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                 privileges: this.privileges,
                 authenticated: !!sessionStorage.getItem("session")
 			}));
+			
+			if(overrides.render){
+				overrides.render();
+			}
 		}
 	});
 
