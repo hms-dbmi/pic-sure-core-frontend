@@ -206,8 +206,8 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                 authenticated: !!sessionStorage.getItem("session")
 			}));
 			
-			if(overrides.render){
-				overrides.render();
+			if(overrides.renderExt){
+				overrides.renderExt(this.$el);
 			}
 		}
 	});
