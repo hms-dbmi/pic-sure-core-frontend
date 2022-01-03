@@ -10,6 +10,6 @@ define([], function(){
 		/*
 		 * This is used to add extra logic after the main header has rendered
 		 */
-		render: undefined
+		renderExt: undefined
 	};
 });
