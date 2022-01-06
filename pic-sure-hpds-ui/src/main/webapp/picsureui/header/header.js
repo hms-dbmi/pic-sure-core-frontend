@@ -24,12 +24,17 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                 }
                 return options.inverse(this);
             });
+            HBS.registerHelper('partial_match', function(list, element, options) {
+                if(list != undefined && list.filter(x => x.includes(element)).length > 0) {
+                    return options.fn(this);
+                }
+                return options.inverse(this);
+            });
             HBS.registerHelper('not_empty', function (array, opts) {
                 if (array && array.length>0)
                     return opts.fn(this);
                 else
                     return opts.inverse(this);
-
             });
             HBS.registerHelper('tokenExpiration', function (token) {
                 var expirationTime = JSON.parse(atob(token.split('.')[1])).exp * 1000;
@@ -200,6 +205,10 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                 privileges: this.privileges,
                 authenticated: !!sessionStorage.getItem("session")
 			}));
+			
+			if(overrides.renderExt){
+				overrides.renderExt(this.$el);
+			}
 		}
 	});
 
