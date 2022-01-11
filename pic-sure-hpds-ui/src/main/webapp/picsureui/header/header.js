@@ -202,7 +202,7 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 			}));
 			
 			if(overrides.renderExt){
-				overrides.renderExt(this.$el);
+				overrides.renderExt(this);
 			}
 		}
 	});
