@@ -1,4 +1,4 @@
-define(["jquery", "datatables", "backbone", "handlebars", "text!output/variantTable.hbs", "text!options/modal.hbs", "picSure/settings",
+define(["jquery", "datatables.net", "backbone", "handlebars", "text!output/variantTable.hbs", "text!options/modal.hbs", "picSure/settings",
         "common/config", "common/spinner"],
     function($, datatables, BB, HBS, variantTableTemplate, modalTemplate, settings,
              config, spinner){

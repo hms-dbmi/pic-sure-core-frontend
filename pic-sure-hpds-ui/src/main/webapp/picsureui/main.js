@@ -17,7 +17,7 @@ require.config({
 		"jstree":"webjars/jstree/3.3.7/jstree",
 		auth0Lock: "webjars/auth0-lock/11.2.3/build/lock",
 		"auth0-js": "webjars/auth0.js/9.2.3/build/auth0",
-		datatables: "webjars/datatables/1.10.25/js/jquery.dataTables",
+		"datatables.net": "webjars/datatables/1.10.25/js/jquery.dataTables",
 		datatablesStyles: "webjars/datatables/1.10.25/css/jquery.dataTables.min.css",
 		accessRule: "psamaui/accessRule/",
 		application: "psamaui/application/",
