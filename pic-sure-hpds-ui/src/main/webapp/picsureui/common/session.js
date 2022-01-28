@@ -1,4 +1,7 @@
-define(["jquery", "underscore", "overrides/session", "common/styles"], function($, _, sessionOverrides){
+define(["jquery", "underscore", "overrides/session", "picSure/settings", "common/styles"], 
+		 function($, _, sessionOverrides, settings){
+	//Styles are loaded here (and only here) for some reason; we don't need to reference the module, just load it
+	
 	var storedSession = JSON.parse(
 			sessionStorage.getItem("session"));
 	
@@ -44,27 +47,85 @@ define(["jquery", "underscore", "overrides/session", "common/styles"], function(
 		});
 	};
 	
+	var authenticated = function(/*userId,*/ token, username, permissions, acceptedTOS) {
+//		session.userId = userId;
+		session.token = token;
+		session.username = username;
+		session.permissions = permissions;
+		session.acceptedTOS = acceptedTOS;
+		sessionStorage.setItem("session", JSON.stringify(session));
+		configureAjax();
+	};
+	
+	var updatePrivileges = function(deferred){
+		var queryTemplateRequest = function() {
+            return $.ajax({
+                url: window.location.origin + "/psama/user/me/queryTemplate/" + settings.applicationIdForBaseQuery,
+                type: 'GET',
+                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                contentType: 'application/json'
+            });
+        };
+        var meRequest = function () {
+            return $.ajax({
+                url: window.location.origin + "/psama/user/me",
+                type: 'GET',
+                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                contentType: 'application/json'
+            });
+        };
+        $.when(queryTemplateRequest(), meRequest()).then(
+            function(queryTemplateResponse, meResponse) {
+                var currentSession = JSON.parse(sessionStorage.getItem("session"));
+                currentSession.queryTemplate = queryTemplateResponse[0].queryTemplate;
+                currentSession.privileges = meResponse[0].privileges;
+                currentSession.acceptedTOS = meResponse[0].acceptedTOS;
+                currentSession.username = meResponse[0].email;
+                
+                sessionStorage.setItem("session", JSON.stringify(currentSession));
+
+                if (sessionStorage.redirection_url && sessionStorage.redirection_url != 'undefined') {
+                    window.location = sessionStorage.redirection_url;
+                }
+                else {
+                    window.location = "/picsureui/"
+                }
+            },
+            function(queryTemplateResponse, meResponse) {
+                if (queryTemplateResponse[0] && queryTemplateResponse[0].status !== 200){
+                    transportErrors.handleAll(queryTemplateResponse[0], "Cannot retrieve query template with status: " + queryTemplateResponse[0].status);
+                }
+                else {
+                    transportErrors.handleAll(meResponse[0], "Cannot retrieve user with status: " + meResponse[0].status);
+                }
+                if(deferred){
+                	deferred.resolve();
+                }
+            }
+        );
+    };
+	
 	return {
 		username : session.username,
 		may : function(permission){
 			return _.contains(permission, session.permissions);
 		},
-		authenticated : function(userId, token, username, permissions, acceptedTOS) {
-			session.userId = userId;
-			session.token = token;
-			session.username = username;
-			session.permissions = permissions;
-			session.acceptedTOS = acceptedTOS;
-			sessionStorage.setItem("session", JSON.stringify(session));
-			configureAjax();
-		},
-		isValid : function(){
-			if(session.username){
+		isValid : function(deferred){
+			if(session.token){
 				var isExpired = expired();
 				if (!isExpired) {
 					configureAjax();
+					
+					if((session.privileges == undefined || session.privileges.length == 0) && ! window.location.href.includes("/psamaui/tos")){
+						updatePrivileges(deferred);
+					} else {
+						if(deferred){
+		                	deferred.resolve();
+		                }
+					}
+					return true;
 				}
-				return !isExpired;
+				return false;
 			}else{
 				return false;
 			}
@@ -82,9 +143,9 @@ define(["jquery", "underscore", "overrides/session", "common/styles"], function(
         email : function(){
             return JSON.parse(sessionStorage.session).email;
         },
-		userId : function(){
-			return JSON.parse(sessionStorage.session).userId;
-		},
+//		userId : function(){
+//			return JSON.parse(sessionStorage.session).userId;
+//		},
 		// userMode : function(){
 		// 	return JSON.parse(sessionStorage.session).currentUserMode;
 		// },
@@ -114,6 +175,15 @@ define(["jquery", "underscore", "overrides/session", "common/styles"], function(
 		setAcceptedTOS : function() {
 			session.acceptedTOS = true;
             sessionStorage.setItem("session", JSON.stringify(session));
-		}
+		},
+	    sessionInit: function(data) {
+	        authenticated(/*data.userId,*/ data.token, data.email, data.permissions, data.acceptedTOS, this.handleNotAuthorizedResponse);
+	        if (data.acceptedTOS !== 'true'){
+	            history.pushState({}, "", "/psamaui/tos");
+	        } else {
+	        	updatePrivileges();
+	        }
+	    }
+	    
 	}
 });

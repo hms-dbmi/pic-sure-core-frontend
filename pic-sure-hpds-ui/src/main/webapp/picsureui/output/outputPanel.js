@@ -1,9 +1,7 @@
 define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars",
-		"overrides/outputPanel", "common/transportErrors", "common/config", "text!output/variantTable.hbs",
-		"text!options/modal.hbs", "picSure/settings", "output/variantExplorer"],
+		"overrides/outputPanel", "common/transportErrors", "common/config", "picSure/settings", "output/variantExplorer"],
 		function($,  dataSelection, outputTemplate, ontology, BB, HBS,
-				 overrides, transportErrors, config, variantTableTemplate,
-				 modalTemplate, settings, variantExplorer){
+				 overrides, transportErrors, config,  settings, variantExplorer){
 
 	var defaultModel = BB.Model.extend({
 		defaults: {

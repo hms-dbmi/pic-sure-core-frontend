@@ -19,7 +19,13 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                     return opts.fn(this);
             });
             HBS.registerHelper('contains', function(list, element, options) {
-                if(list.indexOf(element) > -1) {
+                if(list != undefined && list.indexOf(element) > -1) {
+                    return options.fn(this);
+                }
+                return options.inverse(this);
+            });
+            HBS.registerHelper('partial_match', function(list, element, options) {
+                if(list != undefined && list.filter(x => x.includes(element)).length > 0) {
                     return options.fn(this);
                 }
                 return options.inverse(this);
@@ -29,7 +35,6 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
                     return opts.fn(this);
                 else
                     return opts.inverse(this);
-
             });
             HBS.registerHelper('tokenExpiration', function (token) {
                 var expirationTime = JSON.parse(atob(token.split('.')[1])).exp * 1000;

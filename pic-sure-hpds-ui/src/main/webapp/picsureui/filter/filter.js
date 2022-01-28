@@ -1,4 +1,4 @@
-define(["jquery", "picSure/search", "overrides/filter", "common/spinner", "backbone", "handlebars", "text!filter/filter.hbs", "text!filter/suggestion.hbs", "text!filter/noResults.hbs", "filter/searchResults", "text!filter/constrainFilterMenu.hbs", "text!filter/constrainFilterMenuCategories.hbs", "text!filter/constrainFilterMenuGenetics.hbs", "text!filter/constrainFilterMenuVariantInfoNumeric.hbs", "text!filter/constrainFilterMenuAnyRecordOf.hbs", "text!settings/settings.json", "autocomplete", "bootstrap"],
+define(["jquery", "picSure/search", "overrides/filter", "common/spinner", "backbone", "handlebars", "text!filter/filter.hbs", "text!filter/suggestion.hbs", "text!filter/noResults.hbs", "filter/searchResults", "text!filter/constrainFilterMenu.hbs", "text!filter/constrainFilterMenuCategories.hbs", "text!filter/constrainFilterMenuGenetics.hbs", "text!filter/constrainFilterMenuVariantInfoNumeric.hbs", "text!filter/constrainFilterMenuAnyRecordOf.hbs", "picSure/settings", "autocomplete", "bootstrap"],
 		function($, search, overrides, spinner, BB, HBS, filterTemplate, suggestionTemplate, noResultsTemplate, searchResults, constrainFilterMenuTemplate, constrainFilterMenuCategoriesTemplate, constrainFilterMenuGeneticsTemplate, constrainFilterMenuVariantInfoNumericTemplate, constrainFilterMenuAnyRecordOfTemplate, settings){
 
 	var valueConstrainModel = BB.Model.extend({
@@ -138,7 +138,7 @@ define(["jquery", "picSure/search", "overrides/filter", "common/spinner", "backb
 				//clear out any old data
 				$('.search-tabs', this.$el).html('');
 				this.originalSearchTerm = this.model.get("searchTerm")
-				var categorySearchResultList = JSON.parse(settings).categorySearchResultList;
+				var categorySearchResultList = settings.categorySearchResultList;
 				var searchResultObject = {};
 
 				//inject these category names first so that the results are in a pre-set order

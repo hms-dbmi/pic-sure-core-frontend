@@ -36,7 +36,7 @@
     {{#if authenticated}}
         <a id="user-profile-btn" class="col btn btn-default header-btn authenticated-visible" href="#">User Profile</a>
         <div class="col dropdown btn btn-default header-btn authenticated-visible" id="help-dropdown">
-            <a class="dropdown-toggle col" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</a>
+            <span class="dropdown-toggle col" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</span>
             <ul class="dropdown-menu" role="menu">
                 {{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}" target="_blank">Video Demonstration</a></li>{{/if}}
                 {{#if pdfLink}}<li class="dropdown"><a href="{{{pdfLink}}}" target="_blank">User Guide</a></li>{{/if}}

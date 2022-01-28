@@ -1,11 +1,11 @@
-define(["util/notification", "picSure/psamaSettings"],
+define(["util/notification", "picSure/settings"],
 		function(notification, settings){
     var accessRuleFunctions = {
         init: function () {}
     };
     accessRuleFunctions.fetchAccessRules = function (object, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/accessRule',
+            url: window.location.origin + '/psama/accessRule',
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -19,7 +19,7 @@ define(["util/notification", "picSure/psamaSettings"],
 
     accessRuleFunctions.showAccessRuleDetails = function (uuid, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/accessRule/' + uuid,
+            url: window.location.origin + '/psama/accessRule/' + uuid,
             type: 'GET',
             contentType: 'application/json',
             success: function(response){
@@ -35,7 +35,7 @@ define(["util/notification", "picSure/psamaSettings"],
         var successMessage = requestType == 'POST' ? 'AccessRule created' : 'AccessRule updated';
         var failureMessage = requestType == 'POST' ? 'Failed to create accessRule' : 'Failed to update accessRule';
         $.ajax({
-            url: window.location.origin + settings.basePath + '/accessRule',
+            url: window.location.origin + '/psama/accessRule',
             type: requestType,
             contentType: 'application/json',
             data: JSON.stringify(accessRule),
@@ -51,7 +51,7 @@ define(["util/notification", "picSure/psamaSettings"],
 
     accessRuleFunctions.deleteAccessRule = function (uuid, callback) {
         $.ajax({
-            url: window.location.origin + settings.basePath + '/accessRule/' + uuid,
+            url: window.location.origin + '/psama/accessRule/' + uuid,
             type: 'DELETE',
             contentType: 'application/json',
             success: function(response){

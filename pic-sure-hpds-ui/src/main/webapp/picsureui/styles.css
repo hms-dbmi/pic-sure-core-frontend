@@ -423,10 +423,6 @@ body {
     width: 90%;
 }
 
-#variant-data-container {
-    width: 90%;
-}
-
 .value-operator-range-label {
 	width: unset;
 }
@@ -592,7 +588,7 @@ body {
 }
 
 
--- Following styles mported from psamaui as part of ALS-1636
+/* Following styles mported from psamaui as part of ALS-1636 */
 .table-picsure {
     border-collapse: collapse;
     width: 100%;
@@ -761,6 +757,12 @@ body {
 	text-transform: none;
 }
 
+/* default hidden class is flagged as important, so can't be unset with show() */
 .intitially-hidden {
 	display: none;
 }
+
+.output-button-container {
+	width: 90%;
+}
+
