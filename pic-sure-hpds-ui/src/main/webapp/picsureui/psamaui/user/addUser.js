@@ -12,7 +12,7 @@ define(["backbone", "handlebars", "user/connections", "picSure/userFunctions", "
 			"input #email": "validateEmail"
 		},
 		validateEmail: function(event){
-	        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+	        var emailReg = /^([\w\-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 	        if(!emailReg.test($('input[name=email]').val())) {
 	        	$('#error-email').html('Enter a valid email address.');
 	        	$("#error-email").show();
