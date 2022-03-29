@@ -116,7 +116,7 @@ define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
 			
 			$(".error").hide();
 	        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-	        if(!emailReg.test(user.email)) {
+	        if(!emailReg.test(user.email.value)) {
 	        	$('input[name=email]').after('<span class="error">Enter a valid email address.</span>');
 	        	return false; 
         	}
