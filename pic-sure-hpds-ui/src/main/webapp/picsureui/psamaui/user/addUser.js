@@ -8,7 +8,7 @@ define(["backbone", "handlebars", "user/connections", "picSure/userFunctions", "
         },
 		events: {
 			"change #new-user-connection-dropdown":"renderConnectionForm",
-			"click #save-user-button": "createUser",
+//			"click #save-user-button": "createUser",
 			"input #email": "validateEmail"
 		},
 		validateEmail: function(event){
