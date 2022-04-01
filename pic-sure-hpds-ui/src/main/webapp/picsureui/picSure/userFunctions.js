@@ -42,8 +42,7 @@ define(["util/notification", "picSure/settings"],
             contentType: 'application/json',
             data: JSON.stringify(user),
             success: function(response){
-            	responseData = JSON.parse(response);
-                notification.showSuccessMessage(responseData.message? responseData.message : successMessage);
+                notification.showSuccessMessage(response.message ? response.message : successMessage, 10000);
                 callback(response);
             }.bind(this),
             error: function(response){
