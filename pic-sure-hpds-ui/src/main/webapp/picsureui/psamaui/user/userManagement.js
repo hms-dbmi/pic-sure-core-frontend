@@ -110,6 +110,7 @@ define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
 				//existing - read meta fields from inputs
 				user.auth0metadata = this.$('input[name=auth0metadata]').val();
 				user.subject = this.$('input[name=subject]').val();
+				//this includes the user uuid
 				_.each($('#required-fields input[type=text]'), function(entry){
 					general_metadata[entry.name] = entry.value
 				});
@@ -119,7 +120,7 @@ define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
 				user.connection = {
 					id: $('#new-user-connection-dropdown').val()
 				};
-				//this will be only email input
+				//this will typically be only email input
 				_.each($('#current-connection-form input[type=text]'), function(entry){
 					general_metadata[entry.name] = entry.value;
 				});

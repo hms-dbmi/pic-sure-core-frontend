@@ -8,11 +8,10 @@ define(["backbone", "handlebars", "user/connections", "picSure/userFunctions", "
         },
 		events: {
 			"change #new-user-connection-dropdown":"renderConnectionForm",
-//			"click #save-user-button": "createUser",
 			"input #email": "validateEmail"
 		},
 		validateEmail: function(event){
-	        var emailReg = /^([\w\-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+	        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 	        if(!emailReg.test($('input[name=email]').val())) {
 	        	$('#error-email').html('Enter a valid email address.');
 	        	$("#error-email").show();
@@ -30,36 +29,6 @@ define(["backbone", "handlebars", "user/connections", "picSure/userFunctions", "
     				$("#save-user-button").prop( "disabled", false);
     			}
         	}
-		},
-		createUser: function(event){
-			// cheeck to see if an email has been entered
-            if ($("input[name=email]").val().trim() == "") {
-                notification.showFailureMessage("Missing: You must enter a value for user's email");
-                return;
-            }
-			var metadata = {};
-			var roles = [];
-			_.each(this.$('input:checked'), function (checkbox) {
-                roles.push({uuid: checkbox.value});
-            })
-            //var roles = this.$('input:checked').each;
-			_.each($('#current-connection-form input[type=text]'), function(entry){
-			metadata[entry.name] = entry.value});
-			var user = {
-				connection: {
-					id: $('#new-user-connection-dropdown').val()
-				},
-				generalMetadata:JSON.stringify(metadata),
-				roles: roles
-			};
-			userFunctions.createOrUpdateUser(
-				[user],
-				"POST",
-				function(result){
-					console.log(result);
-                    this.managementConsole.render();
-				}.bind(this)
-			);
 		},
 		renderConnectionForm: function(event){
             this.connection = _.find(this.connections, {id:event.target.value});
