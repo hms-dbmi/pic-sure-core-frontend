@@ -5,11 +5,12 @@ define(["Noty"],
 
         }
     };
-    notification.showSuccessMessage = function (message) {
+    notification.showSuccessMessage = function (message, timeout) {
+    	if(!timeout) timeout=3000;
         new Noty({
             type: "success",
             text: message,
-            timeout: 3000
+            timeout: timeout
         }).show();
     }.bind(notification);
 

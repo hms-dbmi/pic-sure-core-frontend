@@ -97,29 +97,35 @@ define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
 				user = this.model.get("selectedUser");
 			}
 			else {
-				user = {
-						subject: "",
-						roles: []}
+				user = {};
 			}
-//			user.userId = this.$('input[name=userId]').val();
-			user.auth0metadata = this.$('input[name=auth0metadata]').val();
-			user.subject = this.$('input[name=subject]').val();
-			user.connection = {
-					id: this.$('input[name=connectionId]').val()
-			};
+			//general_metadata is used in both new and existing user flow
 			var general_metadata = {};
-			_.each($('#required-fields input[type=text]'), function(entry){
-				general_metadata[entry.name] = entry.value
-			});
+
+			user.connection = {
+						id: this.$('input[name=connectionId]').val()
+				};
+			// use the connection field to determine if this is a new or existing user.
+			if(user.connection.id){
+				//existing - read meta fields from inputs
+				user.auth0metadata = this.$('input[name=auth0metadata]').val();
+				user.subject = this.$('input[name=subject]').val();
+				//this includes the user uuid
+				_.each($('#required-fields input[type=text]'), function(entry){
+					general_metadata[entry.name] = entry.value
+				});
+				user.email = general_metadata["email"] ? general_metadata["email"] : email; // synchronize email with metadata
+			} else {
+				//new user - we have a different connection and email input to read, and no auth0 data
+				user.connection = {
+					id: $('#new-user-connection-dropdown').val()
+				};
+				//this will typically be only email input
+				_.each($('#current-connection-form input[type=text]'), function(entry){
+					general_metadata[entry.name] = entry.value;
+				});
+			}
 			user.generalMetadata = JSON.stringify(general_metadata);
-			user.email = general_metadata["email"] ? general_metadata["email"] : email; // synchronize email with metadata
-			
-			$(".error").hide();
-	        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-	        if(!emailReg.test(user.email)) {
-	        	$('input[name=email]').after('<span class="error">Enter a valid email address.</span>');
-	        	return false; 
-        	}
 			
 			var roles = [];
 			_.each(this.$('input:checked'), function (checkbox) {
