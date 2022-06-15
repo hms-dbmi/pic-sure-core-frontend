@@ -132,7 +132,8 @@ define(["jquery", "datatables", "backbone", "handlebars", "text!output/variantTa
                         });
 
                         $("#modalDialog").show();
-                        $(".modal-body").html("<style scoped>th{width:auto !important;}</style> <table id='vcfData' class='display stripe' ></table>");
+                        $(".modal-body").css("overflow-x", "scroll")
+                        $(".modal-body").html("<style scoped>th{width:auto !important; }</style> <table id='vcfData' class='display stripe' ></table>");
 
                         $('#vcfData').DataTable( {
                             data: output["variants"],
@@ -142,6 +143,10 @@ define(["jquery", "datatables", "backbone", "handlebars", "text!output/variantTa
                                 {
                                     targets: '_all',
                                     className: 'dt-center'
+                                },
+                                {
+                                    targets: [6, 11],
+                                    visible: false
                                 }
                               ],
                             deferRender: true,
