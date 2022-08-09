@@ -26,9 +26,9 @@ define(["jquery", "datatables", "backbone", "handlebars", "text!output/variantTa
                     });
                 }
                 if (showVariantButton) {
-                    $("#variant-data-btn").removeClass("hidden");
+                    $("#variant-data-container").removeClass("hidden");
                 } else {
-                    $("#variant-data-btn").addClass("hidden");
+                    $("#variant-data-container").addClass("hidden");
                 }
             },
             // Check the number of variants in the query and show a modal if valid.
