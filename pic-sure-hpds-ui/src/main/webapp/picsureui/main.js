@@ -25,6 +25,7 @@ require.config({
 		login: "psamaui/login/",
 		privilege: "psamaui/privilege/",
 		picSure: "picSure/",
+		plotly: "webjars/plotly.js-dist-min/2.12.1/plotly.min",
 		role: "psamaui/role/",
 		termsOfService: "psamaui/termsOfService/",
         user: "psamaui/user/",
