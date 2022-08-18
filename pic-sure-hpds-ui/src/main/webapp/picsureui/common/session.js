@@ -47,11 +47,9 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 		});
 	};
 	
-	var authenticated = function(/*userId,*/ token, username, permissions, acceptedTOS) {
-//		session.userId = userId;
+	var authenticated = function(token, username, __unused_permissions, acceptedTOS) {
 		session.token = token;
 		session.username = username;
-		session.permissions = permissions;
 		session.acceptedTOS = acceptedTOS;
 		sessionStorage.setItem("session", JSON.stringify(session));
 		configureAjax();
@@ -143,12 +141,6 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
         email : function(){
             return JSON.parse(sessionStorage.session).email;
         },
-//		userId : function(){
-//			return JSON.parse(sessionStorage.session).userId;
-//		},
-		// userMode : function(){
-		// 	return JSON.parse(sessionStorage.session).currentUserMode;
-		// },
 		acceptedTOS : function(){
 			return sessionStorage.session? JSON.parse(sessionStorage.session).acceptedTOS : undefined;
 		},
@@ -159,25 +151,13 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 			if(typeof activity !== "string"){
 				activity = window.location.href;
 			}
-            /**
-			 * /interaction end-point cannot be found. Do we still need to call it?
-			 */
-			// $.ajax({
-			// 	data: JSON.stringify({
-			// 		description : activity
-			// 	}),
-			// 	url: "/rest/interaction",
-			// 	type: 'POST',
-			// 	dataType: "json",
-			// 	contentType: "application/json"
-			// });
 		}, 10000),
 		setAcceptedTOS : function() {
 			session.acceptedTOS = true;
             sessionStorage.setItem("session", JSON.stringify(session));
 		},
 	    sessionInit: function(data) {
-	        authenticated(/*data.userId,*/ data.token, data.email, data.permissions, data.acceptedTOS, this.handleNotAuthorizedResponse);
+	        authenticated(data.token, data.email, data.permissions, data.acceptedTOS, sessionOverrides.handleNotAuthorizedResponse ? sessionOverrides.handleNotAuthorizedResponse() : handleNotAuthorizedResponse());
 	        if (data.acceptedTOS !== 'true'){
 	            history.pushState({}, "", "/psamaui/tos");
 	        } else {
