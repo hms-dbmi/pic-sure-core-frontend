@@ -2,17 +2,17 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 		 function($, _, sessionOverrides, settings){
 	//Styles are loaded here (and only here) for some reason; we don't need to reference the module, just load it
 	
-	var storedSession = JSON.parse(
+	let storedSession = JSON.parse(
 			sessionStorage.getItem("session"));
 	
-	var session = storedSession ? storedSession : {
+	let session = storedSession ? storedSession : {
 		username : null,
 		permissions : [],
 		privileges : [],
 		email : null
 	};
 
-	var expired = function() {
+	let expired = function() {
 		if (sessionStorage.session){
 			return new Date().getTime()/1000 > JSON.parse(atob(JSON.parse(sessionStorage.session).token.split('.')[1])).exp;
 		}
@@ -20,7 +20,7 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 		return true;
 	}
 
-	var handleNotAuthorizedResponse = function() {
+	let handleNotAuthorizedResponse = function() {
 		try {
 			if (expired()) {
 				history.pushState({}, "", "/psamaui/logout");
@@ -32,8 +32,25 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 			history.pushState({}, "", "/psamaui/not_authorized");
 		}
 	};
+
+	let handleQueryTemplateAndMeResponseSuccess = function(queryTemplateResponse, meResponse) {
+		let currentSession = JSON.parse(sessionStorage.getItem("session"));
+		currentSession.queryTemplate = queryTemplateResponse[0].queryTemplate;
+		currentSession.privileges = meResponse[0].privileges;
+		currentSession.acceptedTOS = meResponse[0].acceptedTOS;
+		currentSession.username = meResponse[0].email;
+		
+		sessionStorage.setItem("session", JSON.stringify(currentSession));
+
+		if (sessionStorage.redirection_url && sessionStorage.redirection_url != 'undefined') {
+			window.location = sessionStorage.redirection_url;
+		}
+		else {
+			window.location = "/picsureui/"
+		}
+	}
 	
-	var configureAjax = function(){
+	let configureAjax = function(){
 		$.ajaxSetup({
 			headers: {"Authorization": "Bearer " + session.token},
 			statusCode: {
@@ -47,7 +64,7 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 		});
 	};
 	
-	var authenticated = function(token, username, __unused_permissions, acceptedTOS) {
+	let authenticated = function(token, username, __unused_permissions, acceptedTOS) {
 		session.token = token;
 		session.username = username;
 		session.acceptedTOS = acceptedTOS;
@@ -55,8 +72,8 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 		configureAjax();
 	};
 	
-	var updatePrivileges = function(deferred){
-		var queryTemplateRequest = function() {
+	let updatePrivileges = function(deferred){
+		let queryTemplateRequest = function() {
             return $.ajax({
                 url: window.location.origin + "/psama/user/me/queryTemplate/" + settings.applicationIdForBaseQuery,
                 type: 'GET',
@@ -64,7 +81,7 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
                 contentType: 'application/json'
             });
         };
-        var meRequest = function () {
+        let meRequest = function () {
             return $.ajax({
                 url: window.location.origin + "/psama/user/me",
                 type: 'GET',
@@ -74,20 +91,9 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
         };
         $.when(queryTemplateRequest(), meRequest()).then(
             function(queryTemplateResponse, meResponse) {
-                var currentSession = JSON.parse(sessionStorage.getItem("session"));
-                currentSession.queryTemplate = queryTemplateResponse[0].queryTemplate;
-                currentSession.privileges = meResponse[0].privileges;
-                currentSession.acceptedTOS = meResponse[0].acceptedTOS;
-                currentSession.username = meResponse[0].email;
-                
-                sessionStorage.setItem("session", JSON.stringify(currentSession));
-
-                if (sessionStorage.redirection_url && sessionStorage.redirection_url != 'undefined') {
-                    window.location = sessionStorage.redirection_url;
-                }
-                else {
-                    window.location = "/picsureui/"
-                }
+                sessionOverrides.handleQueryTemplateAndMeResponseSuccess ? 
+					sessionOverrides.handleQueryTemplateAndMeResponseSuccess(queryTemplateResponse,meResponse) :
+					handleQueryTemplateAndMeResponseSuccess(queryTemplateResponse,meResponse);
             },
             function(queryTemplateResponse, meResponse) {
                 if (queryTemplateResponse[0] && queryTemplateResponse[0].status !== 200){
@@ -110,7 +116,7 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 		},
 		isValid : function(deferred){
 			if(session.token){
-				var isExpired = expired();
+				let isExpired = expired();
 				if (!isExpired) {
 					configureAjax();
 					
@@ -157,7 +163,7 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
             sessionStorage.setItem("session", JSON.stringify(session));
 		},
 	    sessionInit: function(data) {
-	        authenticated(data.token, data.email, data.permissions, data.acceptedTOS, sessionOverrides.handleNotAuthorizedResponse ? sessionOverrides.handleNotAuthorizedResponse() : handleNotAuthorizedResponse());
+	        authenticated(data.token, data.email, data.permissions, data.acceptedTOS, sessionOverrides.handleNotAuthorizedResponse ? sessionOverrides.handleNotAuthorizedResponse : handleNotAuthorizedResponse);
 	        if (data.acceptedTOS !== 'true'){
 	            history.pushState({}, "", "/psamaui/tos");
 	        } else {
