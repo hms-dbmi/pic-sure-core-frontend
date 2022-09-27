@@ -202,6 +202,7 @@ define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/
 				pdfLink: settings.pdfLink,
 				videoLink: settings.videoLink,
                 jupyterExampleLink: settings.jupyterExampleLink,
+                documentationLink: settings.documentationLink,
                 privileges: this.privileges,
                 authenticated: !!sessionStorage.getItem("session")
 			}));
