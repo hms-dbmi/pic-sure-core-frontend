@@ -96,5 +96,10 @@
 			<artifactId>font-awesome</artifactId>
 			<version>6.1.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>chardin.js</artifactId>
+			<version>0.2.0</version>
+		</dependency>
 	</dependencies>
 </project>
