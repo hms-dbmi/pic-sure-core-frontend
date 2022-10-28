@@ -2,7 +2,7 @@ require.config({
 	baseUrl: "/picsureui",
 	urlArgs: "",
 	paths: {
-		jquery: 'webjars/jquery/3.5.1/jquery.min',
+		jquery: 'webjars/jquery/3.6.1/jquery.min',
 		autocomplete: 'webjars/devbridge-autocomplete/1.4.7/dist/jquery.autocomplete',
 		underscore: 'webjars/underscorejs/1.8.3/underscore-min',
 		bootstrap: 'webjars/bootstrap/3.4.1/js/bootstrap.min',
@@ -16,7 +16,7 @@ require.config({
 		NotyStyles: 'webjars/noty/3.1.4/lib/noty.css',
 		"jstree":"webjars/jstree/3.3.7/jstree",
 		auth0Lock: "webjars/auth0-lock/11.2.3/build/lock",
-		chardin: "webjars/chardin.js/0.2.0/chardinjs",
+		chardin: "webjars/chardin.js/0.2.0/chardinjs.min",
 		"auth0-js": "webjars/auth0.js/9.2.3/build/auth0",
 		"datatables.net": "webjars/datatables/1.10.25/js/jquery.dataTables",
 		datatablesStyles: "webjars/datatables/1.10.25/css/jquery.dataTables.min.css",
@@ -57,6 +57,7 @@ require.config({
 require(["backbone", "common/session", "common/router", "underscore", "jquery", "bootstrap"],
     function(Backbone, session, router, _){
         Backbone.history.start({pushState:true});
+		Backbone.pubSub = _.extend({}, Backbone.Events);
         document.onmousemove = session.activity;
         document.onkeyup = session.activity;
     }
