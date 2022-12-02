@@ -1,3 +1,17 @@
+:root {
+    /*PIC-SURE Primary*/
+    --picsure-primary: #c4c4c4;
+    --picsure-secondary: #848484;
+    --picsure-alt: #c4b49c;
+    --picsure-other: #90a8a4;
+    --picsure-lite: #90a8a4;
+    --picsure-dark: #333333;
+}
+
+.selected {
+    border: 4px solid var(--picsure-other) !important;
+}
+
 #main-content {
      width: 80%;
      position: relative;
@@ -108,51 +122,35 @@
      width: 100%;
      background-color: white;
 }
- #header-content {
-     width: 80%;
-     height: 80px;
-     overflow: hidden;
-}
-.header-btn {
-    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
-    border-bottom-style: solid;
-    border-bottom-width: 10px;
-    border-bottom-color: white;
-}
-.header-btn.active {
-     border-color: #999;
-     border-bottom-left-radius: 0px;
-     border-bottom-right-radius: 0px;
-     box-shadow: none;
-     -webkit-box-shadow: none;
-     background-color: #fff;
-     color: black;
-}
-.header-btn:hover {
-     border-bottom-color: #6d6e70;
-}
  .right {
      text-align: right;
 }
  .left {
      text-align: left;
 }
- .help-btn {
+ /* .help-btn {
      background-color: white;
      border: none;
      width:5em;
      border-radius: 0px;
      float: right;
      color: black;
+} */
+
+.space-out {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.dropdown.header-btn {
+/* .dropdown.header-btn {
 	padding: 0px 0px;
 }
 .dropdown-toggle {
     padding: 6px 12px;
     display: inline-block;
-}
+} */
  .spinner {
      position: absolute;
      margin-top: 5px;
@@ -765,4 +763,157 @@ body {
 .output-button-container {
 	width: 90%;
 }
+
+
+
+
+/* ==== HEADER BUTTON  ==== */
+
+#top-header {
+    display: flex;
+    flex-direction: row;
+    background-color: #f4f4f6;
+    padding: 10px;
+}
+
+#top-header img {
+    padding-top: 0px;
+}
+
+#top-header .nav-menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 10px;
+}
+
+#header-content {
+    width: 100%;
+    min-height: unset;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#help-dropdown {
+    padding: 0;
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    padding: 32px 35px;
+    cursor: pointer;
+    background-color: var(--background-grey);
+    border: none;
+}
+
+.dropdown-toggle i {
+    margin-left: 8px;
+}
+
+.selected {
+    border: 4px solid var(--nhlbi-red);
+}
+
+.nav-dropdown-menu.open {
+    display: block;
+}
+
+.nav-dropdown-menu {
+    list-style-type: none;
+    color: rgb(51, 51, 51);
+    position: absolute;
+    top: 0%;
+    z-index: 1000;
+    float: left;
+    min-width: 160px;
+    padding: 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 4px;
+    box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+    display: none;
+}
+
+.nav-dropdown-menu>li>a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
+
+.nav-dropdown-menu>li>a:hover,
+.nav-dropdown-menu>li>a:focus {
+    text-decoration: none;
+    color: #262626;
+    background-color: #f5f5f5;
+}
+
+@media only screen and (max-width: 1470px) {
+    #top-header img {
+        padding-top: 0px;
+        max-width: 500px;
+        height: fit-content;
+    }
+}
+
+@media only screen and (max-width: 990px) {
+    #top-header {
+        display: flex;
+        flex-direction: column;
+        background-color: #f4f4f6;
+        padding: 10px;
+    }
+}
+
+.header-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-bottom-style: none;
+    padding: 20px 0px;
+    height: 90px;
+    border-bottom-width: 0px;
+    box-shadow: none;
+    color: var(--picsure-dark);
+    font-size: 18px;
+    flex-grow: 1;
+    width: 125px;
+}
+
+.header-btn.active {
+    color: white;
+    background-color: var(--picsure-alt);
+}
+
+.header-btn:hover {
+    background-color: var(--picsure-secondary);
+    color: white;
+    text-decoration: none;
+}
+
+.header-btn.long-name {
+    font-size: 16px;
+}
+
+.header-btn.long-name span {
+    margin-left: 10px;
+}
+
+.header-btn.long-name i {
+    margin: 0 8px 0 0;
+    font-size: 18px;
+}
+
+
+/* ==== END HEADER BUTTON OVERRIDES ==== */
 

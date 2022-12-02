@@ -1,15 +1,13 @@
 define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
-	"text!user/userDetails.hbs", "text!user/userTable.hbs",
-	"text!options/modal.hbs", "picSure/userFunctions", "picSure/picsureFunctions", "util/notification"],
-	function(BB, HBS,  AddUserView, template, userDetailsTemplate,
-			userTableTemplate, modalTemplate, userFunctions, picsureFunctions, notification){
+	"user/userDetails", "text!user/userTable.hbs", "picSure/userFunctions", "picSure/picsureFunctions", "util/notification",
+	"common/modal"],
+	function(BB, HBS,  AddUserView, template, userDetailsView,
+			userTableTemplate, userFunctions, picsureFunctions, notification, modal){
 	var userManagementModel = BB.Model.extend({
 	});
 
 	var userManagementView = BB.View.extend({
 		template : HBS.compile(template),
-		crudUserTemplate : HBS.compile(userDetailsTemplate),
-		modalTemplate : HBS.compile(modalTemplate),
 		initialize : function(opts){
 			HBS.registerHelper('fieldHelper', function(user, connectionField){
 				if (user.generalMetadata == null || user.generalMetadata === '') {
@@ -35,11 +33,10 @@ define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
 		events : {
 			"click .add-user-button":   "addUserMenu",
 			"click #edit-user-button":  "editUserMenu",
+			"click .user-row":          "showUserAction",
 			"click .close":             "closeDialog",
 			"click #cancel-user-button":"closeDialog",
-			"click .user-row":          "showUserAction",
 			"click #switch-status-button":"deactivateUser",
-			"click #save-user-button":   "saveUserAction",
 			"click .btn-show-inactive":	"toggleInactive"
 		},
 		updateUserTable: function(connections){
@@ -50,9 +47,7 @@ define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
 			this.updateUserTable(result.connections);
 		},
 		addUserMenu: function (result) {
-			$("#modal-window", this.$el).html(this.modalTemplate({title: "Add user"}));
-			$("#modalDialog", this.$el).show();
-			var addUserView = new AddUserView({el:$('.modal-body'), managementConsole: this}).render();
+			modal.displayModal(new AddUserView({model: this.model, managementConsole: this}), "Add User", ()=>{$('.add-user-button').focus(); this.render();}, {isHandleTabs: true});
 		},
 		showUserAction: function (event) {
 			var uuid = event.target.id;
@@ -63,9 +58,7 @@ define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
 						result.generalMetadata = JSON.parse(result.generalMetadata);
 					}
 					this.model.set("selectedUser", result);
-					$("#modal-window", this.$el).html(this.modalTemplate({title: "User info"}));
-					$("#modalDialog", this.$el).show();
-					$(".modal-body", this.$el).html(this.crudUserTemplate({createOrUpdateUser: false, user: this.model.get("selectedUser"), requiredFields: JSON.parse(this.model.get("selectedUser").connection.requiredFields)}));
+					modal.displayModal(new userDetailsView({model: this.model, createOrUpdateUser: false, user: this.model.get("selectedUser"), requiredFields: JSON.parse(this.model.get("selectedUser").connection.requiredFields)}), "User info", ()=>{$('.user-row').focus(); this.render();}, {isHandleTabs: true}).bind(this);
 				}.bind(this));
 			}.bind(this));
 		},
@@ -74,89 +67,8 @@ define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
 			var user = this.model.get("selectedUser");
 			this.connections(function(connections){
 				var requiredFields = _.where(connections, {id: user.connection.id})[0].requiredFields;
-				$(".modal-body", this.$el).html(this.crudUserTemplate({createOrUpdateUser: true, user: user, availableRoles: this.model.get("availableRoles"), requiredFields: requiredFields}));
-				this.applyCheckboxes();
-                $("input[name=email]").attr('disabled', true);
+                modal.displayModal(new userDetailsView({model: this.model, createOrUpdateUser: true, user: user, availableRoles: this.model.get("availableRoles"), requiredFields: requiredFields}), "User info", ()=>{$('.user-row').focus(); this.render();}, {isHandleTabs: true}).bind(this);
 			}.bind(this));
-		},
-		applyCheckboxes: function () {
-			var checkBoxes = $(":checkbox", this.$el);
-			var userRoles = this.model.get("selectedUser").roles;
-			_.each(checkBoxes, function (roleCheckbox) {
-				_.each(userRoles, function (userRole) {
-					if (userRole.uuid == roleCheckbox.value) {
-						roleCheckbox.checked = true;
-					}
-				})
-			})
-		},
-		saveUserAction: function (e) {
-			e.preventDefault();
-			var user
-			if (this.model.get("selectedUser") != null && this.model.get("selectedUser").uuid.trim().length > 0) {
-				user = this.model.get("selectedUser");
-			}
-			else {
-				user = {};
-			}
-			//general_metadata is used in both new and existing user flow
-			var general_metadata = {};
-
-			user.connection = {
-						id: this.$('input[name=connectionId]').val()
-				};
-			// use the connection field to determine if this is a new or existing user.
-			if(user.connection.id){
-				//existing - read meta fields from inputs
-				user.auth0metadata = this.$('input[name=auth0metadata]').val();
-				user.subject = this.$('input[name=subject]').val();
-				//this includes the user uuid
-				_.each($('#required-fields input[type=text]'), function(entry){
-					general_metadata[entry.name] = entry.value
-				});
-				user.email = general_metadata["email"] ? general_metadata["email"] : email; // synchronize email with metadata
-			} else {
-				//new user - we have a different connection and email input to read, and no auth0 data
-				user.connection = {
-					id: $('#new-user-connection-dropdown').val()
-				};
-				//this will typically be only email input
-				_.each($('#current-connection-form input[type=text]'), function(entry){
-					general_metadata[entry.name] = entry.value;
-				});
-			}
-			user.generalMetadata = JSON.stringify(general_metadata);
-			
-			var roles = [];
-			_.each(this.$('input:checked'), function (checkbox) {
-				roles.push({uuid: checkbox.value});
-			})
-			user.roles = roles;
-			userFunctions.createOrUpdateUser([user], user.uuid == null ? 'POST' : 'PUT', function(result) {
-				console.log(result);
-				this.render();
-			}.bind(this));
-		},
-		deactivateUser: function (event) {
-			try {
-				var user = this.model.get('selectedUser');
-				user.active = !user.active;
-				if (!user.subject) {
-					user.subject = null;
-				}
-				if (!user.roles) {
-					user.roles = [];
-				}
-				user.generalMetadata = JSON.stringify(user.generalMetadata);
-				notification.showConfirmationDialog(function () {
-					userFunctions.createOrUpdateUser([user], 'PUT', function (response) {
-						this.render()
-					}.bind(this));
-				}.bind(this));
-			} catch (err) {
-				console.error(err.message);
-				notification.showFailureMessage('Failed to deactivate user. Contact administrator.')
-			}
 		},
 		getUserRoles: function (stringRoles) {
 			var roles = stringRoles.split(",").map(function(item) {

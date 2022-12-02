@@ -99,6 +99,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         },
         displayUserManagement : function(){
             $(".header-btn.active").removeClass('active');
+            $(".header-btn[data-href='/psamaui/userManagement']").addClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                     var userMngmt = new userManagement.View({model: new userManagement.Model()});
@@ -116,6 +117,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         },
         displayApplicationManagement : function(){
             $(".header-btn.active").removeClass('active');
+            $('#super-admin-dropdown-toggle').addClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
@@ -132,6 +134,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         },
         displayRoleManagement : function(){
             $(".header-btn.active").removeClass('active');
+            $('#super-admin-dropdown-toggle').addClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
@@ -148,6 +151,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         },
         displayPrivilegeManagement : function() {
             $(".header-btn.active").removeClass('active');
+            $('#super-admin-dropdown-toggle').addClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){
@@ -163,6 +167,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         },
         displayAccessRuleManagement : function() {
             $(".header-btn.active").removeClass('active');
+            $('#super-admin-dropdown-toggle').addClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.accessRules, function(element){
@@ -178,6 +183,7 @@ define(["backbone", "common/session", "login/login", 'header/header', 'footer/fo
         },
         displayConnectionManagement : function() {
             $(".header-btn.active").removeClass('active');
+            $('#super-admin-dropdown-toggle').addClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function(data){
                 if (_.find(data.privileges, function(element){

@@ -1,50 +1,51 @@
-<div class="row header-row">
-	<img class="logo-img col-md-4" src="{{logoPath}}">
-</div>
-<div class="row" style="margin-top:6px">
-    {{#not_empty applications}}
-    <div class="col dropdown" id="applications-dropdown">
-        <button class="btn btn-secondary dropdown-toggle header-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Applications</button>
-        <ul class="dropdown-menu" role="menu">
-        {{#each applications}}
+<header id="top-header" class="space-out">
+    <img class="logo-img col-md-4" src="{{logoPath}}">
+    <nav id="header-tabs" class="nav-menu" role="navigation" aria-label="Main Navigation. You are on the main navigation of Pic-sure. Please use the arrow keys to navigate through the tabs. Use Enter or space to select the tab." tabindex="0">
+        {{#not_empty applications}}
+        <button id="applications-dropdown-toggle" class="dropdown-toggle nav-dropdown header-btn" aria-expanded="false" tabindex="-1" title="Super Admin Console" aria-label="Applications Dropdown" aria-controls="applications-dropdown-menu-list">
+            <span>Applications</span><i class="fa fa-caret-down" aria-hidden="true"></i>
+        </button>
+        <ul id="applications-dropdown-menu-list" class="nav-dropdown-menu" role="menu" tabindex="-1">
+            {{#each applications}}
             <li class="dropdown"><a id="{{this.uuid}}" href="{{this.url}}">{{this.name}}</a></li>
-        {{/each}}
+            {{/each}}        
         </ul>
-    </div>
-    {{/not_empty}}
+        {{/not_empty}}
 
-    {{#contains privileges "SUPER_ADMIN"}}
-        <div class="col dropdown btn btn-default header-btn super-admin-visible" id="super-admin-dropdown">
-            <span class="dropdown-toggle col" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Super Admin Console</span>
-            <ul class="dropdown-menu" role="menu">
-                <li class="dropdown"><a id="appMgmt-super-admin" class="header-navigation" data-href="/psamaui/applicationManagement" href="#">Applications</a></li>
-                <li class="dropdown"><a id="connMgmt-super-admin" class="header-navigation" data-href="/psamaui/connectionManagement">Connections</a></li>
-                <li class="dropdown"><a id="privMgmt-super-admin" class="header-navigation" data-href="/psamaui/privilegeManagement">Privileges</a></li>
-                <li class="dropdown"><a id="roleMgmt-super-admin" class="header-navigation" data-href="/psamaui/roleManagement">Roles</a></li>
-            </ul>
-        </div>
-    {{/contains}}
+        {{#contains privileges "SUPER_ADMIN"}}
+        <button id="super-admin-dropdown-toggle" class="dropdown-toggle nav-dropdown header-btn long-name" aria-expanded="false" tabindex="-1" title="Super Admin Console" aria-label="Super Admin Console Dropdown" aria-controls="super-admin-console-menu-list">
+            <span>Super Admin Console</span><i class="fa fa-caret-down" aria-hidden="true"></i>
+        </button>
+        <ul id="super-admin-console-menu-list" class="nav-dropdown-menu" role="menu" tabindex="-1">
+            <li class="dropdown"><a id="appMgmt-super-admin" class="header-navigation" data-href="/psamaui/applicationManagement" href="#">Applications</a></li>
+            <li class="dropdown"><a id="connMgmt-super-admin" class="header-navigation" data-href="/psamaui/connectionManagement">Connections</a></li>
+            <li class="dropdown"><a id="privMgmt-super-admin" class="header-navigation" data-href="/psamaui/privilegeManagement">Privileges</a></li>
+            <li class="dropdown"><a id="roleMgmt-super-admin" class="header-navigation" data-href="/psamaui/roleManagement">Roles</a></li>
+        </ul>
+        {{/contains}}
+        
+        {{#if authenticated}}
+        <a class="header-btn header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn" tabindex="-1">Query Builder</a>
+        {{/if}}
 
-    {{#if authenticated}}
-        <a class="col btn btn-default header-btn authenticated-visible header-navigation" data-href="/picsureui/queryBuilder" href="#" id="query-builder-btn">Query Builder</a>
-    {{/if}}
+        {{#contains privileges 'ADMIN'}}
+        <a class="header-btn header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#" tabindex="-1">Users</a>
+        {{/contains}}
 
-    {{#contains privileges 'ADMIN'}}
-        <a class="col btn btn-default header-btn header-navigation" id="admin-btn" data-href="/psamaui/userManagement" href="#">Users</a>
-    {{/contains}}
+        {{#if authenticated}}
+        <a id="user-profile-btn" class="header-btn authenticated-visible" href="#" tabindex="-1" title="User Profile" aria-haspopup="true" aria-label="User Profile">User Profile</a>
+        <button data-intro="#help-header-button" data-sequence="14" class="dropdown-toggle nav-dropdown header-btn" aria-expanded="false" id="help-dropdown-toggle" tabindex="-1" title="Help" aria-label="Help dropwdown" aria-controls="help-menu-list">
+            <span>Help</span><i class="fa fa-caret-down" aria-hidden="true"></i>
+        </button>
+        <ul id="help-menu-list" class="nav-dropdown-menu" tabindex="-1">
+            {{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}" target="_blank">Video Demonstration</a></li>{{/if}}
+            {{#if pdfLink}}<li class="dropdown"><a href="{{{pdfLink}}}" target="_blank">User Guide</a></li>{{/if}}
+            {{#if jupyterExampleLink}}<li class="dropdown"><a href="{{{jupyterExampleLink}}}" target="_blank">Jupyter Examples</a></li>{{/if}}
+            {{#if documentationLink}}<li id="documentation-option" class="dropdown" aria-label="External documentation, clicking here will open a link  in a new tab"><a href="{{{documentationLink}}}">External Documentation</a></li>{{/if}}
+            {{#if helpLink}}<li class="dropdown"><a href="{{{helpLink}}}" target="_blank">Contact Us</a></li>{{/if}}
+        </ul>
+        <a href="#" id="logout-btn" class="header-btn authenticated-visible" tabindex="-1" title="Log Out" aria-label="Log Out">Log Out</a>
+        {{/if}}
 
-    {{#if authenticated}}
-        <a id="user-profile-btn" class="col btn btn-default header-btn authenticated-visible" href="#">User Profile</a>
-        <div class="col dropdown btn btn-default header-btn authenticated-visible" id="help-dropdown">
-            <span class="dropdown-toggle col" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</span>
-            <ul class="dropdown-menu" role="menu">
-                {{#if videoLink}}<li class="dropdown"><a href="{{{videoLink}}}" target="_blank">Video Demonstration</a></li>{{/if}}
-                {{#if pdfLink}}<li class="dropdown"><a href="{{{pdfLink}}}" target="_blank">User Guide</a></li>{{/if}}
-                {{#if jupyterExampleLink}}<li class="dropdown"><a href="{{{jupyterExampleLink}}}" target="_blank">Jupyter Examples</a></li>{{/if}}
-                {{#if documentationLink}}<li id="documentation-option" class="dropdown" aria-label="External documentation, clicking here will open a link  in a new tab"><a href="{{{documentationLink}}}">External Documentation</a></li>{{/if}}
-                {{#if helpLink}}<li class="dropdown"><a href="{{{helpLink}}}" target="_blank">Contact Us</a></li>{{/if}}
-        </div>
-        <a id="logout-btn" class="col btn btn-default header-btn authenticated-visible">Log Out</a>
-    {{/if}}
-
-</div>
+    </nav>
+</header>
