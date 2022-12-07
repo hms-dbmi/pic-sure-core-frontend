@@ -4,14 +4,16 @@ define([
     'text!privilege/privilegeMenu.hbs',
     'picSure/privilegeFunctions',
     'util/notification',
-    'picSure/applicationFunctions'
-], function(BB, HBS, template, privilegeFunctions, notification, applicationFunctions) {
+    'picSure/applicationFunctions',
+    'common/modal'
+], function(BB, HBS, template, privilegeFunctions, notification, applicationFunctions, modal) {
     let privilegeMenuView = BB.View.extend({
         initialize: function(opts){
             this.model = opts.model;
             this.privilege = opts.privilege;
             this.createOrUpdatePrivilege = opts.createOrUpdatePrivilege;
             this.applications = opts.applications;
+            this.privilegeManagementRef = opts.privilegeManagementRef;
             this.template = HBS.compile(template);
         },
         events: {
@@ -38,14 +40,8 @@ define([
 			}
 		},
         editPrivilegeMenu: function (events) {
-			applicationFunctions.fetchApplications(this, function(applications){
-				modal.displayModal(new privilegeMenuView({
-					createOrUpdatePrivilege: true,
-                    privilege: this.privilege,
-					applications: applications
-				}), "Edit Privilege", () => {this.render(); $('edit-privilege-button').focus();}, {handleTabs: true});
-                // this.applyOptions(this.model.get("selectedPrivilege"));
-            }.bind(this));
+            this.createOrUpdatePrivilege = true;
+            this.render();
 		},
         savePrivilegeAction: function (e) {
             e.preventDefault();
@@ -57,7 +53,7 @@ define([
 
             let privilege;
             let requestType;
-            if (this.model.get("selectedPrivilege") != null && this.model.get("selectedPrivilege").uuid.trim().length > 0) {
+            if (this.privilege != null && this.privilege.uuid.trim().length > 0) {
                 requestType = "PUT";
             }
             else {
@@ -76,6 +72,7 @@ define([
             privilegeFunctions.createOrUpdatePrivilege(privilege, requestType, function(result) {
                 console.debug(result);
                 this.close();
+                this.privilegeManagementRef.render();
             }.bind(this));
         },
 		deletePrivilege: function (event) {
@@ -84,6 +81,7 @@ define([
 
 				privilegeFunctions.deletePrivilege(uuid, function (response) {
                     this.close();
+                    this.privilegeManagementRef.render();
 				}.bind(this));
 
 			}.bind(this));

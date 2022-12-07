@@ -1,8 +1,8 @@
 define(["backbone","handlebars",  "privilege/addPrivilege", "text!privilege/privilegeManagement.hbs",
 		"privilege/privilegeMenuView", "text!privilege/privilegeTable.hbs", "common/modal",
-		"picSure/privilegeFunctions"],
+		"picSure/privilegeFunctions", 'picSure/applicationFunctions'],
 		function(BB, HBS, AddPrivilegeView, template, privilegeMenuView,
-				 privilegeTableTemplate, modal, privilegeFunctions){
+				 privilegeTableTemplate, modal, privilegeFunctions, applicationFunctions){
 	var privilegeManagementModel = BB.Model.extend({
 	});
 
@@ -52,7 +52,8 @@ define(["backbone","handlebars",  "privilege/addPrivilege", "text!privilege/priv
 					modal.displayModal(new privilegeMenuView({
 						createOrUpdatePrivilege: false,
 						privilege: this.model.get("selectedPrivilege"),
-						applications: applications
+						applications: applications,
+						privilegeManagementRef: this
 					}), "Edit Privilege", () => {this.render(); $('edit-privilege-button').focus();}, {handleTabs: true});
                     // this.applyOptions(this.model.get("selectedPrivilege"));
                 }.bind(this));
