@@ -79,7 +79,7 @@ define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
 		closeDialog: function () {
 			// cleanup
 			this.model.unset("selectedUser");
-			$("#modalDialog").hide();
+			$(".close").click();
 		},
 		toggleInactive: function (event) {
 			var id = event.target.id

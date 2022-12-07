@@ -5,12 +5,11 @@ define(["backbone", "handlebars", "picSure/privilegeFunctions", "privilege/privi
 			this.applications = opts.applications;
 			this.template = HBS.compile(template);
 			this.managementConsole = opts.managementConsole;
-
-
 		},
 		events: {
 			"click #save-privilege-button": "createPrivilege",
-            "change #application-dropdown":"dropdownChange"
+            "change #application-dropdown":"dropdownChange",
+			"click #cancel-privilege-button":"closeDialog",
 		},
 		createPrivilege: function(event){
 			var pName = $('#new-privilege-form input[name=privilege_name]').val();
@@ -51,6 +50,9 @@ define(["backbone", "handlebars", "picSure/privilegeFunctions", "privilege/privi
             }
 
         },
+		closeDialog: function () {
+			$(".close").click();
+		},
 		render: function(){
 			this.$el.html(this.template({applications:this.applications}));
 			// this.renderConnectionForm({target:{value:this.connections[0].id}})

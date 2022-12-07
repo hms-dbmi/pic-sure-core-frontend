@@ -11,6 +11,7 @@ define(["backbone", "handlebars", "user/connections", "picSure/userFunctions", "
 			"change #new-user-connection-dropdown":"renderConnectionForm",
 			"input #email": "validateEmail",
 			"click #save-user-button":   "saveUserAction",
+			"click #cancel-user-button": "closeDialog",
 		},
 		validateEmail: function(event){
 	        let emailReg = /(?:[a-zA-Z0-9!#$%&'*+/=?^_{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
@@ -20,7 +21,7 @@ define(["backbone", "handlebars", "user/connections", "picSure/userFunctions", "
 	        	$("#save-user-button").prop( "disabled", true);
         	} else {
         		//only check the current connection's users; unique per connection
-    			let emails = _.pluck(this.connection.users, "email")
+    			let emails = _.pluck(this.connection.users, "email");
     			if(emails.includes($("#email").val())){
     				$('#error-email').html('That email address is already in use.');
     				$("#error-email").show();
@@ -90,6 +91,11 @@ define(["backbone", "handlebars", "user/connections", "picSure/userFunctions", "
         getConnections : function(callback){
             picsureFunctions.getConnection("", false, callback);
         },
+		closeDialog: function () {
+			// cleanup
+			this.model.unset("selectedUser");
+			$(".close").click();
+		},
 		render: function(){
 			// load available connections first
             this.getConnections(function (connections) {
