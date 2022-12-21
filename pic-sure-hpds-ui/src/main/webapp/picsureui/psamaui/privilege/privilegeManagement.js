@@ -41,7 +41,7 @@ define(["backbone","handlebars",  "privilege/addPrivilege", "text!privilege/priv
             // $("#modal-window", this.$el).html(this.modalTemplate({title: "Add Privilege"}));
             // $("#modalDialog", this.$el).show();
             // var addPrivilegeView = new AddPrivilegeView({el:$('.modal-body'), managementConsole: this, applications:result.applications}).render();
-			modal.displayModal(new AddPrivilegeView({managementConsole: this, applications:result.applications}), "Add Privilege", () => {this.render(); $('add-privilege-button').focus();}, {handleTabs: true});
+			modal.displayModal(new AddPrivilegeView({managementConsole: this, applications:result.applications}), "Add Privilege", () => {this.render(); $('.add-privilege-button').focus();}, {handleTabs: true});
 		},
 		showPrivilegeAction: function (event) {
 			var uuid = event.target.id;

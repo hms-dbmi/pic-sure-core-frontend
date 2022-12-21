@@ -1,21 +1,16 @@
-define(["backbone","handlebars",  "role/addRole", "text!role/roleManagement.hbs", "text!role/roleMenu.hbs", "text!role/roleTable.hbs", "text!options/modal.hbs", "picSure/roleFunctions", "util/notification","picSure/privilegeFunctions"],
-		function(BB, HBS, AddRoleView, template, roleMenuTemplate, roleTableTemplate, modalTemplate, roleFunctions, notification, privilegeFunctions){
+define(["backbone","handlebars",  "role/addRole", "text!role/roleManagement.hbs", "role/roleMenu", "text!role/roleTable.hbs", "common/modal", "picSure/roleFunctions", "util/notification","picSure/privilegeFunctions"],
+		function(BB, HBS, AddRoleView, template, roleMenu, roleTableTemplate, modal, roleFunctions, notification, privilegeFunctions){
 	var roleManagementModel = BB.Model.extend({
 	});
 
 	var roleManagementView = BB.View.extend({
 		// connections : connections,
 		template : HBS.compile(template),
-		crudRoleTemplate : HBS.compile(roleMenuTemplate),
-		modalTemplate : HBS.compile(modalTemplate),
 		initialize : function(opts){
 
 		},
 		events : {
 			"click .add-role-button":   "addRoleMenu",
-			"click #edit-role-button":  "editRoleMenu",
-			"click .close":             "closeDialog",
-			"click #cancel-role-button":"closeDialog",
 			"click .role-row":          "showRoleAction",
 			"click #delete-role-button":"deleteRole",
 			"submit":                   "saveRoleAction",
@@ -31,9 +26,10 @@ define(["backbone","handlebars",  "role/addRole", "text!role/roleManagement.hbs"
 			});
 		},
 		showAddRoleMenu: function(result, view) {
-            $("#modal-window", this.$el).html(this.modalTemplate({title: "Add Role"}));
-            $("#modalDialog", this.$el).show();
-            var addRoleView = new AddRoleView({el:$('.modal-body'), managementConsole: this, privileges:result}).render();
+			modal.displayModal(new AddRoleView({managementConsole: this, privileges:result}),
+				"Add Privilege",
+				() => {this.render(); $('.add-role-button').focus();},
+				{handleTabs: true});
 		},
 		editRoleMenu: function (events) {
             privilegeFunctions.fetchPrivileges(this, function(privileges,view){
@@ -41,80 +37,31 @@ define(["backbone","handlebars",  "role/addRole", "text!role/roleManagement.hbs"
             });
 		},
 		showEditRoleMenu: function(result, view){
-            $(".modal-body", this.$el).html(this.crudRoleTemplate({
-				createOrUpdateRole: true,
-				role: this.model.get("selectedRole"),
-				privileges:result
-			}));
-            this.applyCheckboxes();
+			modal.displayModal(new AddRoleView({managementConsole: this, applications:result.applications}), "Add Privilege", () => {this.render(); $('.add-role-button').focus();}, {handleTabs: true});
 		},
 		showRoleAction: function (event) {
-			var uuid = event.target.id;
+			const uuid = event.target.id;
 
 			roleFunctions.showRoleDetails(uuid, function(result) {
 				this.model.set("selectedRole", result);
                 privilegeFunctions.fetchPrivileges(this, function(privileges){
-                    $("#modal-window", this.$el).html(this.modalTemplate({title: "Role Info"}));
-                    $("#modalDialog", this.$el).show();
-                    $(".modal-body", this.$el).html(this.crudRoleTemplate({
+					modal.displayModal(new roleMenu({
 						createOrUpdateRole: false,
-						role: this.model.get("selectedRole"),
-						privileges:privileges
-                    }));
-                    this.applyCheckboxes();
+						role: this.model.get("selectedRole"), 
+						privileges:privileges,
+						model: this.model}),
+						'Role Info', 
+						()=>{this.render(); $(event.target).focus()},
+						{handleTabs: true});
                 }.bind(this));
 			}.bind(this));
 		},
-        applyCheckboxes: function () {
-            var checkBoxes = $(":checkbox", this.$el);
-            var rolePrivileges = this.model.get("selectedRole").privileges;
-            _.each(checkBoxes, function (privilegeCheckbox) {
-                _.each(rolePrivileges, function(privilege){
-                    if (privilege.name === privilegeCheckbox.name){
-                        privilegeCheckbox.checked = true;
-                    }
-                });
-            })
-        },
-        saveRoleAction: function (e) {
-            e.preventDefault();
-            var uuid = this.$('input[name=role_name]').attr('uuid');
-            var name = this.$('input[name=role_name]').val();
-            var description = this.$('input[name=role_description]').val();
-
-            var privileges = [];
-            _.each(this.$('input:checked'), function(element) {
-            	privileges.push({uuid: element.value});
-			});
-
-
-            var role;
-            var requestType;
-            if (this.model.get("selectedRole") != null && this.model.get("selectedRole").uuid.trim().length > 0) {
-                requestType = "PUT";
-            }
-            else {
-                requestType = "POST";
-            }
-
-            role = [{
-                uuid: uuid,
-                name: name,
-                description: description,
-				privileges: privileges
-            }];
-
-            roleFunctions.createOrUpdateRole(role, requestType, function(result) {
-                console.log(result);
-                this.render();
-            }.bind(this));
-        },
 		deleteRole: function (event) {
 			var uuid = this.$('input[name=role_name]').attr('uuid');
 			notification.showConfirmationDialog(function () {
 
 				roleFunctions.deleteRole(uuid, function (response) {
-					this.render()
+				this.render();
 				}.bind(this));
 
 			}.bind(this));
