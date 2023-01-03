@@ -1,29 +1,28 @@
 define([
     'backbone',
     'handlebars',
-    'text!privilege/privilegeMenu.hbs',
-    'picSure/privilegeFunctions',
+    'text!role/roleMenu.hbs',
+    'picSure/roleFunctions',
     'util/notification',
     'picSure/applicationFunctions',
     'common/modal'
-], function(BB, HBS, template, privilegeFunctions, notification, applicationFunctions, modal) {
+], function(BB, HBS, template, roleFunctions, notification, applicationFunctions, modal) {
     let privilegeMenuView = BB.View.extend({
         initialize: function(opts){
             this.model = opts.model;
             this.role = opts.role;
             this.privileges = opts.privileges;
-            this.createOrUpdatePrivilege = opts.createOrUpdatePrivilege;
+            this.createOrUpdateRole = opts.createOrUpdateRole;
             this.applications = opts.applications;
-            this.privilegeManagementRef = opts.privilegeManagementRef;
+            this.roleManagementRef = opts.managementConsole;
             this.template = HBS.compile(template);
         },
         events: {
             "change #application-dropdown":"dropdownChange",
-            "click #delete-privilege-button":"deletePrivilege",
-            "click #edit-role-button":  "editRoleMenu",
-            "click #edit-privilege-button":  "editPrivilegeMenu",
-            "click .close":              "closeDialog",
-			"click #cancel-role-button": "closeDialog",
+            "click #delete-role-button":"deleteRole",
+            "click #edit-role-button":  "editRoleMenu", 
+            "click .close":              "close",
+			"click #cancel-role-button": "close",
             "submit":                   "saveRoleAction"
         },
         applyCheckboxes: function (role) {
@@ -37,8 +36,8 @@ define([
                 });
             })
         },
-        editPrivilegeMenu: function (events) {
-            this.createOrUpdatePrivilege = true;
+        editRoleMenu: function (events) {
+            this.createOrUpdateRole = true;
             this.render();
 		},
         saveRoleAction: function (e) {
@@ -70,17 +69,17 @@ define([
             }];
 
             roleFunctions.createOrUpdateRole(role, requestType, function(result) {
-                console.log(result);
-                this.render();
+                this.close();
+                this.roleManagementRef.render();
             }.bind(this));
         },
-		deletePrivilege: function (event) {
-			let uuid = this.$('input[name=privilege_name]').attr('uuid');
+		deleteRole: function (event) {
+			let uuid = this.$('input[name=role_uuid]').attr('uuid');
 			notification.showConfirmationDialog(function () {
 
-				privilegeFunctions.deletePrivilege(uuid, function (response) {
+				roleFunctions.deleteRole(uuid, function (response) {
                     this.close();
-                    this.privilegeManagementRef.render();
+                    this.roleManagementRef.render();
 				}.bind(this));
 
 			}.bind(this));
@@ -90,7 +89,7 @@ define([
         },
         render: function(){
             this.$el.html(this.template(this));
-            this.applyOptions(this.role);
+            this.applyCheckboxes(this.role);
         }
     });
     return privilegeMenuView;

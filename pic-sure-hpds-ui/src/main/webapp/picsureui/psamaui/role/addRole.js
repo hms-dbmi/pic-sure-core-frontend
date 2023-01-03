@@ -8,8 +8,8 @@ define(["backbone", "handlebars", "picSure/roleFunctions", "role/roleManagement"
 		},
 		events: {
 			"click #save-role-button": "createRole",
-			"click .close":              "closeDialog",
-			"click #cancel-role-button": "closeDialog",
+			"click .close":              "close",
+			"click #cancel-role-button": "close",
 		},
 		createRole: function(event){
             var privileges = [];
@@ -28,7 +28,7 @@ define(["backbone", "handlebars", "picSure/roleFunctions", "role/roleManagement"
 				[role],
 				"POST",
 				function(result){
-					console.log(result);
+					this.close();
                     this.managementConsole.render();
 				}.bind(this)
 			);
