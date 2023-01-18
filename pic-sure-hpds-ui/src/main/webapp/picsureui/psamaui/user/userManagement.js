@@ -32,7 +32,6 @@ define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
 		},		
 		events : {
 			"click .add-user-button":   "addUserMenu",
-			"click #edit-user-button":  "editUserMenu",
 			"click .user-row":          "showUserAction",
 			"click .close":             "closeDialog",
 			"click #cancel-user-button":"closeDialog",
@@ -58,16 +57,8 @@ define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
 						result.generalMetadata = JSON.parse(result.generalMetadata);
 					}
 					this.model.set("selectedUser", result);
-					modal.displayModal(new userDetailsView({model: this.model, createOrUpdateUser: false, user: this.model.get("selectedUser"), requiredFields: JSON.parse(this.model.get("selectedUser").connection.requiredFields)}), "User info", ()=>{$('.user-row').focus(); this.render();}, {isHandleTabs: true}).bind(this);
+					modal.displayModal(new userDetailsView({model: this.model, createOrUpdateUser: false, user: this.model.get("selectedUser"), requiredFields: JSON.parse(this.model.get("selectedUser").connection.requiredFields)}), "User info", ()=>{$('.user-row').focus(); this.render();}, {isHandleTabs: true});
 				}.bind(this));
-			}.bind(this));
-		},
-		editUserMenu: function (events) {
-            if ($(".noty_type__alert").length > 0) return;
-			var user = this.model.get("selectedUser");
-			this.connections(function(connections){
-				var requiredFields = _.where(connections, {id: user.connection.id})[0].requiredFields;
-                modal.displayModal(new userDetailsView({model: this.model, createOrUpdateUser: true, user: user, availableRoles: this.model.get("availableRoles"), requiredFields: requiredFields}), "User info", ()=>{$('.user-row').focus(); this.render();}, {isHandleTabs: true}).bind(this);
 			}.bind(this));
 		},
 		getUserRoles: function (stringRoles) {

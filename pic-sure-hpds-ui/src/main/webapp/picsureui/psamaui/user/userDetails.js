@@ -17,6 +17,7 @@ define([
         },
         events: {
             "click #switch-status-button": "deactivateUser",
+			"click #edit-user-button":     "editUser",
             "click .close":                "closeDialog",
             "click #cancel-user-button":   "closeDialog",
             "click #switch-status-button": "deactivateUser",
@@ -32,6 +33,10 @@ define([
 					}
 				})
 			})
+		},
+		editUser: function (events) {
+            this.createOrUpdatePrivilege = true;
+            this.render();
 		},
         deactivateUser: function (event) {
 			try {
