@@ -52,12 +52,12 @@ define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
 			var uuid = event.target.id;
 			userFunctions.showUserDetails(uuid, function(result) {
 				this.connections(function(connections){
-					var requiredFields = _.where(connections, {id: result.connection.id})[0].requiredFields;
+					let requiredFields = _.where(connections, {id: result.connection.id})[0].requiredFields;
 					if (result.generalMetadata){
 						result.generalMetadata = JSON.parse(result.generalMetadata);
 					}
 					this.model.set("selectedUser", result);
-					modal.displayModal(new userDetailsView({model: this.model, createOrUpdateUser: false, user: this.model.get("selectedUser"), requiredFields: JSON.parse(this.model.get("selectedUser").connection.requiredFields)}), "User info", ()=>{$('.user-row').focus(); this.render();}, {isHandleTabs: true});
+					modal.displayModal(new userDetailsView({model: this.model, createOrUpdateUser: false, user: this.model.get("selectedUser"), requiredFields: requiredFields}), "User info", ()=>{$('.user-row').focus(); this.render();}, {isHandleTabs: true});
 				}.bind(this));
 			}.bind(this));
 		},
