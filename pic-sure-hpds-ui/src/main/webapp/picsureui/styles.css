@@ -916,3 +916,41 @@ body {
 
 /* ==== END HEADER BUTTON OVERRIDES ==== */
 
+/* ==== Selection Search Panel ==== */
+
+.selection-container {
+    margin: 5px 0;
+    padding: 0 0 10px 0;
+    overflow-wrap: anywhere;
+}
+
+.selection-search-box {
+    border-radius: 0px;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    margin-left: 0px;
+}
+
+input[type='checkbox'].categorical-filter-input {
+    margin-right: 10px;
+}
+
+.select-box {
+    width: 50%;
+    margin-left: 1px;
+    padding-bottom: 15px;
+}
+
+.select-box:not(:last-child) {
+    border-right: 1px solid #555555;
+}
+
+.results-header {
+    margin: 1px;
+}
+
+.selection-container .panel-body {
+    display: flex;
+    padding: 0px;
+}
