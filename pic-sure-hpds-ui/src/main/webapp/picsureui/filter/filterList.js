@@ -1,6 +1,5 @@
-define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList",
-			"picSure/settings", "text!filter/searchHelpTooltip.hbs"],
-		function($, HBS, queryBuilder, filter, ontology, overrides, settings, searchHelpTooltipTemplate){
+define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList", "filter/searchHelpTooltipView", "common/modal"],
+		function($, HBS, queryBuilder, filter, ontology, overrides, helpView, modal){
 
 	var defaultRenderHelpCallback = function(filterView) {
         ontology.getInstance().allInfoColumnsLoaded.then(function(){
@@ -8,14 +7,9 @@ define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSu
             	HBS.registerHelper('eq', function(arg1, arg2, options) {
             	    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
             	});
-                $('#modal-window').html(HBS.compile(searchHelpTooltipTemplate)({infoColumns: ontology.getInstance().allInfoColumns(),
-																			queryButtonLabel: settings.queryButtonLabel,
-																			queryExportType: settings.queryExportType}));
-                $('#modal-window', this.$el).tooltip();
-                $(".close").click(function(){
-                    $("#search-help-modal").hide();
-                });
-                $("#search-help-modal").show();
+				modal.displayModal(new helpView(), "Instructions",  ()=>{
+					$('.show-help-modal').focus();
+				}, {isHandleTabs: true});
             });
         }.bind(filterView));
     };

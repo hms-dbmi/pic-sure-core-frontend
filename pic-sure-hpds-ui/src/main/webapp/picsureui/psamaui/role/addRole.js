@@ -7,7 +7,9 @@ define(["backbone", "handlebars", "picSure/roleFunctions", "role/roleManagement"
 			this.managementConsole = opts.managementConsole;
 		},
 		events: {
-			"click #save-role-button": "createRole"
+			"click #save-role-button": "createRole",
+			"click .close":              "close",
+			"click #cancel-role-button": "close",
 		},
 		createRole: function(event){
             var privileges = [];
@@ -26,11 +28,14 @@ define(["backbone", "handlebars", "picSure/roleFunctions", "role/roleManagement"
 				[role],
 				"POST",
 				function(result){
-					console.log(result);
+					this.close();
                     this.managementConsole.render();
 				}.bind(this)
 			);
 		},
+		close: function(){
+            $('.close').click();
+        },
 		render: function(){
 			this.$el.html(this.template({privileges:this.privileges}));
 		}
