@@ -954,3 +954,18 @@ input[type='checkbox'].categorical-filter-input {
     display: flex;
     padding: 0px;
 }
+
+/* ==== END Selection Search Panel ==== */
+
+/* ==== Tree Select Panel ==== */
+
+.tree-select-container {
+    margin: 5px 0;
+    padding: 0 0 10px 0;
+    overflow-wrap: anywhere;
+    max-width: fit-content;
+}
+
+.tree-select-container .jstree-checkbox {
+    
+}
