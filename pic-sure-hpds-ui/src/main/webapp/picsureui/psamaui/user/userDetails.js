@@ -22,6 +22,8 @@ define([
             "click #switch-status-button": "deactivateUser",
             "click .btn-show-inactive":    "toggleInactive",
 			"click #save-user-button":   "saveUserAction",
+			"click input[name*='Admin']": "checkUserRoleOnAdminRoleChecked",
+			"click input[name='PIC-SURE User']": "uncheckAdminRoleOnUnchecked"
         },
         applyCheckboxes: function () {
 			var checkBoxes = $(":checkbox", this.$el);
@@ -31,8 +33,8 @@ define([
 					if (userRole.uuid == roleCheckbox.value) {
 						roleCheckbox.checked = true;
 					}
-				})
-			})
+				});
+			});
 		},
 		editUser: function (events) {
             this.createOrUpdateUser = true;
@@ -51,7 +53,7 @@ define([
 				user.generalMetadata = JSON.stringify(user.generalMetadata);
 				notification.showConfirmationDialog(function () {
 					userFunctions.createOrUpdateUser([user], 'PUT', function (response) {
-						this.render()
+						this.render();
 					}.bind(this));
 				}.bind(this));
 			} catch (err) {
@@ -78,9 +80,9 @@ define([
 				user.subject = this.$('input[name=subject]').val();
 				//this includes the user uuid
 				_.each($('#required-fields input[type=text]'), function(entry){
-					general_metadata[entry.name] = entry.value
+					general_metadata[entry.name] = entry.value;
 				});
-				user.email = general_metadata["email"] ? general_metadata["email"] : email; // synchronize email with metadata
+				user.email = general_metadata.email ? general_metadata.email : email; // synchronize email with metadata
 			} else {
 				//new user - we have a different connection and email input to read, and no auth0 data
 				user.connection = {
@@ -96,7 +98,7 @@ define([
 			let roles = [];
 			_.each(this.$('input:checked'), function (checkbox) {
 				roles.push({uuid: checkbox.value});
-			})
+			});
 			user.roles = roles;
 			userFunctions.createOrUpdateUser([user], user.uuid == null ? 'POST' : 'PUT', function(result) {
 				console.log(result);
@@ -104,19 +106,40 @@ define([
 			}.bind(this));
 		},
         toggleInactive: function (event) {
-			var id = event.target.id
+			var id = event.target.id;
 			$('#inactive-' + id, this.$el).toggle();
 			var toggleButton = $('.btn-show-inactive#' + id + ' span', this.$el);
-			if (toggleButton.hasClass('glyphicon-chevron-down'))
+			if (toggleButton.hasClass('glyphicon-chevron-down')) {
 				toggleButton.removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-			else
+			} else {
 				toggleButton.removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+			}
+		},
+		checkUserRoleOnAdminRoleChecked: function (event) {
+			console.debug("checkUserRoleOnAdminRoleChecked");
+			let userRoleCheckbox = $('input[name="PIC-SURE User"]');
+
+			let isAdminChecked = event.target.checked;
+
+			if (isAdminChecked) {
+				userRoleCheckbox.prop('checked', isAdminChecked);
+			}
+		},
+		uncheckAdminRoleOnUnchecked: function (event) {
+			console.debug("uncheckAdminRoleOnUnchecked");
+			let adminRoleCheckbox = $('input[name*="Admin"]');
+			let isUserRoleChecked = event.target.checked;
+
+			// If the user role has been unchecked we must uncheck the admin roles
+			if (!isUserRoleChecked) {
+				adminRoleCheckbox.prop('checked', isUserRoleChecked);
+			}
 		},
 		closeDialog: function () {
 			this.model.unset("selectedUser");
 			$(".close").click();
 		},
-        render: function(){
+        render: function() {
             this.$el.html(this.template(this));
 			if (this.createOrUpdateUser) {
 				$("input[name=email]").attr('disabled', true);
