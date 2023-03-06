@@ -22,7 +22,7 @@
 	],
 	"pageTitle": "PIC-SURE",
 	"queryExportType":"EXPORT_IMMEDIATE",
-	"queryButtonLabel":"Export Data",
+	"queryButtonLabel":"Export for analysis",
 	"defaultValues": {
 		"SOME_PATH" : "Value"
 	},
