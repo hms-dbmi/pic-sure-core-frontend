@@ -13,7 +13,7 @@ define([
         },
         render: function(){
             this.$el.html(this.template(this));
-            this.$el.find('#tree').jstree({'core' : {'data': this.tree, 'themes': {'icons': false}}, 'plugins' : ['checkbox']});
+            this.$el.find('#tree').jstree({'core' : {'data': this.tree, 'themes': {'icons': false}}, 'plugins' : ['checkbox', 'changed']});
         }
     });
     return TreeSelect;

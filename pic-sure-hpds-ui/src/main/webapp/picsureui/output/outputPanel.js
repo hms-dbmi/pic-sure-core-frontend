@@ -1,7 +1,7 @@
 define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars",
-		"overrides/outputPanel", "common/transportErrors", "common/config", "picSure/settings", "output/variantExplorer"],
+		"overrides/outputPanel", "common/transportErrors", "common/config", "picSure/settings", "output/variantExplorer", "common/modal", "output/package-data-view"],
 		function($,  dataSelection, outputTemplate, ontology, BB, HBS,
-				 overrides, transportErrors, config,  settings, variantExplorer){
+				 overrides, transportErrors, config,  settings, variantExplorer, modal, packageDataView){
 
 	var defaultModel = BB.Model.extend({
 		defaults: {
@@ -34,14 +34,12 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 			},
 			select: function(event){
 				if(this.model.get("queryRan")){
-					if( !this.dataSelection){
-						this.dataSelection = new dataSelection({query:JSON.parse(JSON.stringify(this.model.baseQuery))});
-						$("#select-btn").hide();
-						$("#concept-tree-div",this.$el).append(this.dataSelection.$el);
-					} else {
-						this.dataSelection.updateQuery(this.model.baseQuery);
-					}
-					this.dataSelection.render();
+					modal.displayModal(
+						new packageDataView({model: this.model, query: JSON.parse(JSON.stringify(this.model.baseQuery))}), 
+						"Select Data for Export", 
+						()=>{$('#select-btn').focus();}, 
+						{isHandleTabs: true}
+					);
 				}
 			},
 			queryRunning: function(){
@@ -63,12 +61,7 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				var count = parseInt(result);
 				this.queryFinished(count);
 				
-				$("#patient-count").html(count);  
-                //and update the data selection panel
-				if( this.dataSelection){
-					this.dataSelection.updateQuery(this.model.baseQuery);
-					this.dataSelection.render();
-				}
+				$("#patient-count").html(count);
 
 				if (this.variantExplorerView) {
 					this.variantExplorerView.updateQuery(this.model.baseQuery);
@@ -111,10 +104,6 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 			},
 			render: function(){
 				this.$el.html(this.template(this.model.toJSON()));
-				if(this.dataSelection){
-					this.dataSelection.setElement($("#concept-tree-div",this.$el));
-					this.dataSelection.render();
-				}
 
 				if (settings.variantExplorerStatus === config.VariantExplorerStatusEnum.enabled
 					|| settings.variantExplorerStatus === config.VariantExplorerStatusEnum.aggregate) {

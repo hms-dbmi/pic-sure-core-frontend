@@ -560,11 +560,7 @@ body {
 }
 
 .results-div {
-    position: sticky;
-    bottom: 25px;
-    padding: 5px;
-    padding-bottom: 25px;
-    background-color: #f4f4f6;
+
 }
 .numeric-label {
 	padding-top: 10px;
@@ -956,6 +952,37 @@ input[type='checkbox'].categorical-filter-input {
 }
 
 /* ==== END Selection Search Panel ==== */
+
+/* ==== Package Data Modal ==== */
+
+#package-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+ #package-data #data-summary {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid var(--picsure-other);
+    border-radius: 10px;
+ }
+ #package-data #data-summary span {
+    padding: 0 5px;
+ }
+
+ #package-data 
+ #resource-id-display {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+ }
+ #queryId-span {
+    width: 276px;
+ }
 
 /* ==== Tree Select Panel ==== */
 
