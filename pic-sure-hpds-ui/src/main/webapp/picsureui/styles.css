@@ -974,6 +974,10 @@ input[type='checkbox'].categorical-filter-input {
     padding: 0 5px;
  }
 
+ #package-data #concept-tree {
+    max-width: 70vw;
+ }
+
  #package-data 
  #resource-id-display {
     display: flex;
