@@ -1,21 +1,20 @@
 <div id="package-data">
-    {{log  this}}
-    <seaction id="data-summary">
+    <section id="data-summary">
         <span>Dataset Summary:</span>
         <span id="total-patients">N/A# Patients</span>
         <span id="total-variables">N/A# Variables</span>
         <span id="estimated-data-points">N/A# Estimated Data Points</span>
-    </seaction>
-    <seaction>
+    </section>
+    <section>
         <div><strong>Select additional</strong> phenotypic <strong>variables</strong> you would like to be included in your filtered cohort dataset.</div>
         <div id="concept-tree"></div>
-    </seaction>
+    </section>
     <section id="query-id-container">
         <div id="download-spinner"></div>
         <div id="resource-id-display"></div>
     </section>
-    <seaction id="buttons" class="results-div">
+    <section id="buttons" class="results-div">
         <a class="center btn btn-default" id="prepare-btn">{{#if queryButtonLabel}}{{queryButtonLabel}}{{else}}Export Data{{/if}}</a>
         <a class="center btn btn-default hidden" download="data.csv" id="download-btn">Download</a>
-    </seaction>
+    </section>
 </div>
