@@ -116,6 +116,10 @@ define([
             return query;
         },
         queryAsync: function (query, promise) {
+            if (overrides.queryAsync) {
+                overrides.queryAsync(query, promise);
+                return;
+            }
             /*
              * This will send a query to PICSURE to evaluate and execute; it will not return results.  Use downloadData to do that.
              */
@@ -202,7 +206,7 @@ define([
         },
         updateQuery: function (query) {
             if (overrides.updateQuery) {
-                overrides.updateQuery(query);
+                overrides.updateQuery(query, this);
                 return;
             }
             if (!query) { return; }
@@ -212,6 +216,14 @@ define([
                 .concat(query.fields)
                 .concat(_.keys(query.query.categoryFilters))
                 .concat(_.keys(query.query.numericFilters)));
+        },
+        queryChangedCallback: function () {
+            if (overrides.queryChangedCallback) {
+                overrides.queryChangedCallback(this);
+                return;
+            }
+            this.query = this.updateQueryFields();
+            this.updateEstimations(this.query);
         },
         render: function () {
             this.$el.html(this.template(this));
@@ -281,8 +293,7 @@ define([
                             "download-spinner"
                     );
                     $("#concept-tree").on("changed.jstree", function (e, data) {
-                        this.query = this.updateQueryFields();
-                        this.updateEstimations(this.query);
+                        this.queryChangedCallback();
                     }.bind(this));
             }
             this.updateEstimations();
