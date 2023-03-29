@@ -938,16 +938,30 @@ input[type='checkbox'].categorical-filter-input {
 
 .select-box {
     width: 50%;
-    margin-left: 1px;
     padding-bottom: 15px;
+    height: 275px;
+}
+
+.value-container {
+    height: 90%;
+    padding: 2px;
+    overflow-y: auto;
+}
+
+.select-box .results-header .panel-title {
+    margin-left: 2px;    
+}
+
+.select-box .btn-default {
+    padding: 5.5px 12px;
 }
 
 .select-box:not(:last-child) {
-    border-right: 1px solid #555555;
+    border-right: 1px solid #ddd;
 }
 
 .results-header {
-    margin: 1px;
+    border-bottom: 1px solid #ccc;
 }
 
 .selection-container .panel-body {
@@ -964,8 +978,14 @@ input[type='checkbox'].categorical-filter-input {
     padding: 0 0 10px 0;
     overflow-wrap: anywhere;
     max-width: fit-content;
+    height: 400px;
 }
 
-.tree-select-container .jstree-checkbox {
-    
+.tree-select-container .panel-body {
+    height: 90%;
+    overflow-y: scroll;
+}
+
+.tree-select-container .panel-body .jstree-themeicon {
+    display: none;
 }

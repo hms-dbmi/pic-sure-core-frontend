@@ -24,7 +24,7 @@
                 <input type="search" id="{{searchId}}" class="selection-search-box form-control tabable" placeholder="{{placeholderText}}" title="Search box, {{placeholderText}}">
                     {{!-- <input class="btn bg-transparent" value="" accesskey="r" type="reset"></input> --}}
                 </input>
-                <div class="genomic-value-container selection-search-results tabable" role="listbox" >
+                <div class="value-container selection-search-results tabable" role="listbox" >
                     {{#each searchResultOptions}}
                     <input id="{{this}}" class="categorical-filter-input selectable list-item" type="checkbox" tabindex="-1" value="{{this}}" title="{{this}}" role="option"/>{{this}} <br />
                     {{/each}}
@@ -32,11 +32,11 @@
             </div>
             <div class="select-box">
                 <div class="results-header space-out">
-                    <h4 class="panel-title">{{resultContext}}</h4>
+                    <h4 class="panel-title">{{resultContext}}:</h4>
                     <button id="{{searchId}}-selection-clear-button" class="btn btn-default tabable">Clear</button>
                 </div>
                 <div class="panel-body results-box">
-                    <div class="genomic-value-container selections tabable">
+                    <div class="value-container selections tabable">
                         {{#each selectedResults}}
                         <input class="categorical-filter-input selectable list-item" type="checkbox" tabindex="-1" value="{{this}}" role="option"/>{{this}} <br />
                         {{/each}}

@@ -37,12 +37,12 @@ define(['jquery',
                 'click #selection-clear-button' : 'clearSelection',
             },
             addEvents: function() {
-                $('.genomic-value-container.selection-search-results input').on('change', this.selectItem.bind(this));
-                $('.genomic-value-container.selections input').on('change', this.unselectItem.bind(this));
+                $('.value-container.selection-search-results input').on('change', this.selectItem.bind(this));
+                $('.value-container.selections input').on('change', this.unselectItem.bind(this));
                 $('#'+this.data.searchId+'-selection-clear-button').on('click', this.clearSelection.bind(this));
                 $('#'+this.data.searchId+'-selection-select-all').on('click', this.selectAll.bind(this));
-                $('.genomic-value-container').on('focus', this.focusItem.bind(this));
-                $('.genomic-value-container').on('blur', this.blurItem.bind(this));
+                $('.value-container').on('focus', this.focusItem.bind(this));
+                $('.value-container').on('blur', this.blurItem.bind(this));
             },
             search: function(e) {
                 console.debug('search', e.target.value);
@@ -170,9 +170,9 @@ define(['jquery',
                 this.$el.find('.selections').html(newHTMLRSelectionList).fadeIn('fast');
                 const search = this.$el.find('#'+this.data.searchId)[0] ? this.$el.find('#'+this.data.searchId)[0].value : '';
                 if (this.data.searchResultOptions.length <= 0 && search) {
-                    this.$el.find('.genomic-value-container.selection-search-results').html('<span>No results found</span>');
+                    this.$el.find('.value-container.selection-search-results').html('<span>No results found</span>');
                 } else if (this.data.searchResultOptions.length <= 0 && !search && this.data.results.length > this.data.selectedResults.length) {
-                    this.$el.find('.genomic-value-container.selection-search-results').html('<span style="color: #AAA">Try searching for more</span>');
+                    this.$el.find('.value-container.selection-search-results').html('<span style="color: #AAA">Try searching for more</span>');
                 } else {
                     this.$el.find('.selection-search-results').html(newHTMLList).fadeIn('fast');
                 }

@@ -6,6 +6,8 @@ define(["jquery", "underscore", "picSure/settings", "overrides/ontology",
     var instance;
     var allConcepts, allInfoColumns;
 
+    let infoColumnsTimeout = overrides.infoColumnsTimeout ? overrides.infoColumnsTimeout : 60000;
+
     var loadAllConceptsDeferred = function(){
     	allConceptsDeferred = $.Deferred();
 	    search.dictionary("\\", function(allConceptsRetrieved) {
@@ -42,6 +44,12 @@ define(["jquery", "underscore", "picSure/settings", "overrides/ontology",
                 console.log(response);
             }.bind(this)
         });
+
+        if (infoColumnsTimeout) {
+            setTimeout(function() {
+                allinfoColumnsDeferred.reject();
+            }, infoColumnsTimeout);
+        }
 
         return allinfoColumnsDeferred;
     }
