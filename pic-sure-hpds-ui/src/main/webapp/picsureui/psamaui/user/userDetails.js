@@ -103,6 +103,7 @@ define([
 			userFunctions.createOrUpdateUser([user], user.uuid == null ? 'POST' : 'PUT', function(result) {
 				console.log(result);
 				this.render();
+				this.closeDialog();
 			}.bind(this));
 		},
         toggleInactive: function (event) {
