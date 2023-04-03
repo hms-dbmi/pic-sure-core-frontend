@@ -53,7 +53,7 @@ define([
 				user.generalMetadata = JSON.stringify(user.generalMetadata);
 				notification.showConfirmationDialog(function () {
 					userFunctions.createOrUpdateUser([user], 'PUT', function (response) {
-						this.render();
+						this.closeDialog();
 					}.bind(this));
 				}.bind(this));
 			} catch (err) {
@@ -101,8 +101,7 @@ define([
 			});
 			user.roles = roles;
 			userFunctions.createOrUpdateUser([user], user.uuid == null ? 'POST' : 'PUT', function(result) {
-				console.log(result);
-				this.render();
+				this.closeDialog();
 			}.bind(this));
 		},
         toggleInactive: function (event) {
