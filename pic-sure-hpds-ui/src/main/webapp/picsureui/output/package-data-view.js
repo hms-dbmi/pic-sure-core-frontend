@@ -5,10 +5,10 @@ define([
     'picSure/settings',
     'text!output/package-data-view.hbs',
     'overrides/package-data-view',
-    "overrides/outputPanel",
     'output/tree',
-    'common/spinner'
-], function (BB, HBS, jstree, settings, view, overrides, outputOverride, tree, spinner) {
+    'common/spinner',
+    'overrides/outputPanel',
+], function (BB, HBS, jstree, settings, view, overrides, tree, spinner, outputOverride,) {
     let triggerDownload = function (response) {
         const responseDataUrl = URL.createObjectURL(new Blob([response], { type: "octet/stream" }));
         $("#download-btn", this.$el).off('click');
@@ -297,6 +297,7 @@ define([
                     }.bind(this));
             }
             this.updateEstimations();
+            overrides.renderExt && overrides.renderExt(this);
         }
     });
     return PicsureDialog;
