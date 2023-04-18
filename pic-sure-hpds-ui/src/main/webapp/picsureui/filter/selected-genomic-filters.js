@@ -6,11 +6,13 @@ define([
     let selectedGenomicFilters = BB.View.extend({
         initialize: function(opts){
             this.template = HBS.compile(template);
-            this.clearButton = opts.clearButton || false;
+            this.title = opts.title;
+            this.description = opts.description;
+            this.clearButton = true;
             this.clearAction = opts.clearAction || this.clearLists;
         },
         events : {
-            'click #clear-btn' : 'clear'
+            'click #selected-genomic-clear-btn' : 'clear',
         },
         clear: function(){
             this.clearAction();
@@ -41,6 +43,7 @@ define([
         },
         render: function(){
             this.$el.html(this.template(this));
+            this.delegateEvents();
         }
     });
     return selectedGenomicFilters;

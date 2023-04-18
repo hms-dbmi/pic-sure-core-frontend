@@ -1,18 +1,17 @@
 define(['jquery', 'backbone','handlebars', 
+'overrides/genomic-filter-view',
 'text!filter/genomic-filter-view.hbs', 
 'common/selection-search-panel-view', 
 'text!common/selection-panel.hbs', 
-'common/tree-select',
-'filter/selected-genomic-filters',
-'text!../data/variant-data.json',
+'text!filter/genomic-filter-partial.hbs',
+'text!../studyAccess/variant-data.json',
 'picSure/ontology', "common/spinner",
-'common/keyboard-nav'],
-    function($, BB, HBS, genomicView, searchPanel, selectionPanel, treeSelect, filterContainer, variantDataJson, ontology, spinner, keyboardNav) {
+'common/keyboard-nav', 'common/tree-select',
+'filter/selected-genomic-filters'],
+    function($, BB, HBS, overrides, genomicView, searchPanel, selectionPanel, filterContainer, variantDataJson, ontology, spinner, keyboardNav, treeSelect, selectedGenomicFilters) {
         const geneKey = 'Gene_with_variant';
         const consequenceKey = 'Variant_consequence_calculated';
         const severityKey = 'Variant_severity';
-        const classKey = 'Variant_class';
-        const frequencyKey = 'Variant_frequency_as_text';
         const classDescription = 'A standardized term from the Sequence Ontology (http://www.sequenceontology.org) to describe the type of a variant. Possible values: deletion, insertion.';
         const frequencyDescription = 'The variant allele frequency in gnomAD exomes of combined population as discrete text categories. Possible values: Rare (variant frequency less than 1%), Common (variant frequency greater than or equal to 1%).';
         const TABABLE_CLASS = '.tabable';
@@ -27,24 +26,21 @@ define(['jquery', 'backbone','handlebars',
                 this.infoColumns = [];
                 this.loadingData = ontology.getInstance().allInfoColumnsLoaded.then(function(){
                     this.infoColumns = ontology.getInstance().allInfoColumns();
-                    this.data.geneDesc = this.infoColumns.find(col => col.key === geneKey).description || 'Error loading description';
-                    this.data.consequenceDesc = this.infoColumns.find(col => col.key === consequenceKey).description || 'Error loading description';
-                    this.data.severityDescription = this.infoColumns.find(col => col.key === severityKey).description || 'Error loading description';
+                    this.data.geneDesc = this.infoColumns.find(col => col.key === geneKey).description.split('"')[1] || 'Error loading description';
+                    this.data.consequenceDesc = this.infoColumns.find(col => col.key === consequenceKey).description.split('"')[1] || 'Error loading description';
+                    this.data.severityDescription = this.infoColumns.find(col => col.key === severityKey).description.split('"')[1] || 'Error loading description';
                     this.data.classDescription = classDescription;
                     this.data.frequencyDescription = frequencyDescription;
-                    // TODO: Do this in the backend at some point
                     this.data.severityDescription = this.data.severityDescription.substring(0, this.data.severityDescription.lastIndexOf(','))+'.';
                     isLoading = false;
                     this.render();
-                }.bind(this));
-                //timeout loadingData deferred promise to allow UI to render if thre is an issue with the ontology
-                setTimeout(function(){
-                    if(isLoading){
-                        isLoading = false;
-                        this.render();
-                    }
-                }.bind(this), 5000);
+                }.bind(this)).catch((error)=>{
+                    console.error(error);
+                    isLoading = false;
+                    this.render();
+                });;
                 this.template = HBS.compile(genomicView);
+                this.filterPartialTemplate = HBS.compile(filterContainer);
                 const selectionPanelTemplate = HBS.compile(selectionPanel);
                 keyboardNav.addNavigableView('genomic-filter-view', this);
                 HBS.registerPartial('selection-panel', selectionPanelTemplate);
@@ -61,8 +57,7 @@ define(['jquery', 'backbone','handlebars',
               'click #cancel-genomic-filters' : 'cancelGenomicFilters',
               'click #apply-genomic-filters' : 'applyGenomicFilters',
               'click #clear-genomic-filters' : 'clearGenomicFilters',
-              'change input[type="checkbox"],input[type="number"]' : 'updateGenomicFilter',
-              'click .jstree-checkbox' : 'updateGenomicFilter',
+              'change input[type="checkbox"]' : 'updateGenomicFilter',
               'updatedLists' : 'updateGenomicFilter',
               'focus #severity .selection-box' : 'onFocusSelection',
               'blur #severity .selection-box' : 'onBlurSelection',
@@ -75,8 +70,6 @@ define(['jquery', 'backbone','handlebars',
                 const parsedVariantData = JSON.parse(variantDataJson);
                 const geneList = parsedVariantData.genes;
                 const consequencesList = parsedVariantData.consequences;
-                this.data.severityOptions = ['High', 'Moderate', 'Low'];
-                this.data.classOptions = ['Deletion', 'Insertion'];
                 this.data.frequencyOptions = ['Rare', 'Common'];
                 this.dataForGeneSearch = {
                     heading: 'Gene with Variant',
@@ -89,13 +82,10 @@ define(['jquery', 'backbone','handlebars',
                     isRequired: true
                 }
                 this.dataForConsequenceSearch = {
-                    title: 'Select Calculated Consequence Grouped by Variant Severity',
-                    data: consequencesList,
-                    description: this.data.consequenceDesc,
-                };
-                this.dataForFilterContainer = {
-                    clearAction: undefined,
-                    clearButton: true,
+                    title: 'Variant consequence calculated',
+                    tree: consequencesList,
+                    ignoreParent: true, 
+                    description: this.data.consequenceDesc
                 };
                 // If editing a previous filter, then repopulate the form.
                 if (this.data.currentFilter) {
@@ -103,34 +93,32 @@ define(['jquery', 'backbone','handlebars',
                         this.dataForGeneSearch.searchResults = [...this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Gene_with_variant];
                     }
                     if (this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated) {
-                        this.dataForConsequenceSearch.data = [...this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated]; //TODO: fix consequences list to be nested.
+                        this.dataForConsequenceSearch.searchResults = [...this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated];
                     }
                     this.previousFilter = this.data.currentFilter;
                 }
                 this.geneSearchPanel = new searchPanel(this.dataForGeneSearch);
                 this.consequenceSearchPanel = new treeSelect(this.dataForConsequenceSearch);
-                this.filterContainerPanel = new filterContainer(this.dataForFilterContainer);
-                //this.consequenceSearchPanel = new searchPanel(this.dataForConsequenceSearch);
+                this.selectedFiltersPanel = new selectedGenomicFilters({title: 'Selected Genomic Filters', clearButton: true, clearAction: this.clearGenomicFilters.bind(this)});
             },
             applyGenomicFilters: function(){
-                console.debug("apply genomic filters");
+                if (overrides && overrides.applyGenomicFilters) {
+                    overrides.applyGenomicFilters(this);
+                    return;
+                }
                 let filtersForQuery = {
                     categoryVariantInfoFilters: this.data.categoryVariantInfoFilters,
                     numericVariantInfoFilters: {}
                 };
                 //this.createUniqueId(filtersForQuery); uncomment to support multiple filters
-                console.debug(filtersForQuery);
-                //filterModel.addGenomicFilter(filtersForQuery, this.previousUniqueId);
+                //filterModel.addGenomicFilter(filtersForQuery, this.previousUniqueId); //TODO fix for baseline
                 this.cancelGenomicFilters();
             },
             clearGenomicFilters: function(){
-                console.debug("clear genomic filters");
                 this.geneSearchPanel.reset();
                 this.consequenceSearchPanel.reset();
                 this.$el.find('input[type="checkbox"]').prop('checked', false);
-                this.$el.find('input[type="number"]').val('');
                 this.data.filters = {};
-                this.$el.find('#selected-filters').html(this.filterPartialTemplate({filters: this.data.categoryVariantInfoFilters}));
                 this.$el.find('#apply-genomic-filters').prop('disabled', true);
             },
             cancelGenomicFilters: function(){
@@ -143,23 +131,19 @@ define(['jquery', 'backbone','handlebars',
                     $(el).attr('tabindex', genomicTabIndex);
                     genomicTabIndex++;
                 });
-                $('#consequence-search-container').find(TABABLE_CLASS).each((i, el) => {
-                    $(el).attr('tabindex', genomicTabIndex);
-                    genomicTabIndex++;
-                });
-                $('#severity').find(TABABLE_CLASS).each((i, el) => {
-                    $(el).attr('tabindex', genomicTabIndex);
-                    genomicTabIndex++;
-                });
-                $('#variant-class').find(TABABLE_CLASS).each((i, el) => {
-                    $(el).attr('tabindex', genomicTabIndex);
-                    genomicTabIndex++;
-                });
                 $('#frequency-text').find(TABABLE_CLASS).each((i, el) => {
                     $(el).attr('tabindex', genomicTabIndex);
                     genomicTabIndex++;
                 });
-                $('#filters').find(TABABLE_CLASS).each((i, el) => {
+                $('#consequence-search-container').find(TABABLE_CLASS).each((i, el) => {
+                    $(el).attr('tabindex', genomicTabIndex);
+                    genomicTabIndex++;
+                });
+                $('#selected-filters').find(TABABLE_CLASS).each((i, el) => {
+                    $(el).attr('tabindex', genomicTabIndex);
+                    genomicTabIndex++;
+                });
+                $('.push-left-and-down').find(TABABLE_CLASS).each((i, el) => {
                     $(el).attr('tabindex', genomicTabIndex);
                     genomicTabIndex++;
                 });
@@ -196,9 +180,7 @@ define(['jquery', 'backbone','handlebars',
                         });
                     }
                     if (!(_.isEmpty(this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated)) && this.consequenceSearchPanel.$el.length > 0) {
-                        this.consequenceSearchPanel.$el.find('.selections input[type="checkbox"]').each((i, checkbox)  => {
-                            checkbox.checked = true;
-                        });
+                        this.consequenceSearchPanel.reapply(this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated);
                     }
                     this.updateGenomicFilter();
                 }
@@ -213,17 +195,14 @@ define(['jquery', 'backbone','handlebars',
                 }
             },
             updateGenomicFilter: function(){
-                console.debug("Start update genomic filter");
                 const geneData = this.geneSearchPanel.data.selectedResults;
-                const conData = this.$el.find('#consequence-search-container input[type="checkbox"]:checked');
+                const conData = this.consequenceSearchPanel.data.selectedResults;
                 const severity = this.$el.find('#severity input[type="checkbox"]:checked');
                 const variantClass = this.$el.find('#variant-class input[type="checkbox"]:checked');
                 const variantFrequencyText = this.$el.find('#frequency-text input[type="checkbox"]:checked');
-                const variantFrequencyNumber = this.$el.find('#frequency-number input[type="number"]');
                 let severityData = [];
                 let variantClassData = [];
                 let variantFrequencyData = [];
-                let variantFrequencyNumberData = [];
                 if (severity.length > 0) {
                     severity.each(function(i, el){
                         severityData.push($(el).val().toUpperCase());
@@ -246,20 +225,10 @@ define(['jquery', 'backbone','handlebars',
                 this.data.categoryVariantInfoFilters = {
                     Gene_with_variant: _.isEmpty(geneData) ? undefined : geneData,
                     Variant_consequence_calculated: _.isEmpty(conData) ? undefined : conData,
-                    Variant_severity: _.isEmpty(severityData) ? undefined : severityData,
-                    Variant_class: _.isEmpty(variantClassData) ? undefined : variantClassData,
                     Variant_frequency_as_text: _.isEmpty(variantFrequencyData) ? undefined : variantFrequencyData,
                 };
-
+                this.selectedFiltersPanel.updateFilter(this.data.categoryVariantInfoFilters);
                 this.updateDisabledButton();
-                
-                this.filterContainerPanel.updateFilter(this.data.categoryVariantInfoFilters);
-                
-                // this.$el.find('#selected-filters').html(this.filterPartialTemplate({filters: {
-                //         categoryVariantInfoFilters: this.data.categoryVariantInfoFilters
-                //     }
-                // }));
-                console.debug("End update genomic filter", this.data.categoryVariantInfoFilters);
             },
             createUniqueId: function(obj){
                 let uniqueId = '';
@@ -343,10 +312,9 @@ define(['jquery', 'backbone','handlebars',
                     this.$el.html(this.template(this.data));
                     this.geneSearchPanel.$el = $('#gene-search-container');
                     this.consequenceSearchPanel.$el = $('#consequence-search-container');
-                    this.filterContainerPanel.$el = $('#selected-genomic-filters');
+                    this.selectedFiltersPanel.$el = $('#selected-filters');
                     this.geneSearchPanel.render();
                     this.consequenceSearchPanel.render();
-                    this.filterContainerPanel.render();
                     this.previousFilter && this.reapplyGenomicFilters();
                     this.updateDisabledButton();
                     this.createTabIndex();

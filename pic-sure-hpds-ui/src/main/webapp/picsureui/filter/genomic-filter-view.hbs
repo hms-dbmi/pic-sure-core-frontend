@@ -1,20 +1,18 @@
 <div id="genomic-filter-container" class="genomic-container">
-    <section>
-        <div id="gene-search-container"></div>
-        <div id="frequency-text" class="thrid-width">
-                {{> selection-panel heading="Variant frequency" searchContext="Select variant frequency of interest" options=frequencyOptions description=frequencyDescription }}
+    <section class="space-even">
+        <div id="gene-search-container" class="two-thirds-width"></div>
+        <div id="frequency-text" class="align-top thrid-width">
+            {{> selection-panel heading="Variant frequency" searchContext="Select variant frequency" options=frequencyOptions description=frequencyDescription }}
         </div>
     </section>
-    <section>
-        <div id="consequence-search-container"></div>
-        <div id="selected-genomic-filters"></div>
+    <section class="space-even">
+        <div id="consequence-search-container" class="half-width"></div>
+        <div id="selected-filters" class="half-width"></div>
     </section>
-    <section id="filters" class="space-out">
-        <div class="push-left-and-down">
-            <button id="cancel-genomic-filters" class="btn-small btn btn-default tabable">Cancel</button>
-            <span id="apply-genomic-filters-tooltip" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Please select at least one Gene with Variant.">
-                <button id="apply-genomic-filters" class="btn-small btn btn-primary tabable">Apply genomic filter</button>
-            </span>
-        </div>
-    </section>
+    <div class="push-left-and-down">
+        <button id="cancel-genomic-filters" class="btn-small btn btn-default tabable">Cancel</button>
+        <span id="apply-genomic-filters-tooltip" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Please select at least one Gene with Variant.">
+            <button id="apply-genomic-filters" class="btn-small btn btn-primary tabable">Apply genomic filter</button>
+        </span>
+    </div>
 </div>

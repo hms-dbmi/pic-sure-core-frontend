@@ -1,54 +1,57 @@
 <div class="panel panel-default no-padding" aria-label="{{description}}">
     <div class="panel-heading space-out panel-extra-large">
-        <h4 class="panel-title">{{searchContext}}</h4>
+        <h4 class="panel-title">{{title}}</h4>
         {{#if clearButton}}
-        <button id="clear-btn" class="btn btn-default">Clear</button>
+        <button id="selected-genomic-clear-btn" tabindex="0" class="btn btn-default tabable">Clear</button>
         {{/if}}
     </div>
     <div class="panel-body">
         <div class="filter-section">
-            <span>Gene with variant: </span>
-            <span id="selectedVariant" class="selected-items">
+            <span class="p-b-8">Gene with variant: </span>
+            <br>
+            <div id="selectedVariant" class="selected-items">
                 {{#each selectedVariants}}
                 <span class="selected-item">
                     {{#if @last}}
                         {{this}}
                     {{else}}
-                        {{this}} OR 
+                        {{this}} <strong class="filter-or">OR</strong>  
                     {{/if}}
                 </span>
                 {{/each}}
-            </span>
+            </div>
         </div>
         <div class="and">AND</div>
         <div class="filter-section">
-            <span>Variant frequency: </span>
-            <span id="selectedFrequency" class="selected-items">
+            <span class="p-b-8">Variant frequency: </span>
+            <br>
+            <div id="selectedFrequency" class="selected-items">
                 {{#each selectedFrequencies}}
                 <span class="selected-item">
                     {{#if @last}}
                         {{this}}
                     {{else}}
-                        {{this}} OR 
+                        {{this}} <strong class="filter-or">OR</strong> 
                     {{/if}}
                 </span>
                 {{/each}}
-            </span>
+            </div>
         </div>
         <div class="and">AND</div>
         <div class="filter-section">
-            <span>Consequence Group by severity: </span>
-            <span id="selectedConsequence" class="selected-items">
+            <span class="p-b-8">Consequence Group by severity: </span>
+            <br>
+            <div id="selectedConsequence" class="selected-items">
                 {{#each selectedConsequences}}
                 <span class="selected-item">
                     {{#if @last}}
                         {{this}}
                     {{else}}
-                        {{this}} OR 
+                        {{this}} <strong class="filter-or">OR</strong>  
                     {{/if}}
                 </span>
                 {{/each}}
-            </span>
+            </div>
         </div>
     </div>
 </div>
