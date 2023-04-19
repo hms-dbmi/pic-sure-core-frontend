@@ -71,7 +71,7 @@ define(['jquery', 'backbone','handlebars',
                 const geneList = parsedVariantData.genes;
                 const consequencesList = parsedVariantData.consequences;
                 this.data.frequencyOptions = ['Rare', 'Common'];
-                this.dataForGeneSearch = {
+                const dataForGeneSearch = {
                     heading: 'Gene with Variant',
                     results: geneList,
                     searchContext: 'Select genes of interest',
@@ -79,27 +79,32 @@ define(['jquery', 'backbone','handlebars',
                     placeholderText: 'The list of genes below is a sub-set, try typing other gene names (Ex. CHD8)',
                     description: this.data.geneDesc,
                     sample: true,
-                    isRequired: true
+                    isRequired: true,
                 }
-                this.dataForConsequenceSearch = {
+                const dataForConsequenceSearch = {
                     title: 'Variant consequence calculated',
                     tree: consequencesList,
                     ignoreParent: true, 
-                    description: this.data.consequenceDesc
+                    description: this.data.consequenceDesc,
                 };
+                const dataForSelectedFitlers = {
+                    title: 'Selected Genomic Filters', 
+                    clearButton: true, 
+                    clearAction: this.clearGenomicFilters.bind(this),
+                }
                 // If editing a previous filter, then repopulate the form.
                 if (this.data.currentFilter) {
                     if (this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Gene_with_variant) {
-                        this.dataForGeneSearch.searchResults = [...this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Gene_with_variant];
+                        dataForGeneSearch.searchResults = [...this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Gene_with_variant];
                     }
                     if (this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated) {
-                        this.dataForConsequenceSearch.searchResults = [...this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated];
+                        dataForConsequenceSearch.searchResults = [...this.data.currentFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_consequence_calculated];
                     }
                     this.previousFilter = this.data.currentFilter;
                 }
-                this.geneSearchPanel = new searchPanel(this.dataForGeneSearch);
-                this.consequenceSearchPanel = new treeSelect(this.dataForConsequenceSearch);
-                this.selectedFiltersPanel = new selectedGenomicFilters({title: 'Selected Genomic Filters', clearButton: true, clearAction: this.clearGenomicFilters.bind(this)});
+                this.geneSearchPanel = new searchPanel(dataForGeneSearch);
+                this.consequenceSearchPanel = new treeSelect(dataForConsequenceSearch);
+                this.selectedFiltersPanel = new selectedGenomicFilters(dataForSelectedFitlers);
             },
             applyGenomicFilters: function(){
                 if (overrides && overrides.applyGenomicFilters) {
@@ -117,6 +122,7 @@ define(['jquery', 'backbone','handlebars',
             clearGenomicFilters: function(){
                 this.geneSearchPanel.reset();
                 this.consequenceSearchPanel.reset();
+                this.selectedFiltersPanel.clearLists();
                 this.$el.find('input[type="checkbox"]').prop('checked', false);
                 this.data.filters = {};
                 this.$el.find('#apply-genomic-filters').prop('disabled', true);
@@ -151,21 +157,6 @@ define(['jquery', 'backbone','handlebars',
             reapplyGenomicFilters: function(){
                 if (this.previousFilter) {
                     this.previousUniqueId = this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.__uniqueid;
-                    if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_severity) {
-                        $('#severity input[type="checkbox"]').each((i, checkbox)  => {
-                            if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_severity.includes(checkbox.value.toUpperCase())) {
-                                checkbox.checked = true;
-                            }
-                        });               
-                    }
-                    if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_class) {
-                        $('#variant-class input[type="checkbox"]').each((i,checkbox)  => {
-                            let value = checkbox.value === 'SNV' ? checkbox.value.toUpperCase() : checkbox.value.toLowerCase();
-                            if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_class.includes(value)) {
-                                checkbox.checked = true;
-                            }
-                        });               
-                    }
                     if (this.previousFilter.variantInfoFilters.categoryVariantInfoFilters.Variant_frequency_as_text) {
                         $('#frequency-text input[type="checkbox"]').each((i, checkbox)  => {
                             let value = checkbox.value.substr(0,1).toUpperCase() + checkbox.value.substr(1).toLowerCase();
@@ -197,25 +188,8 @@ define(['jquery', 'backbone','handlebars',
             updateGenomicFilter: function(){
                 const geneData = this.geneSearchPanel.data.selectedResults;
                 const conData = this.consequenceSearchPanel.data.selectedResults;
-                const severity = this.$el.find('#severity input[type="checkbox"]:checked');
-                const variantClass = this.$el.find('#variant-class input[type="checkbox"]:checked');
                 const variantFrequencyText = this.$el.find('#frequency-text input[type="checkbox"]:checked');
-                let severityData = [];
-                let variantClassData = [];
                 let variantFrequencyData = [];
-                if (severity.length > 0) {
-                    severity.each(function(i, el){
-                        severityData.push($(el).val().toUpperCase());
-                    });
-                }
-                if (variantClass.length > 0) {
-                    variantClass.each(function(i, el){
-                        let elVal = $(el).val();
-                        if (elVal !== 'SNV')
-                            elVal = elVal.toLowerCase();
-                        variantClassData.push(elVal);
-                    });
-                }
                 if (variantFrequencyText.length > 0) {
                     variantFrequencyText.each(function(i, el){
                         $(el).val() && variantFrequencyData.push($(el).val().substr(0,1).toUpperCase() + $(el).val().substr(1).toLowerCase());
@@ -265,7 +239,6 @@ define(['jquery', 'backbone','handlebars',
                 $(e.target).find('.' + SELECTED).removeClass(SELECTED);
             },
             navigateUp: function(e) {
-                console.debug('navigateUp', e);
                 let selectionItems = e.target.querySelectorAll('.' + LIST_ITEM);
                 let selectedItem = $(selectionItems).filter('.' + SELECTED);
                 if ($(selectedItem).length <= 0) {
@@ -283,7 +256,6 @@ define(['jquery', 'backbone','handlebars',
                 }
             },
             navigateDown: function(e) {
-                console.debug('navigateDown', e);
                 let selectionItems = e.target.querySelectorAll('.' + LIST_ITEM);
                 let selectedItem = $(selectionItems).filter('.' + SELECTED);
                 if ($(selectedItem).length <= 0) {
@@ -302,7 +274,6 @@ define(['jquery', 'backbone','handlebars',
                 }
             },
             clickItem: function(e) {
-                console.debug(e.target);
                 let selectedItem = e.target.querySelector('.' + SELECTED);
                 selectedItem && selectedItem.click();
             },
