@@ -4,7 +4,7 @@ define([
     'text!common/pic-sure-dialog-view.hbs',
     'common/modal'
 ], function(BB, HBS, dialog, modal) {
-    var PicsureDialog = BB.View.extend({
+    let PicsureDialog = BB.View.extend({
         initialize: function(opts){
             this.opts = opts;
             this.template = HBS.compile(dialog);
