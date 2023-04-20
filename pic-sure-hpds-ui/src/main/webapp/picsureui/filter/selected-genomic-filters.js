@@ -23,18 +23,6 @@ define([
             this.selectedConsequences = [];
             this.render();
         },
-        addVariant: function(variant){
-            this.selectedVariants.push(variant);
-            this.render();
-        },
-        addFrequency: function(frequency){
-            this.selectedFrequencies.push(frequency);
-            this.render();
-        },
-        addConsequence: function(consequence){
-            this.selectedConsequences.push(consequence);
-            this.render();
-        },
         updateFilter: function(filter){
             this.selectedVariants = filter.Gene_with_variant;
             this.selectedFrequencies = filter.Variant_frequency_as_text;
