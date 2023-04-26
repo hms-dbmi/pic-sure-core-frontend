@@ -42,16 +42,16 @@ define([
 		},
         deactivateUser: function (event) {
 			try {
-				var user = this.model.get('selectedUser');
-				user.active = !user.active;
-				if (!user.subject) {
-					user.subject = null;
-				}
-				if (!user.roles) {
-					user.roles = [];
-				}
-				user.generalMetadata = JSON.stringify(user.generalMetadata);
 				notification.showConfirmationDialog(function () {
+					let user = this.model.get('selectedUser');
+					user.active = !user.active;
+					if (!user.subject) {
+						user.subject = null;
+					}
+					if (!user.roles) {
+						user.roles = [];
+					}
+					user.generalMetadata = JSON.stringify(user.generalMetadata);
 					userFunctions.createOrUpdateUser([user], 'PUT', function (response) {
 						this.render();
 					}.bind(this));

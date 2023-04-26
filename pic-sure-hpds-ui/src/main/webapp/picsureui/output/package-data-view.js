@@ -4,11 +4,11 @@ define([
     'jstree',
     'picSure/settings',
     'text!output/package-data-view.hbs',
-    'overrides/package-data-view',
     'output/tree',
     'common/spinner',
     'overrides/outputPanel',
-], function (BB, HBS, jstree, settings, view, overrides, tree, spinner, outputOverride,) {
+    'overrides/package-data-view',
+], function (BB, HBS, jstree, settings, view, tree, spinner, outputOverride, overrides,) {
     let triggerDownload = function (response) {
         const responseDataUrl = URL.createObjectURL(new Blob([response], { type: "octet/stream" }));
         $("#download-btn", this.$el).off('click');
@@ -17,7 +17,7 @@ define([
         // User already clicked, so we need to trigger the download
         $("#download-btn", this.$el)[0]?.click();
     }
-    let PicsureDialog = BB.View.extend({
+    return BB.View.extend({
         initialize: function (opts) {
             this.template = HBS.compile(view);
             this.model = opts.model;
@@ -36,7 +36,7 @@ define([
             document.getElementById('copy-queryid-btn').innerText = "Copied!";
         },
         downloadData: function(queryId){
-            if (overrides.downloadData) {
+            if (overrides && overrides.downloadData) {
                 overrides.downloadData(queryId);
                 return;
             }
@@ -57,7 +57,7 @@ define([
             })
         }.bind(this),
         prepare: function () {
-            if (overrides.prepare) {
+            if (overrides && overrides.prepare) {
                 overrides.prepare();
                 return;
             }
@@ -116,7 +116,7 @@ define([
             return query;
         },
         queryAsync: function (query, promise) {
-            if (overrides.queryAsync) {
+            if (overrides && overrides.queryAsync) {
                 overrides.queryAsync(query, promise);
                 return;
             }
@@ -164,7 +164,7 @@ define([
             }());
         },
         querySync: function (query) {
-            if (overrides.querySync) {
+            if (overrides && overrides.querySync) {
                 overrides.querySync(query);
                 return;
             }
@@ -189,7 +189,7 @@ define([
             );
         },
         updateEstimations: function (query) {
-            if (overrides.updateEstimations) {
+            if (overrides && overrides.updateEstimations) {
                 overrides.updateEstimations(query);
                 return;
             }
@@ -205,7 +205,7 @@ define([
             $('#estimated-data-points').text(this.model.get('totalPatients') * totalVariables + " Estimated Data Points");
         },
         updateQuery: function (query) {
-            if (overrides.updateQuery) {
+            if (overrides && overrides.updateQuery) {
                 overrides.updateQuery(query, this);
                 return;
             }
@@ -218,7 +218,7 @@ define([
                 .concat(_.keys(query.query.numericFilters)));
         },
         queryChangedCallback: function () {
-            if (overrides.queryChangedCallback) {
+            if (overrides && overrides.queryChangedCallback) {
                 overrides.queryChangedCallback(this);
                 return;
             }
@@ -253,7 +253,7 @@ define([
                                     data:tree,
                                 },
                                 "checkbox" : {
-                                    "keep_selected_style" : false
+                                    "keep_selected_style" : false,
                                 },
                                 "plugins":["checkbox"]
                             });
@@ -300,5 +300,4 @@ define([
             overrides.renderExt && overrides.renderExt(this);
         }
     });
-    return PicsureDialog;
 });

@@ -6,6 +6,7 @@
     --picsure-other: #90a8a4;
     --picsure-lite: #90a8a4;
     --picsure-dark: #333333;
+    --picsure-error: #FF0000;
 }
 
 .selected {
@@ -28,6 +29,51 @@
      background-color: rgb(223, 238, 255);
      border-radius: 4px;
 }
+
+/************************* Outline Buttons ******************************/
+.btn-outline {
+    border: 1px solid #e5e5e5;
+    background-color: transparent;
+    border-radius: 4px;
+}
+
+.btn-outline.danger:hover {
+    border: 1px solid var(--picsure-error);
+    background-color: var(--picsure-error);
+    color: white;
+}
+
+.btn-outline.danger {
+    border: 1px solid var(--picsure-error);
+    background-color: white;
+    color: var(--picsure-error);
+}
+
+.btn-outline.primary {
+    border: 1px solid var(--picsure-primary);
+    background-color: white;
+    color: var(--picsure-primary);
+}
+
+.btn-outline.primary:hover {
+    border: 1px solid var(--picsure-primary);
+    background-color: var(--picsure-primary);
+    color: white;
+}
+
+.btn-outline.secondary {
+    border: 1px solid var(--picsure-secondary);
+    background-color: white;
+    color: var(--picsure-secondary);
+}
+
+.btn-outline.secondary:hover {
+    border: 1px solid var(--picsure-secondary);
+    background-color: var(--picsure-secondary);
+    color: white;
+}
+/************************* End Outline Buttons ***************************/
+
 .query-builder-heading {
 	color: gray;
 }
@@ -515,12 +561,6 @@ body {
 
 .search-tooltip-help-icon {
     float: left;
-}
-
-#prepare-btn {
-    position: -webkit-sticky;
-    position: sticky;
-    bottom: 25px;
 }
 
 .anyvalueof-value-list {
