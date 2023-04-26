@@ -117,8 +117,7 @@ define([
         },
         queryAsync: function (query, promise) {
             if (overrides && overrides.queryAsync) {
-                overrides.queryAsync(query, promise);
-                return;
+                return overrides.queryAsync(query, promise);
             }
             /*
              * This will send a query to PICSURE to evaluate and execute; it will not return results.  Use downloadData to do that.
