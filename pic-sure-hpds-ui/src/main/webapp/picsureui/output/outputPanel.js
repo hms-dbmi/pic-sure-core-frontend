@@ -1,8 +1,8 @@
 define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars",
-		"overrides/outputPanel", "common/transportErrors", "common/config", "picSure/settings", "output/variantExplorer", "common/modal", "output/package-data-view"],
+		"overrides/outputPanel", "common/transportErrors", "common/config", "picSure/settings", "output/variantExplorer",
+		"common/modal", "filter/genomic-filter-view", "output/package-data-view"],
 		function($,  dataSelection, outputTemplate, ontology, BB, HBS,
-				 overrides, transportErrors, config,  settings, variantExplorer, modal, packageDataView){
-
+				 overrides, transportErrors, config,  settings, variantExplorer, modal, genomicFilterView, packageDataView){
 	var defaultModel = BB.Model.extend({
 		defaults: {
 			totalPatients : 0,
@@ -30,7 +30,8 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				});
 			},
 			events:{
-				"click #select-btn": "select"
+				"click #select-btn": "select",
+				"click #genomic-filter-btn": "openGenomicFilter",
 			},
 			select: function(event){
 				if(this.model.get("queryRan")){
@@ -101,6 +102,13 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 						}.bind(this)
 					});
 				}
+			},
+			openGenomicFilter: function(){
+				modal.displayModal(new genomicFilterView({el: $(".modal-body")}),
+								  'Genomic Filter', 
+								  () => { $('#genomic-filter-btn').focus(); },
+								  { isHandleTabs: true }
+				);
 			},
 			render: function(){
 				this.$el.html(this.template(this.model.toJSON()));

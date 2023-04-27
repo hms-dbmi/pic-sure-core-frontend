@@ -7,6 +7,7 @@
     --picsure-lite: #90a8a4;
     --picsure-dark: #333333;
     --picsure-error: #FF0000;
+    --picsure-blue: #337ab7;
 }
 
 .selected {
@@ -956,6 +957,7 @@ body {
 
 .selection-container {
     margin: 5px 0;
+    width: 100%;
     padding: 0 0 10px 0;
     overflow-wrap: anywhere;
 }
@@ -968,23 +970,62 @@ body {
     margin-left: 0px;
 }
 
+.selection-panel {
+    width: 100%;
+}
+
 input[type='checkbox'].categorical-filter-input {
     margin-right: 10px;
 }
 
 .select-box {
     width: 50%;
-    margin-left: 1px;
     padding-bottom: 15px;
+    height: 275px;
+    overflow: inherit;
+}
+
+.value-container {
+    padding: 2px;
+    overflow-y: auto;
+    height: calc(100% - 21px);
+}
+
+.value-container.selection-search-results {
+    padding-top: 3px;
+}
+
+.value-container.selections {
+    padding-top: 0px;
+}
+
+.select-box .results-header .panel-title {
+    margin-left: 2px;    
+}
+
+.select-box .btn-default {
+    padding: 5.5px 12px;
 }
 
 .select-box:not(:last-child) {
-    border-right: 1px solid #555555;
+    border-right: 1px solid #ddd;
 }
 
-.results-header {
-    margin: 1px;
+.results-header button {
+    margin: 2px 2px 0 0;
+    padding: 4.5px 10px;
 }
+
+.filter-section {
+    border: 1px solid black;
+    border-radius: 0.5em;
+    padding: 8px;
+    min-height: 75px;
+}
+
+/* .results-header {
+    border-bottom: 1px solid #ccc;
+} */
 
 .selection-container .panel-body {
     display: flex;
@@ -1027,6 +1068,122 @@ input[type='checkbox'].categorical-filter-input {
  #queryId-span {
     width: 276px;
  }
+/* Genomic Modal */
+
+.no-padding {
+    padding: 0px;
+}
+
+
+.half-width:not(:last-child) {
+    margin-right: auto;
+}
+
+.thrid-width {
+    width: 35%;
+}
+
+.half-width {
+    width: 48.5%;
+}
+
+.two-thirds-width {
+    width: 60%;
+}
+
+.align-top {
+    display: flex;
+    flex-direction: column;
+    align-self: baseline;
+}
+
+.genomic-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: left;
+    margin-bottom: 10px;
+}
+
+#selected-filters {
+    height: 400px;
+}
+
+#selected-filters .panel-body {
+    height: 83%;
+    overflow-y: scroll;
+}
+
+.selected-items {
+    padding-left: 16px;
+}
+
+.and {
+    font-weight: 600;
+    padding-left: 16px;
+}
+
+.filter-container span {
+    font-weight: 600;
+}
+
+.filter-container .filter {
+    max-width: 95%;
+    word-break: break-word;
+    hyphens: none;
+}
+
+.filter-or {
+    color: var(--picsure-dark);
+}
+
+.space-out {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.space-out i.fa-question-circle {
+    color: var(--picsure-blue);
+    font-weight: bold;
+}
+
+.space-even {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.space-even section:not(:last-child) {
+    margin-right: auto;
+}
+
+.take-space {
+    flex: 1 0 auto;
+    margin-right: 20px;
+    max-width: 74%;
+}
+
+.push-left-and-down {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-self: flex-end;
+    margin-bottom: 18px;
+}
+
+.push-left-and-down button {
+    margin-left: 10px;
+}
+
+/* ==== END Genomic Modal ==== */
+
+
+.panel-extra-large {
+    padding: 17.5px 15px;
+}
 
 /* ==== Tree Select Panel ==== */
 
@@ -1034,9 +1191,15 @@ input[type='checkbox'].categorical-filter-input {
     margin: 5px 0;
     padding: 0 0 10px 0;
     overflow-wrap: anywhere;
-    max-width: fit-content;
+    min-width: fit-content;
+    height: 400px;
 }
 
-.tree-select-container .jstree-checkbox {
-    
+.tree-select-container .panel-body {
+    height: 90%;
+    overflow-y: scroll;
+}
+
+.tree-select-container .panel-body .jstree-themeicon {
+    display: none;
 }
