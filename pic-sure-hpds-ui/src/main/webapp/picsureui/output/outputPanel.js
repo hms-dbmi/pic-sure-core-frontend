@@ -36,7 +36,7 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 			select: function(event){
 				if(this.model.get("queryRan")){
 					modal.displayModal(
-						new packageDataView({model: this.model, query: JSON.parse(JSON.stringify(this.model.baseQuery))}), 
+						new packageDataView({model: this.model, query: JSON.parse(JSON.stringify(this.model.baseQuery)), modal: modal}), 
 						"Select Data for Export", 
 						()=>{$('#select-btn').focus();}, 
 						{isHandleTabs: true}

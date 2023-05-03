@@ -21,6 +21,7 @@ define([
         initialize: function (opts) {
             this.template = HBS.compile(view);
             this.model = opts.model;
+            this.modal = opts.modal;
             this.settings = settings;
             this.selectedFields = [];
             this.updateQuery(opts.query);
@@ -29,7 +30,6 @@ define([
         events: {
             "click #prepare-btn": "prepare",
             "click #copy-queryid-btn" : "copyQueryId",
-            "change": "updateEstimations",
         },
         copyQueryId: function () {
             navigator.clipboard.writeText(document.getElementById('queryid-span').value);
