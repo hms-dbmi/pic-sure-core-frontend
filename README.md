@@ -13,10 +13,10 @@ The pic-sure-hpds-ui module contains the core user interface components for the 
 
 #### Features include:
 
-Search and filter functionality for dataset variables
-Query builder for creating complex queries using logical operators
-Visualization of query results as tables, charts, and other graphical representations
-Export of query results in various formats, such as CSV, JSON, or XML
+- Search and filter functionality for dataset variables
+- Query builder for creating complex queries using logical operators
+- Visualization of query results as tables, charts, and other graphical representations
+- Export of query results in various formats, such as CSV, JSON, or XML
 
 ### 2. pic-sure-hpds-ui-extension-archetype
 The pic-sure-hpds-ui-extension-archetype module provides a template for creating custom extensions to the PIC-SURE HPDS UI. These extensions can be used to add new features, modify existing ones, or integrate with external services and applications.
@@ -25,18 +25,18 @@ By using this module, developers can create a custom extension with the necessar
 
 #### Features include:
 
-Pre-configured project structure with required dependencies
-Sample code for creating custom UI components and services
-Documentation and guidelines for developing and integrating custom extensions
+- Pre-configured project structure with required dependencies
+- Sample code for creating custom UI components and services
+- Documentation and guidelines for developing and integrating custom extensions
 
 ### 3. pic-sure-hpds-ui-libs
 The pic-sure-hpds-ui-libs module contains a collection of utility libraries and services that are used throughout the PIC-SURE HPDS UI. These libraries handle common tasks, such as communication with the PIC-SURE API, parsing and formatting data, and managing user authentication and authorization.
 
 #### Features include:
 
-Helper functions for interacting with the PIC-SURE API
-Data formatting and parsing utilities
-Authentication and authorization services
+- Helper functions for interacting with the PIC-SURE API
+- Data formatting and parsing utilities
+- Authentication and authorization services
 
 ## Getting Started
 WIP
