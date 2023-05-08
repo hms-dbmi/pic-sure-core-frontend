@@ -5,7 +5,7 @@ Welcome to the PIC-SURE HPDS UI repository! This repository contains the source 
 
 The PIC-SURE HPDS UI is designed to provide an intuitive, easy-to-use interface for researchers, enabling them to explore and analyze large-scale biomedical datasets without requiring extensive programming knowledge.
 
-This README provides an overview of the main modules included in this repository.
+This README provides an overview of the modules included in this repository.
 
 ## Modules
 ### 1. pic-sure-hpds-ui
