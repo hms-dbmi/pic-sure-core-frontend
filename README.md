@@ -46,9 +46,6 @@ This will create a new project with the specified group ID, artifact ID, and ver
 ### 3. pic-sure-hpds-ui-libs
 The pic-sure-hpds-ui-libs module contains a collection of utility libraries and services that are used throughout the PIC-SURE HPDS UI. These libraries handle common tasks, such as communication with the PIC-SURE API, parsing and formatting data, and managing user authentication and authorization.
 
-## Getting Started
-WIP
-
 ## Contributing
 We welcome contributions to the PIC-SURE HPDS UI project. Please refer to the [CONTRIBUTING](https://github.com/hms-dbmi/pic-sure-all-in-one/blob/master/CONTRIBUTING.md) file for guidelines on how to contribute, submit issues, and propose improvements.
 
