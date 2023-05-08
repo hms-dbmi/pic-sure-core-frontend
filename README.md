@@ -32,12 +32,6 @@ By using this module, developers can create a custom extension with the necessar
 ### 3. pic-sure-hpds-ui-libs
 The pic-sure-hpds-ui-libs module contains a collection of utility libraries and services that are used throughout the PIC-SURE HPDS UI. These libraries handle common tasks, such as communication with the PIC-SURE API, parsing and formatting data, and managing user authentication and authorization.
 
-#### Features include:
-
-- Helper functions for interacting with the PIC-SURE API
-- Data formatting and parsing utilities
-- Authentication and authorization services
-
 ## Getting Started
 WIP
 
