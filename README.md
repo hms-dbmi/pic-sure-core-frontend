@@ -23,6 +23,20 @@ The pic-sure-hpds-ui-extension-archetype module provides a template for creating
 
 By using this module, developers can create a custom extension with the necessary structure and dependencies, allowing them to focus on implementing their desired functionality.
 
+#### How to use the archetype
+To create a new custom extension, run the following command:
+
+```
+mvn archetype:generate -DarchetypeGroupId=edu.harvard.hms.dbmi.avillach \
+-DarchetypeArtifactId=pic-sure-hpds-ui-extension-archetype \
+-DarchetypeVersion=1.0.0-SNAPSHOT \
+-DgroupId=<your-group-id> \
+-DartifactId=<your-artifact-id> \
+-Dversion=<your-version>
+```
+
+This will create a new project with the specified group ID, artifact ID, and version number. The project will be pre-configured with the necessary dependencies and project structure for creating a custom extension.
+
 #### Features include:
 
 - Pre-configured project structure with required dependencies
