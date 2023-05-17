@@ -1,5 +1,6 @@
-define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList", "filter/searchHelpTooltipView", "common/modal"],
-		function($, HBS, queryBuilder, filter, ontology, overrides, helpView, modal){
+define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList", "filter/searchHelpTooltipView", "common/modal",
+	"underscore"],
+		function($, HBS, queryBuilder, filter, ontology, overrides, helpView, modal, _){
 
 	var defaultRenderHelpCallback = function(filterView) {
         ontology.getInstance().allInfoColumnsLoaded.then(function(){
