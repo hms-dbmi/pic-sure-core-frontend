@@ -2,12 +2,12 @@ require.config({
 	baseUrl: "/picsureui",
 	urlArgs: "",
 	paths: {
-		jquery: 'webjars/jquery/3.6.1/jquery.min',
+		jquery: 'webjars/jquery/3.6.2/jquery.min',
 		autocomplete: 'webjars/devbridge-autocomplete/1.4.7/dist/jquery.autocomplete',
-		underscore: 'webjars/underscore/1.13.2/underscore-min',
-		bootstrap: 'webjars/bootstrap/5.2.3/js/bootstrap.min',
-		bootstrapStyles: 'webjars/bootstrap/5.2.3/css/bootstrap.min.css',
-		backbone: 'webjars/backbonejs/1.3.3/backbone-min',
+		underscore: 'webjars/underscore/1.13.6/underscore-min',
+		bootstrap: 'webjars/bootstrap/3.4.1/js/bootstrap.min',
+		bootstrapStyles: 'webjars/bootstrap/3.4.1/css/bootstrap.min.css',
+		backbone: 'webjars/backbone/1.4.1/backbone-min',
 		text: 'webjars/requirejs-text/2.0.15/text',
 		handlebars: 'webjars/handlebars/4.7.7/handlebars.min',
 		treeview: 'webjars/bootstrap-treeview/1.2.0/bootstrap-treeview.min',
@@ -50,7 +50,10 @@ require.config({
 		"auth0-js": {
             deps:["jquery"],
             exports: "Auth0"
-        }
+        },
+		"backbone": {
+			deps: ["jquery", "underscore"]
+		}
 	}
 });
 
