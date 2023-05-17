@@ -1,4 +1,4 @@
-define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList", "filter/searchHelpTooltipView", "common/modal",
+define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList", "filter/searchHelpTooltipView", "common/modal",
 	"underscore"],
 		function($, HBS, queryBuilder, filter, ontology, overrides, helpView, modal, _){
 
