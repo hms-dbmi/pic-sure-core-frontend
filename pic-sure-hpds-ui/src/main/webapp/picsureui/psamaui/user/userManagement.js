@@ -1,4 +1,4 @@
-define(["backbone", "underscore", "handlebars", "user/addUser", "text!user/userManagement.hbs",
+define(["backbone", "handlebars", "underscore", "user/addUser", "text!user/userManagement.hbs",
 	"user/userDetails", "text!user/userTable.hbs", "picSure/userFunctions", "picSure/picsureFunctions", "util/notification",
 	"common/modal"],
 	function(BB, HBS,  _, AddUserView, template, userDetailsView,
