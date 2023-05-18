@@ -1,4 +1,4 @@
-define(['search-interface/filter-model',], function(filterModel){
+define([], function(){
 	return {
         /*
          * Override how the genomic filters are applied and the modal is closed.
