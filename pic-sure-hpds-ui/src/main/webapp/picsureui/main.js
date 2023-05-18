@@ -4,7 +4,7 @@ require.config({
 	paths: {
 		jquery: 'webjars/jquery/3.6.2/jquery.min',
 		autocomplete: 'webjars/devbridge-autocomplete/1.4.7/dist/jquery.autocomplete',
-		underscore: 'webjars/underscore/1.13.6/underscore-umd-min',
+		underscore: 'webjars/underscore/1.13.6/underscore-min',
 		bootstrap: 'webjars/bootstrap/3.4.1/js/bootstrap.min',
 		bootstrapStyles: 'webjars/bootstrap/3.4.1/css/bootstrap.min.css',
 		backbone: 'webjars/backbone/1.4.1/backbone-min',
