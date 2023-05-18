@@ -1,4 +1,4 @@
-define(['jquery', 'backbone','handlebars', 
+define(['jquery', 'backbone','handlebars', "underscore",
 'overrides/genomic-filter-view',
 'text!filter/genomic-filter-view.hbs', 
 'common/selection-search-panel-view', 
@@ -8,7 +8,7 @@ define(['jquery', 'backbone','handlebars',
 'picSure/ontology', "common/spinner",
 'common/keyboard-nav', 'common/tree-select',
 'filter/selected-genomic-filters'],
-    function($, BB, HBS, overrides, genomicView, searchPanel, selectionPanel, filterContainer, variantDataJson, ontology, spinner, keyboardNav, treeSelect, selectedGenomicFilters) {
+    function($, BB, HBS, _, overrides, genomicView, searchPanel, selectionPanel, filterContainer, variantDataJson, ontology, spinner, keyboardNav, treeSelect, selectedGenomicFilters) {
         const geneKey = 'Gene_with_variant';
         const consequenceKey = 'Variant_consequence_calculated';
         const severityKey = 'Variant_severity';
