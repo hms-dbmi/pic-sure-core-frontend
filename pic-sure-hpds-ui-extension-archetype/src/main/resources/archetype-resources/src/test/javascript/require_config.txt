@@ -2,7 +2,7 @@
 	paths: {
 		jquery: '../webjars/jquery/3.6.2/dist/jquery.min',
 		autocomplete: '../webjars/devbridge-autocomplete/1.4.7/dist/jquery.autocomplete',
-		underscore: '../webjars/underscore/underscore-min',
+		underscore: '../webjars/underscore/1.13.6/underscore-min',
 		handlebars: '../webjars/handlebars/4.7.7/handlebars.min',
 		bootstrap: '../webjars/bootstrap/3.4.1/js/bootstrap.min',
 		bootstrapStyles: '../webjars/bootstrap/3.4.1/css/bootstrap.min.css',
