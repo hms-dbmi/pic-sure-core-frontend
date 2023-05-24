@@ -6,6 +6,7 @@
     --picsure-other: #90a8a4;
     --picsure-lite: #90a8a4;
     --picsure-dark: #333333;
+    --picsure-error: #FF0000;
     --picsure-blue: #337ab7;
 }
 
@@ -29,6 +30,51 @@
      background-color: rgb(223, 238, 255);
      border-radius: 4px;
 }
+
+/************************* Outline Buttons ******************************/
+.btn-outline {
+    border: 1px solid #e5e5e5;
+    background-color: transparent;
+    border-radius: 4px;
+}
+
+.btn-outline.danger:hover {
+    border: 1px solid var(--picsure-error);
+    background-color: var(--picsure-error);
+    color: white;
+}
+
+.btn-outline.danger {
+    border: 1px solid var(--picsure-error);
+    background-color: white;
+    color: var(--picsure-error);
+}
+
+.btn-outline.primary {
+    border: 1px solid var(--picsure-primary);
+    background-color: white;
+    color: var(--picsure-primary);
+}
+
+.btn-outline.primary:hover {
+    border: 1px solid var(--picsure-primary);
+    background-color: var(--picsure-primary);
+    color: white;
+}
+
+.btn-outline.secondary {
+    border: 1px solid var(--picsure-secondary);
+    background-color: white;
+    color: var(--picsure-secondary);
+}
+
+.btn-outline.secondary:hover {
+    border: 1px solid var(--picsure-secondary);
+    background-color: var(--picsure-secondary);
+    color: white;
+}
+/************************* End Outline Buttons ***************************/
+
 .query-builder-heading {
 	color: gray;
 }
@@ -518,12 +564,6 @@ body {
     float: left;
 }
 
-#prepare-btn {
-    position: -webkit-sticky;
-    position: sticky;
-    bottom: 25px;
-}
-
 .anyvalueof-value-list {
     max-height: 300px;
     overflow: auto;
@@ -561,11 +601,7 @@ body {
 }
 
 .results-div {
-    position: sticky;
-    bottom: 25px;
-    padding: 5px;
-    padding-bottom: 25px;
-    background-color: #f4f4f6;
+
 }
 .numeric-label {
 	padding-top: 10px;
@@ -998,6 +1034,40 @@ input[type='checkbox'].categorical-filter-input {
 
 /* ==== END Selection Search Panel ==== */
 
+/* ==== Package Data Modal ==== */
+
+#package-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+ #package-data #data-summary {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid var(--picsure-other);
+    border-radius: 10px;
+ }
+ #package-data #data-summary span {
+    padding: 0 5px;
+ }
+
+ #package-data #concept-tree {
+    max-width: 70vw;
+ }
+
+ #package-data 
+ #resource-id-display {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+ }
+ #queryId-span {
+    width: 276px;
+ }
 /* Genomic Modal */
 
 .no-padding {

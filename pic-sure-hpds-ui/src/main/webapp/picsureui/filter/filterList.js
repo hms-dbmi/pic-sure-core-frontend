@@ -8,7 +8,8 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
             	HBS.registerHelper('eq', function(arg1, arg2, options) {
             	    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
             	});
-				modal.displayModal(new helpView(), "Instructions",  ()=>{
+				const infoColumns = ontology.getInstance().allInfoColumns();
+				modal.displayModal(new helpView({infoColumns: infoColumns}), "Instructions",  ()=>{
 					$('.show-help-modal').focus();
 				}, {isHandleTabs: true});
             });
