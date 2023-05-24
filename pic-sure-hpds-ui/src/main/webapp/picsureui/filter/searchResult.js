@@ -1,5 +1,5 @@
-define(["jquery", "backbone", "handlebars", "text!filter/searchResult.hbs", "picSure/search", "picSure/settings", "treeview"],
-    function($, BB, HBS, searchResultTemplate, search, settings){
+define(["jquery", "backbone", "underscore", "handlebars", "text!filter/searchResult.hbs", "picSure/search", "picSure/settings", "treeview"],
+    function($, BB, _, HBS, searchResultTemplate, search, settings){
         var searchResultModel = BB.Model.extend({
 
         });

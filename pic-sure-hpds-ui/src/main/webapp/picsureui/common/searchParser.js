@@ -1,4 +1,4 @@
-define([], function(){
+define(["underscore"], function(_){
 	var parseQueryString = function(){
 
 		var queryString = location.search.length==0 ? location.hash.substring(1).split("&") : location.search.substring(1).split("&");

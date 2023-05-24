@@ -1,5 +1,5 @@
-define(["backbone", "handlebars", "user/connections", "picSure/userFunctions", "picSure/picsureFunctions", "text!user/addUser.hbs", "text!user/addUserConnectionForm.hbs", "util/notification"],
-		function(BB, HBS, connections, userFunctions, picsureFunctions, template, connectionTemplate, notification){
+define(["backbone", "underscore", "handlebars", "user/connections", "picSure/userFunctions", "picSure/picsureFunctions", "text!user/addUser.hbs", "text!user/addUserConnectionForm.hbs", "util/notification"],
+		function(BB, _, HBS, connections, userFunctions, picsureFunctions, template, connectionTemplate, notification){
 	let view = BB.View.extend({
 		initialize: function(opts) {
 			this.connectionTemplate = HBS.compile(connectionTemplate);

@@ -1,5 +1,5 @@
-define(['jquery', 'auth0-js', 'handlebars', 'text!login/loginButtons.hbs'], 
-function($, auth0, HBS, buttonsTemplate) {
+define(['jquery', "underscore", 'auth0-js', 'handlebars', 'text!login/loginButtons.hbs'],
+function($, _, auth0, HBS, buttonsTemplate) {
 	return{
 		showLockButtons: function (connections, oauthOptions){
 			/*

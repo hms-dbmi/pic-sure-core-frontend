@@ -1,8 +1,8 @@
-define(["jquery", "backbone","handlebars", "text!header/header.hbs", "overrides/header", "picSure/settings",
+define(["jquery", "backbone", "underscore", "handlebars", "text!header/header.hbs", "overrides/header", "picSure/settings",
         "common/transportErrors", "common/modal", "header/userProfile",
         "util/notification", "psamaui/overrides/userProfile", "picSure/userFunctions","common/pic-dropdown", 
         "common/menu-nav-controls","common/keyboard-nav", "picSure/applicationFunctions"],
-		function($, BB, HBS, template, overrides, settings,
+		function($, BB, _, HBS, template, overrides, settings,
                  transportErrors, modal, userProfile,
                  notification, profileOverride, userFunctions, dropdown,
                  menuNavControls, keyboardNav, applicationFunctions){
