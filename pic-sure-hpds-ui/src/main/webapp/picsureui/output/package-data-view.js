@@ -1,6 +1,7 @@
 define([
     'backbone',
     'handlebars',
+    'underscore',
     'jstree',
     'picSure/settings',
     'text!output/package-data-view.hbs',
@@ -8,7 +9,7 @@ define([
     'common/spinner',
     'overrides/outputPanel',
     'overrides/package-data-view',
-], function (BB, HBS, jstree, settings, view, tree, spinner, outputOverride, overrides,) {
+], function (BB, HBS, _, jstree, settings, view, tree, spinner, outputOverride, overrides,) {
     let triggerDownload = function (response) {
         const responseDataUrl = URL.createObjectURL(new Blob([response], { type: "octet/stream" }));
         $("#download-btn", this.$el).off('click');
