@@ -1,10 +1,11 @@
 define([
     'backbone',
     'handlebars',
+	'underscore',
     'text!user/userDetails.hbs',
     'util/notification',
     'picSure/userFunctions',
-], function(BB, HBS, userTemplate, notification, userFunctions) {
+], function(BB, HBS, _, userTemplate, notification, userFunctions) {
     let userDetailsView = BB.View.extend({
         initialize: function(opts){
 			this.model = opts.model || new BB.Model();
