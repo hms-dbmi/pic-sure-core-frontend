@@ -1,12 +1,12 @@
 define(['jquery',
         'backbone',
-        'handlebars', 
+        'handlebars',
+        'underscore',
         'text!common/selection-search-panel.hbs', 
         'common/keyboard-nav',
     ],
-    function($, BB, HBS, 
-            searchPanelTemplate, 
-            keyboardNav,
+    function($, BB, HBS,
+             _, searchPanelTemplate, keyboardNav,
     ) {
         const LIST_ITEM = 'list-item';
         const SELECTED = 'selected';

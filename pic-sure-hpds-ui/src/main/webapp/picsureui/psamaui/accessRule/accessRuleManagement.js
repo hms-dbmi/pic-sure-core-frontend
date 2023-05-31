@@ -1,7 +1,7 @@
-define(["backbone","handlebars",  "accessRule/addAccessRule", "text!accessRule/accessRuleManagement.hbs",
+define(["backbone","handlebars", 'underscore', "accessRule/addAccessRule", "text!accessRule/accessRuleManagement.hbs",
 		"text!accessRule/accessRuleMenu.hbs", "text!accessRule/accessRuleTable.hbs", "text!options/modal.hbs",
 		"picSure/accessRuleFunctions", "util/notification","picSure/applicationFunctions"],
-		function(BB, HBS, AddAccessRuleView, template, accessRuleMenuTemplate,
+		function(BB, HBS, _, AddAccessRuleView, template, accessRuleMenuTemplate,
 				 accessRuleTableTemplate, modalTemplate, accessRuleFunctions,
 				 notification, applicationFunctions){
 	var accessRuleManagementModel = BB.Model.extend({

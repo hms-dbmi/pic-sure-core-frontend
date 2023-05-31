@@ -1,5 +1,5 @@
-define(["backbone","handlebars",  "application/addApplication", "text!application/applicationManagement.hbs", "text!application/applicationMenu.hbs", "text!application/applicationTable.hbs", "text!options/modal.hbs", "picSure/applicationFunctions", "util/notification", "header/header"],
-		function(BB, HBS, AddApplicationView, template, applicationMenuTemplate, applicationTableTemplate, modalTemplate, applicationFunctions, notification, header){
+define(["backbone","handlebars", 'underscore', "application/addApplication", "text!application/applicationManagement.hbs", "text!application/applicationMenu.hbs", "text!application/applicationTable.hbs", "text!options/modal.hbs", "picSure/applicationFunctions", "util/notification", "header/header"],
+		function(BB, HBS, _, AddApplicationView, template, applicationMenuTemplate, applicationTableTemplate, modalTemplate, applicationFunctions, notification, header){
 	var applicationManagementModel = BB.Model.extend({
 	});
 

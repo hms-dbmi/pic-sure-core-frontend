@@ -1,7 +1,7 @@
-define(["backbone","handlebars", "user/addUser", "text!user/userManagement.hbs",
+define(["backbone", "handlebars", "underscore", "user/addUser", "text!user/userManagement.hbs",
 	"user/userDetails", "text!user/userTable.hbs", "picSure/userFunctions", "picSure/picsureFunctions", "util/notification",
 	"common/modal"],
-	function(BB, HBS,  AddUserView, template, userDetailsView,
+	function(BB, HBS,  _, AddUserView, template, userDetailsView,
 			userTableTemplate, userFunctions, picsureFunctions, notification, modal){
 	var userManagementModel = BB.Model.extend({
 	});

@@ -1,12 +1,13 @@
 define([
     'backbone',
     'handlebars',
+    'underscore',
     'text!role/roleMenu.hbs',
     'picSure/roleFunctions',
     'util/notification',
     'picSure/applicationFunctions',
     'common/modal'
-], function(BB, HBS, template, roleFunctions, notification, applicationFunctions, modal) {
+], function(BB, HBS, _, template, roleFunctions, notification, applicationFunctions, modal) {
     let privilegeMenuView = BB.View.extend({
         initialize: function(opts){
             this.model = opts.model;

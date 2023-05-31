@@ -1,0 +1,24 @@
+<div class="panel panel-default no-padding" aria-label="{{description}}">
+    <div class="panel-heading space-out panel-extra-large">
+        <h4 class="panel-title">{{searchContext}}</h4>
+        {{#if clearButton}}
+        <button id="clear-btn" class="btn btn-default">Clear</button>
+        {{/if}}
+    </div>
+    <div class="panel-body">
+        <div class="filter-section">
+            <span>Gene with variant: </span>
+            <span id="selectedVariant" class="selected-items"></span>
+        </div>
+        <div class="and">AND</div>
+        <div class="filter-section">
+            <span>Variant frequency: </span>
+            <span id="selectedFrequency" class="selected-items"></span>
+        </div>
+        <div class="and">AND</div>
+        <div class="filter-section">
+            <span>Consequence Group by severity: </span>
+            <span id="selectedConsequence" class="selected-items"></span>
+        </div>
+    </div>
+</div>

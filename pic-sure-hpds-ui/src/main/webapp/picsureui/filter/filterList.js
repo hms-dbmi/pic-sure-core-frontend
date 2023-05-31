@@ -1,5 +1,6 @@
-define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList", "filter/searchHelpTooltipView", "common/modal"],
-		function($, HBS, queryBuilder, filter, ontology, overrides, helpView, modal){
+define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList", "filter/searchHelpTooltipView", "common/modal",
+	"underscore"],
+		function($, HBS, queryBuilder, filter, ontology, overrides, helpView, modal, _){
 
 	var defaultRenderHelpCallback = function(filterView) {
         ontology.getInstance().allInfoColumnsLoaded.then(function(){
@@ -7,7 +8,8 @@ define(["jquery",  "handlebars", "picSure/queryBuilder", "filter/filter", "picSu
             	HBS.registerHelper('eq', function(arg1, arg2, options) {
             	    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
             	});
-				modal.displayModal(new helpView(), "Instructions",  ()=>{
+				const infoColumns = ontology.getInstance().allInfoColumns();
+				modal.displayModal(new helpView({infoColumns: infoColumns}), "Instructions",  ()=>{
 					$('.show-help-modal').focus();
 				}, {isHandleTabs: true});
             });
