@@ -190,7 +190,7 @@ define([
         },
         updateEstimations: function (query) {
             if (overrides && overrides.updateEstimations) {
-                overrides.updateEstimations(query);
+                overrides.updateEstimations(this, query);
                 return;
             }
             let queryToUse = query || this.query;
