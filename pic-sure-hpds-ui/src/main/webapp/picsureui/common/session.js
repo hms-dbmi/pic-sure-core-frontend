@@ -141,7 +141,7 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
             session.token = token;
             sessionStorage.setItem("session", JSON.stringify(session));
 		},
-		username : function(){
+		username: function(){
 			return JSON.parse(sessionStorage.session).username;
 		},
         email : function(){
@@ -164,12 +164,12 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 		},
 	    sessionInit: function(data) {
 	        authenticated(data.token, data.email, data.permissions, data.acceptedTOS, sessionOverrides.handleNotAuthorizedResponse ? sessionOverrides.handleNotAuthorizedResponse : handleNotAuthorizedResponse);
-	        if (data.acceptedTOS !== 'true'){
+	        if (data.acceptedTOS !== 'true') {
 	            history.pushState({}, "", "/psamaui/tos");
 	        } else {
 	        	updatePrivileges();
 	        }
 	    }
 	    
-	}
+	};
 });
