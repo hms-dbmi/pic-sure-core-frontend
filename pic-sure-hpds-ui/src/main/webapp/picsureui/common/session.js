@@ -68,6 +68,7 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
 		session.token = token;
 		session.username = username;
 		session.acceptedTOS = acceptedTOS;
+		session.email = username;
 		sessionStorage.setItem("session", JSON.stringify(session));
 		configureAjax();
 	};
