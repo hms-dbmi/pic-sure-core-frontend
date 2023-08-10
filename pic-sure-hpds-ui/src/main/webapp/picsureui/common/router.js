@@ -3,13 +3,13 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
         'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
         'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
         "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
-        "text!common/unexpected_error.hbs"],
+        "text!common/unexpected_error.hbs", "footer/googleAnalytics"],
         function(Backbone, _, session, login, header, footer, userManagement,
                 roleManagement, privilegeManagement, applicationManagement,
                 connectionManagement, tos, userFunctions,
                 HBS, accessRuleManagement, routerOverrides, filterList,
                  layoutTemplate, queryBuilder, output, settings,
-                 unexpectedErrorTemplate){
+                 unexpectedErrorTemplate, googleAnalytics){
 
         var publicRoutes = ["not_authorized", "login", "logout"];
         var Router = Backbone.Router.extend({
@@ -36,7 +36,6 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
                 this.route(routeOverride, routerOverrides.routes[routeOverride]);
             }
             var pushState = history.pushState;
-            //TODO: Why
             this.tos = tos;
             history.pushState = function(state, title, path) {
                 if(state.trigger){
@@ -48,6 +47,8 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
             }.bind({router:this});
             this.layoutTemplate = HBS.compile(layoutTemplate);
             this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
+
+            this.displayGoogleAnalytics();
         },
        execute: function(callback, args, name){
             if (publicRoutes.includes(name)){
@@ -215,6 +216,12 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
             outputPanelView.runQuery(query);
 
             filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
+        },
+        displayGoogleAnalytics: function() {
+            let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
+            // append the analytics view to the body
+            analyticsView.render();
+            $("body").append(analyticsView.$el);
         },
         defaultAction: function() {
             console.log("Default action");
