@@ -1,4 +1,4 @@
-define(["backbone","handlebars", "text!footer/googleAnalytics.hbs", "picSure/settings"],
+define(["backbone","handlebars", "text!common/googleAnalytics.hbs", "picSure/settings"],
     function(BB, HBS, template, settings){
         var googleAnalytics = BB.View.extend({
             initialize : function(){
