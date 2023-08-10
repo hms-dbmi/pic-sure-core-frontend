@@ -3,7 +3,7 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
         'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
         'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
         "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
-        "text!common/unexpected_error.hbs", "footer/googleAnalytics"],
+        "text!common/unexpected_error.hbs", "common/googleAnalytics"],
         function(Backbone, _, session, login, header, footer, userManagement,
                 roleManagement, privilegeManagement, applicationManagement,
                 connectionManagement, tos, userFunctions,
@@ -221,7 +221,7 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
             let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
             // append the analytics view to the body
             analyticsView.render();
-            $("body").append(analyticsView.$el);
+            $("head").append(analyticsView.$el);
         },
         defaultAction: function() {
             console.log("Default action");
