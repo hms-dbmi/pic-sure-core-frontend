@@ -1011,6 +1011,10 @@ input[type='checkbox'].categorical-filter-input {
     border-right: 1px solid #ddd;
 }
 
+.results-box {
+    height: 260px;
+}
+
 .results-header button {
     margin: 2px 2px 0 0;
     padding: 4.5px 10px;
