@@ -2,13 +2,14 @@ define(['jquery', 'backbone','handlebars', "underscore",
 'overrides/genomic-filter-view',
 'text!filter/genomic-filter-view.hbs', 
 'common/selection-search-panel-view', 
-'text!common/selection-panel.hbs', 
+'text!common/selection-panel.hbs',
 'text!filter/genomic-filter-partial.hbs',
-'text!../studyAccess/variant-data.json',
 'picSure/ontology', "common/spinner",
 'common/keyboard-nav', 'common/tree-select',
-'filter/selected-genomic-filters'],
-    function($, BB, HBS, _, overrides, genomicView, searchPanel, selectionPanel, filterContainer, variantDataJson, ontology, spinner, keyboardNav, treeSelect, selectedGenomicFilters) {
+'filter/selected-genomic-filters',
+'text!../studyAccess/variant-data.json',
+'picSure/settings', 'common/transportErrors'],
+    function($, BB, HBS, _, overrides, genomicView, searchPanel, selectionPanel, filterContainer, ontology, spinner, keyboardNav, treeSelect, selectedGenomicFilters, variantDataJson, settings, transportErrorHandlers) {
         const geneKey = 'Gene_with_variant';
         const consequenceKey = 'Variant_consequence_calculated';
         const severityKey = 'Variant_severity';
@@ -17,14 +18,19 @@ define(['jquery', 'backbone','handlebars', "underscore",
         const TABABLE_CLASS = '.tabable';
         const SELECTED = 'selected';
         const LIST_ITEM = 'list-item';
-        let isLoading = true;
+        let isOntologyLoading = true;
+        let isGenesLoading = true;
         let genomicFilterView = BB.View.extend({
             initialize: function(opts){
                 this.previousUniqueId = 0;
                 $("body").tooltip({ selector: '[data-toggle=tooltip]' });
                 this.data = opts;
                 this.infoColumns = [];
-                this.loadingData = ontology.getInstance().allInfoColumnsLoaded.then(function(){
+                this.loadingGenes = this.getNextGenes(1).then((data)=>{
+                    this.initGenes = data.results;
+                    isGenesLoading = false;
+                }, (error)=>{console.error(error)});
+                this.loadingInfoColumns = ontology.getInstance().allInfoColumnsLoaded.then(function(){
                     this.infoColumns = ontology.getInstance().allInfoColumns();
                     this.data.geneDesc = this.infoColumns.find(col => col.key === geneKey).description.split('"')[1] || 'Error loading description';
                     this.data.consequenceDesc = this.infoColumns.find(col => col.key === consequenceKey).description.split('"')[1] || 'Error loading description';
@@ -32,13 +38,14 @@ define(['jquery', 'backbone','handlebars', "underscore",
                     this.data.classDescription = classDescription;
                     this.data.frequencyDescription = frequencyDescription;
                     this.data.severityDescription = this.data.severityDescription.substring(0, this.data.severityDescription.lastIndexOf(','))+'.';
-                    isLoading = false;
+                    isOntologyLoading = false;
                     this.render();
                 }.bind(this)).catch((error)=>{
                     console.error(error);
                     isLoading = false;
                     this.render();
-                });;
+                });
+                this.loadingData = Promise.all([this.loadingGenes, this.loadingInfoColumns]);
                 this.template = HBS.compile(genomicView);
                 this.filterPartialTemplate = HBS.compile(filterContainer);
                 const selectionPanelTemplate = HBS.compile(selectionPanel);
@@ -68,17 +75,17 @@ define(['jquery', 'backbone','handlebars', "underscore",
             },
             setUpViews: function() {
                 const parsedVariantData = JSON.parse(variantDataJson);
-                const geneList = parsedVariantData.genes;
                 const consequencesList = parsedVariantData.consequences;
                 this.data.frequencyOptions = ['Rare', 'Common'];
                 const dataForGeneSearch = {
                     heading: 'Gene with Variant',
-                    results: geneList,
                     searchContext: 'Select genes of interest',
+                    searchResultOptions: this.initGenes,
                     resultContext: 'Selected genes',
                     placeholderText: 'The list of genes below is a sub-set, try typing other gene names (Ex. CHD8)',
                     description: this.data.geneDesc,
-                    sample: true,
+                    infinite: true,
+                    getNextOptions: this.getNextGenes,
                     isRequired: true,
                 }
                 const dataForConsequenceSearch = {
@@ -277,8 +284,23 @@ define(['jquery', 'backbone','handlebars', "underscore",
                 let selectedItem = e.target.querySelector('.' + SELECTED);
                 selectedItem && selectedItem.click();
             },
+            getNextGenes: function(page, searchTerm="a") {
+                console.debug("Get next genes", page);
+                const url = window.location.origin + '/picsure/search/'+ settings.picSureResourceId + '/values/?genomicConceptPath=Gene_with_variant&query='+searchTerm+'&page='+page+'&size=20';
+                return fetch(url, {
+                    method: 'GET',
+                    headers: {'Authorization': 'Bearer ' + JSON.parse(sessionStorage.getItem('session')).token, 'content-type': 'application/json'},
+                }).then(response => response.json()).then(data => {
+                    return data;
+                }).catch(error => {
+                    console.error(error);
+                    transportErrorHandlers.handleAll(error);
+                });
+            },
             render: function(){
-                if (!isLoading) {
+                this.$el.html('<div id="genomic-spinner"></div>');
+                spinner.medium(this.loadingData, '#genomic-spinner', ''); 
+                this.loadingData.then(function() {
                     this.setUpViews();
                     this.$el.html(this.template(this.data));
                     this.geneSearchPanel.$el = $('#gene-search-container');
@@ -289,11 +311,7 @@ define(['jquery', 'backbone','handlebars', "underscore",
                     this.previousFilter && this.reapplyGenomicFilters();
                     this.updateDisabledButton();
                     this.createTabIndex();
-                } 
-                else {
-                    this.$el.html('<div id="genomic-spinner"></div>');
-                    spinner.medium(this.loadingData, '#genomic-spinner', '');
-                }
+                }.bind(this));
             }
         });
         return genomicFilterView;

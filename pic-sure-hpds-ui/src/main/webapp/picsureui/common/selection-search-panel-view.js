@@ -5,8 +5,12 @@ define(['jquery',
         'text!common/selection-search-panel.hbs', 
         'common/keyboard-nav',
     ],
-    function($, BB, HBS,
-             _, searchPanelTemplate, keyboardNav,
+    function($, 
+             BB, 
+             HBS, 
+             _, 
+             searchPanelTemplate,
+             keyboardNav,
     ) {
         const LIST_ITEM = 'list-item';
         const SELECTED = 'selected';
@@ -14,13 +18,13 @@ define(['jquery',
             initialize: function(opts){
                 if (opts && opts.heading) {
                     this.data = opts;
+                    this.previousSearch = undefined;
                     this.data.searchId = opts.heading.toLowerCase().replace(/\s/g, '-');
                     this.data.searchResultOptionsText = opts.placeholderText || 'Search ' + opts.heading;
                     this.resetSearchResults();
                     this.data.cachedResults = this.data.searchResultOptions;
                     this.data.selectedResults = opts.searchResults || [];
                 }
-                console.debug('selectionSearchView', this.data);
                 this.template = HBS.compile(searchPanelTemplate);
                 keyboardNav.addNavigableView("selection-search-results", this);
                 keyboardNav.addNavigableView("selections",this);
@@ -38,6 +42,7 @@ define(['jquery',
             },
             addEvents: function() {
                 $('.value-container.selection-search-results input').on('change', this.selectItem.bind(this));
+                $('.value-container.selection-search-results').on('scroll', _.throttle(this.handleScroll.bind(this), 500, {trailing: true}));
                 $('.value-container.selections input').on('change', this.unselectItem.bind(this));
                 $('#'+this.data.searchId+'-selection-clear-button').on('click', this.clearSelection.bind(this));
                 $('#'+this.data.searchId+'-selection-select-all').on('click', this.selectAll.bind(this));
@@ -45,29 +50,38 @@ define(['jquery',
                 $('.value-container').on('blur', this.blurItem.bind(this));
             },
             search: function(e) {
-                console.debug('search', e.target.value);
                 if (e.target.value.length > 1) {
-                    this.data.searchResultOptions = this.data.results.filter((result) => {
-                        return result.toLowerCase().includes(e.target.value.toLowerCase());
-                    });
-                    this.renderLists();
+                    if (!this.data.infinite) {
+                        this.data.searchResultOptions = this.data.results.filter((result) => {
+                            return result.toLowerCase().includes(e.target.value.toLowerCase());
+                        });
+                        this.renderLists();
+                    } else {
+                        if (!this.previousSearch || this.previousSearch !== e.target.value) {
+                            this.data.page = 1;
+                        }
+                        this.previousSearch = e.target.value;
+                        this.data.getNextOptions(this.data.page, e.target.value).then((data)=>{
+                            if (data.results) {
+                                this.data.searchResultOptions = data.results; //todo search loading handling
+                                this.renderLists();
+                            }
+                        }, (error)=>{console.error(error)});
+                    }
                 }else if (e.target.value.length === 0) {
-                    this.data.sample ? this.resetSearchResults(this.data.cachedResults) : this.resetSearchResults();
+                    this.data.infinite ? this.resetSearchResults(this.data.cachedResults) : this.resetSearchResults();
                     this.renderLists();
                 }
             },
             clickItem: function(e) {
-                console.debug(e.target);
                 let selectedItem = e.target.querySelector('.' + SELECTED);
                 selectedItem && selectedItem.click();
             },
             selectItem: function(e) {
-                console.debug('selectItem', e.target);
                 const index = this.data.searchResultOptions.indexOf(e.target.value);
                 this.moveItem(this.data.searchResultOptions, this.data.selectedResults, index);
             },
             unselectItem: function(e) {
-                console.debug('unselectItem', e.target);
                 const index = this.data.selectedResults.indexOf(e.target.value);
                 const searchIndex = this.data.searchResultOptions.indexOf(e.target.value)
                 if (searchIndex > -1 && index > -1) {
@@ -83,7 +97,6 @@ define(['jquery',
                 }
             },
             clearSelection: function() {
-                console.debug('clearSelection from here');
                 this.$el.find('#'+this.data.searchId).val('');
                 this.data.selectedResults.reverse().forEach((item) => {
                     this.data.searchResultOptions.indexOf(item) === -1 && this.data.searchResultOptions.unshift(item);
@@ -92,7 +105,6 @@ define(['jquery',
                 this.renderLists();
             },
             selectAll: function() {
-                console.debug('selectAll from here');
                 let unselectedItems = $('.selection-search-results input:not(:checked)').map(function(){
                     return $(this).val();
                   }).get();
@@ -110,9 +122,19 @@ define(['jquery',
                 $(e.target).find('.'+SELECTED).removeClass(SELECTED);
             },
             resetSearchResults: function(cached) {
-                    cached ? 
-                        this.data.searchResultOptions = cached : 
-                        this.data.sample ? this.data.searchResultOptions = _.sortBy(_.sample(this.data.results, 10)) : this.data.searchResultOptions = _.sortBy(this.data.results);
+                this.data.page = 1;
+                this.previousSearch = undefined;
+                if (cached) {
+                    this.data.searchResultOptions = cached
+                } else {
+                    if (this.data.infinite) {
+                        this.data.getNextOptions(this.data.page).then((res) => {
+                            this.data.searchResultOptions = res.results;
+                        });
+                    } else {
+                        this.data.searchResultOptions = _.sortBy(this.data.results);
+                    }
+                }      
             },
             navigateUp: function(e) {
                 console.debug('navigateUp', e);
@@ -154,17 +176,37 @@ define(['jquery',
                     $(nextItem)[0].scrollIntoView({behavior: "smooth", block: "nearest", inline: "start"});
                 }
             },
+            handleScroll: function(e) {
+                const container = $(e.target);
+                const scrollTop = container.scrollTop();
+                const containerHeight = container.height();
+                const contentHeight = container[0].scrollHeight;
+                const scrollThreshold = 5;
+                if (contentHeight - (scrollTop + containerHeight) <= scrollThreshold) {
+                    this.data.page++;
+                    let searchTerm = $('#gene-with-variant').val();
+                    if (!searchTerm) { // .val() could return empty string
+                        searchTerm = undefined;
+                    }
+                    this.data.getNextOptions(this.data.page, searchTerm).then((response) => {
+                        this.data.searchResultOptions = this.data.searchResultOptions.concat(response.results);
+                        this.renderLists();
+                    });
+                }
+            },
             reset() {
-                this.data.sample ? this.data.searchResultOptions = _.sample(this.data.results, 10) : this.data.searchResultOptions = this.data.results;
+                this.data.infinite ? this.data.searchResultOptions.concat(this.data.cachedResults) : this.data.searchResultOptions = this.data.results;
+                this.data.page = 1;
+                this.previousSearch = undefined;
                 this.clearSelection();
             },
             renderLists: function() {
-                const newHTMLList  = this.data.searchResultOptions.map((item) => {
+                const newHTMLList  = this.data.searchResultOptions?.map((item) => {
                     return this.data.selectedResults.indexOf(item) > -1 ? 
                     `<input class="categorical-filter-input selectable list-item" role="option" type="checkbox" value="${item}" checked disabled/>${item}<br/>` : 
                     `<input class="categorical-filter-input selectable list-item" role="option" type="checkbox" value="${item}" />${item}<br/>`;
                 }, this);
-                const newHTMLRSelectionList  = this.data.selectedResults.map((item) => {
+                const newHTMLRSelectionList  = this.data.selectedResults?.map((item) => {
                     return `<input class="categorical-filter-input selectable list-item" type="checkbox" value="${item}" checked/>${item}<br/>`;
                 });      
                 this.$el.find('.selections').html(newHTMLRSelectionList).fadeIn('fast');
