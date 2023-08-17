@@ -51,7 +51,7 @@ define(['jquery',
             },
             search: function(e) {
                 if (e.target.value.length > 1) {
-                    if (!this.data.infinite) {
+                    if (typeof this.data.getNextOptions !== typeof(Function)) {
                         this.data.searchResultOptions = this.data.results.filter((result) => {
                             return result.toLowerCase().includes(e.target.value.toLowerCase());
                         });
@@ -69,7 +69,7 @@ define(['jquery',
                         }, (error)=>{console.error(error)});
                     }
                 }else if (e.target.value.length === 0) {
-                    this.data.infinite ? this.resetSearchResults(this.data.cachedResults) : this.resetSearchResults();
+                    typeof this.data.getNextOptions === typeof(Function) ? this.resetSearchResults(this.data.cachedResults) : this.resetSearchResults();
                     this.renderLists();
                 }
             },
@@ -127,7 +127,7 @@ define(['jquery',
                 if (cached) {
                     this.data.searchResultOptions = cached
                 } else {
-                    if (this.data.infinite) {
+                    if (typeof this.data.getNextOptions === typeof(Function)) {
                         this.data.getNextOptions(this.data.page).then((res) => {
                             this.data.searchResultOptions = res.results;
                         });
@@ -195,7 +195,7 @@ define(['jquery',
                 }
             },
             reset() {
-                this.data.infinite ? this.data.searchResultOptions.concat(this.data.cachedResults) : this.data.searchResultOptions = this.data.results;
+                typeof this.data.getNextOptions === typeof(Function) ? this.data.searchResultOptions.concat(this.data.cachedResults) : this.data.searchResultOptions = this.data.results;
                 this.data.page = 1;
                 this.previousSearch = undefined;
                 this.clearSelection();

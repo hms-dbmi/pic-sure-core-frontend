@@ -84,7 +84,6 @@ define(['jquery', 'backbone','handlebars', "underscore",
                     resultContext: 'Selected genes',
                     placeholderText: 'The list of genes below is a sub-set, try typing other gene names (Ex. CHD8)',
                     description: this.data.geneDesc,
-                    infinite: true,
                     getNextOptions: this.getNextGenes,
                     isRequired: true,
                 }
