@@ -18,8 +18,6 @@ define(['jquery', 'backbone','handlebars', "underscore",
         const TABABLE_CLASS = '.tabable';
         const SELECTED = 'selected';
         const LIST_ITEM = 'list-item';
-        let isOntologyLoading = true;
-        let isGenesLoading = true;
         let genomicFilterView = BB.View.extend({
             initialize: function(opts){
                 this.previousUniqueId = 0;
@@ -28,7 +26,6 @@ define(['jquery', 'backbone','handlebars', "underscore",
                 this.infoColumns = [];
                 this.loadingGenes = this.getNextGenes(1).then((data)=>{
                     this.initGenes = data.results;
-                    isGenesLoading = false;
                 }, (error)=>{console.error(error)});
                 this.loadingInfoColumns = ontology.getInstance().allInfoColumnsLoaded.then(function(){
                     this.infoColumns = ontology.getInstance().allInfoColumns();
@@ -38,7 +35,6 @@ define(['jquery', 'backbone','handlebars', "underscore",
                     this.data.classDescription = classDescription;
                     this.data.frequencyDescription = frequencyDescription;
                     this.data.severityDescription = this.data.severityDescription.substring(0, this.data.severityDescription.lastIndexOf(','))+'.';
-                    isOntologyLoading = false;
                     this.render();
                 }.bind(this)).catch((error)=>{
                     console.error(error);
