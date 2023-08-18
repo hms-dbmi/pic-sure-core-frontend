@@ -21,6 +21,9 @@ define(['jquery', 'backbone','handlebars', "underscore",
         let genomicFilterView = BB.View.extend({
             initialize: function(opts){
                 this.previousUniqueId = 0;
+                if (!opts.genomicConceptPath) {
+                    opts.genomicConceptPath = 'Gene_with_variant';
+                }
                 $("body").tooltip({ selector: '[data-toggle=tooltip]' });
                 this.data = opts;
                 this.infoColumns = [];
@@ -80,7 +83,7 @@ define(['jquery', 'backbone','handlebars', "underscore",
                     resultContext: 'Selected genes',
                     placeholderText: 'The list of genes below is a sub-set, try typing other gene names (Ex. CHD8)',
                     description: this.data.geneDesc,
-                    getNextOptions: this.getNextGenes,
+                    getNextOptions: this.getNextGenes.bind(this),
                     isRequired: true,
                 }
                 const dataForConsequenceSearch = {
@@ -280,8 +283,11 @@ define(['jquery', 'backbone','handlebars', "underscore",
                 selectedItem && selectedItem.click();
             },
             getNextGenes: function(page, searchTerm="a") {
-                console.debug("Get next genes", page);
-                const url = window.location.origin + '/picsure/search/'+ settings.picSureResourceId + '/values/?genomicConceptPath=Gene_with_variant&query='+searchTerm+'&page='+page+'&size=20';
+                const url =
+                  window.location.origin + "/picsure/search/" + settings.picSureResourceId +
+                  "/values/?genomicConceptPath=" + this.data.genomicConceptPath +
+                  "&query=" + searchTerm +
+                  "&page=" + page + "&size=20";
                 return fetch(url, {
                     method: 'GET',
                     headers: {'Authorization': 'Bearer ' + JSON.parse(sessionStorage.getItem('session')).token, 'content-type': 'application/json'},
