@@ -1,32 +1,52 @@
-define(["handlebars","jquery","backbone","underscore","text!options/modal.hbs"],
-	function(HBS,$,BB, _,modalTemplate){
+define(["handlebars","jquery","backbone", "underscore", "text!options/modal.hbs"],
+	function(HBS,$,BB, _, modalTemplate){
 		const TAB_INDEX_START = 1000000;
 	let Modal = BB.View.extend({
 		initialize: function(opts){
 			this.title="";
+			this.modalContainerId = "modal-window";
 			HBS.registerHelper("tabindex", function(options) {
 			  return TAB_INDEX_START + options;
 			});
 			this.createTabLoop();
 		},
-
 		events: {
 
 		},
+		render: function(view){
+			let modalId = this.modalContainerId;
 
-		render: function(){
-			if ($("#modal-window").length === 0) {
-                $('#main-content').append('<div id="modal-window" aria-modal="true"></div>');
-            }
-			if($("#modal-window").length !== 0) {
+			if($("#" + modalId).length === 0) {
+				$('#main-content').append('<div id="' + modalId + '" aria-modal="true"></div>');
+			}
+
+			if($(".modal-backdrop").length !== 0) {
 				$(".modal-backdrop").remove();
 			}
 
-            $("#modal-window").html(HBS.compile(modalTemplate)({title: this.title}));
-            $('.close').click(function() {
-                $("#modalDialog").hide();
-                $(".modal-backdrop").hide();
-            });
+			let modal = $("#" + modalId);
+
+			modal.html(HBS.compile(modalTemplate)({title: this.title}));
+
+			$('#' + modalId + ' #modalDialog').on('click', function(event) {
+				let parent = $(event.target).parent();
+				// Traverse up the tree until we find the modal-content class or the body
+				while (parent.length && !parent.is('body') && !parent.is('#modalDialog')) {
+					parent = parent.parent();
+				}
+
+				// If we traversed up to the body, then we clicked outside the modal
+				if (parent.is('body')) {
+					$('#' + modalId + ' .close').click();
+				}
+			});
+
+
+			$('#' + modalId + ' .close').click(function() {
+				$("#" + modalId +  " #modalDialog").hide();
+				$(".modal-backdrop").hide();
+				view && this.destroyView(view);
+            }.bind(this));
 		},
 
 		/*
@@ -38,17 +58,20 @@ define(["handlebars","jquery","backbone","underscore","text!options/modal.hbs"],
 		*/
 		displayModal: function(view, title, dismissalAction, opts){
 			this.title = title;
-			this.render();
+			this.modalContainerId = (opts && opts.modalContainerId) ? opts.modalContainerId : "modal-window";
+			this.render(view);
 
-	        $("#modalDialog").modal({keyboard:true});
-			if(dismissalAction){
-				$('#modalDialog').on('hidden.bs.modal', dismissalAction);
+	        $('#' + this.modalContainerId + ' #modalDialog').modal({keyboard:true, backdrop: "static"});
+			if(dismissalAction) {
+				$('#' + this.modalContainerId + ' #modalDialog').on('hidden.bs.modal', dismissalAction);
 			}
-            $('.close').attr('tabindex', 1100000);
-			view.setElement($(".modal-body"));
+
+            $('#' + this.modalContainerId + ' .close').attr('tabindex', 1100000);
+			view.setElement($('#' + this.modalContainerId +  ' .modal-body'));
 			view.render();
+
 			opts && opts.isHandleTabs && this.createTabIndex();
-			opts && opts.width && $('.modal-dialog').width(opts.width);
+			opts && opts.width && $('#' + this.modalContainerId +  ' .modal-dialog').width(opts.width);
 		},
 
 		/*
@@ -76,16 +99,20 @@ define(["handlebars","jquery","backbone","underscore","text!options/modal.hbs"],
                     }
                 }
             });
-            // TODO : What?
-            //$('[tabindex="1000000"]').focus();
-           // $('.close').focus();
         },
+
+		destroyView: function(view){
+			view.undelegateEvents();	
+			$(view.el).removeData().unbind(); 
+			view.remove();  
+			Backbone.View.prototype.remove.call(view);
+		},
 
 		// Finds elements with a tab index or the class 'tabable' and sets the correct tab index for the modal. 
 		// Ignores the close button.
 		createTabIndex: function() {
 			let tabIndex = TAB_INDEX_START;
-			_.each($('#modalDialog').find('[tabindex]:not(.close),.tabable'), function(el) {
+			_.each($('#' + this.modalContainerId +  ' #modalDialog').find('[tabindex]:not(.close),.tabable'), function(el) {
 				$(el).attr('tabindex', tabIndex);
 				tabIndex++;
 			});
