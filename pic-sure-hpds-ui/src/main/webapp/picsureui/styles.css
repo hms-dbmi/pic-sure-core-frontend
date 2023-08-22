@@ -467,6 +467,10 @@ body {
     width: 90%;
 }
 
+#variant-data-container {
+    width: 90%;
+}
+
 .value-operator-range-label {
 	width: unset;
 }
