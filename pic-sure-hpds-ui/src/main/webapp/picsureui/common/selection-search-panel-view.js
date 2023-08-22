@@ -4,6 +4,7 @@ define(['jquery',
         'underscore',
         'text!common/selection-search-panel.hbs', 
         'common/keyboard-nav',
+        'common/spinner'
     ],
     function($, 
              BB, 
@@ -11,6 +12,7 @@ define(['jquery',
              _, 
              searchPanelTemplate,
              keyboardNav,
+             spinner
     ) {
         const LIST_ITEM = 'list-item';
         const SELECTED = 'selected';
@@ -42,7 +44,7 @@ define(['jquery',
             },
             addEvents: function() {
                 $('.value-container.selection-search-results input').on('change', this.selectItem.bind(this));
-                $('.value-container.selection-search-results').on('scroll', _.throttle(this.handleScroll.bind(this), 500, {trailing: true}));
+                $('.value-container.selection-search-results').on('scroll', _.throttle(this.handleScroll.bind(this), 500, {leading: true}));
                 $('.value-container.selections input').on('change', this.unselectItem.bind(this));
                 $('#'+this.data.searchId+'-selection-clear-button').on('click', this.clearSelection.bind(this));
                 $('#'+this.data.searchId+'-selection-select-all').on('click', this.selectAll.bind(this));
@@ -59,6 +61,7 @@ define(['jquery',
                     } else {
                         if (!this.previousSearch || this.previousSearch !== e.target.value) {
                             this.data.page = 1;
+                            this.completedResults = false;
                         }
                         this.previousSearch = e.target.value;
                         this.data.getNextOptions(this.data.page, e.target.value).then((data)=>{
@@ -124,6 +127,7 @@ define(['jquery',
             resetSearchResults: function(cached) {
                 this.data.page = 1;
                 this.previousSearch = undefined;
+                this.completedResults = false;
                 if (cached) {
                     this.data.searchResultOptions = cached
                 } else {
@@ -177,37 +181,51 @@ define(['jquery',
                 }
             },
             handleScroll: function(e) {
-                const container = $(e.target);
-                const scrollTop = container.scrollTop();
-                const containerHeight = container.height();
-                const contentHeight = container[0].scrollHeight;
-                const scrollThreshold = 5;
-                if (contentHeight - (scrollTop + containerHeight) <= scrollThreshold) {
-                    this.data.page++;
-                    let searchTerm = $('#gene-with-variant').val();
-                    if (!searchTerm) { // .val() could return empty string
-                        searchTerm = undefined;
+                if (!this.completedResults) {
+                    const container = $(e.target);
+                    const scrollTop = container.scrollTop();
+                    const containerHeight = container.height();
+                    const contentHeight = container[0].scrollHeight;
+                    const scrollThreshold = 5;
+                    if (contentHeight - (scrollTop + containerHeight) <= scrollThreshold) {
+                        this.data.page++;
+                        let searchTerm = $('#gene-with-variant').val();
+                        if (!searchTerm) { // .val() could return empty string
+                            searchTerm = undefined;
+                        }
+                            let disableListsAndLoad = $.Deferred();
+                            $('.value-container input').prop('disabled', true);
+                            spinner.small(disableListsAndLoad, "#list-spinner", "");
+                            let nextOptionsLoading = this.data.getNextOptions(this.data.page, searchTerm).then((response) => {
+                                if (Array.isArray(response.results) && response.results.length === 0 && this.data.page !== 1) {
+                                    this.completedResults = true;
+                                }
+                                this.data.searchResultOptions = this.data.searchResultOptions.concat(response.results);
+                                disableListsAndLoad.resolve();
+                                this.renderLists();
+                            });
+                            $.when(disableListsAndLoad, nextOptionsLoading).then(() => {
+                                $('.value-container input').prop('disabled', false);
+                            });
                     }
-                    this.data.getNextOptions(this.data.page, searchTerm).then((response) => {
-                        this.data.searchResultOptions = this.data.searchResultOptions.concat(response.results);
-                        this.renderLists();
-                    });
                 }
             },
             reset() {
                 typeof this.data.getNextOptions === typeof(Function) ? this.data.searchResultOptions.concat(this.data.cachedResults) : this.data.searchResultOptions = this.data.results;
                 this.data.page = 1;
                 this.previousSearch = undefined;
+                this.completedResults = false;
                 this.clearSelection();
             },
             renderLists: function() {
                 const newHTMLList  = this.data.searchResultOptions?.map((item) => {
                     return this.data.selectedResults.indexOf(item) > -1 ? 
-                    `<input class="categorical-filter-input selectable list-item" role="option" type="checkbox" value="${item}" checked disabled/>${item}<br/>` : 
-                    `<input class="categorical-filter-input selectable list-item" role="option" type="checkbox" value="${item}" />${item}<br/>`;
+                    `<input id="${item}" class="categorical-filter-input selectable list-item" role="option" type="checkbox" value="${item}" checked disabled/>${item}<br/>` : 
+                    `<input id="${item}" class="categorical-filter-input selectable list-item" role="option" type="checkbox" value="${item}" />${item}<br/>`;
                 }, this);
+                newHTMLList.push('<div id="list-spinner"></div>');
                 const newHTMLRSelectionList  = this.data.selectedResults?.map((item) => {
-                    return `<input class="categorical-filter-input selectable list-item" type="checkbox" value="${item}" checked/>${item}<br/>`;
+                    return `<input id="${item}" class="categorical-filter-input selectable list-item" type="checkbox" value="${item}" checked/>${item}<br/>`;
                 });      
                 this.$el.find('.selections').html(newHTMLRSelectionList).fadeIn('fast');
                 const search = this.$el.find('#'+this.data.searchId)[0] ? this.$el.find('#'+this.data.searchId)[0].value : '';
