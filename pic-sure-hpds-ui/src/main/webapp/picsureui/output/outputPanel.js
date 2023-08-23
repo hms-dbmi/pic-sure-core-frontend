@@ -1,7 +1,7 @@
-define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars",
+define(["jquery", "underscore", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars",
 		"overrides/outputPanel", "common/transportErrors", "common/config", "picSure/settings", "output/variantExplorer",
 		"common/modal", "filter/genomic-filter-view", "output/package-data-view"],
-		function($,  dataSelection, outputTemplate, ontology, BB, HBS,
+		function($, _, outputTemplate, ontology, BB, HBS,
 				 overrides, transportErrors, config,  settings, variantExplorer, modal, genomicFilterView, packageDataView){
 	var defaultModel = BB.Model.extend({
 		defaults: {
@@ -22,7 +22,7 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 				overrides.renderOverride ? this.render = overrides.renderOverride.bind(this) : undefined;
 				overrides.update ? this.update = overrides.update.bind(this) : undefined;
 				HBS.registerHelper("outputPanel_obfuscate", function(count){
-					if(count < 10 && false){
+					if(count < 10){
 						return "< 10";
 					} else {
 						return count;
@@ -32,6 +32,7 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 			events:{
 				"click #select-btn": "select",
 				"click #genomic-filter-btn": "openGenomicFilter",
+				"click #variant-data-btn" : "openVariantExplorer",
 			},
 			select: function(event){
 				if(this.model.get("queryRan")){
@@ -110,17 +111,36 @@ define(["jquery", "output/dataSelection", "text!output/outputPanel.hbs", "picSur
 								  { isHandleTabs: true }
 				);
 			},
+			openVariantExplorer: function(){
+				modal.displayModal(new variantExplorer({el: $(".modal-body"), query: this.model.baseQuery, errorMsg: undefined}),
+								  'Variant Data', 
+								  () => { $('#variant-data-btn').focus(); },
+								  { isHandleTabs: true }
+				);
+			},
+			displayVariantExplorerButton: function() {
+				let showVariantButton = false;
+                if(this.model.baseQuery && this.model.baseQuery.query.variantInfoFilters.length > 0){
+                    _.each(this.model.baseQuery.query.variantInfoFilters, function(variantHolder){
+                        if(Object.keys(variantHolder.categoryVariantInfoFilters).length != 0 ||
+                            Object.keys(variantHolder.numericVariantInfoFilters).length != 0){
+                            showVariantButton = true;
+                        }
+                    });
+                }
+				if (settings.variantExplorerStatus !== config.VariantExplorerStatusEnum.enabled
+					&& settings.variantExplorerStatus !== config.VariantExplorerStatusEnum.aggregate) {
+						showVariantButton = false;
+					}
+                if (showVariantButton) {
+                    $("#variant-data-container").removeClass("hidden");
+                } else {
+                    $("#variant-data-container").addClass("hidden");
+                }
+			},
 			render: function(){
 				this.$el.html(this.template(this.model.toJSON()));
-
-				if (settings.variantExplorerStatus === config.VariantExplorerStatusEnum.enabled
-					|| settings.variantExplorerStatus === config.VariantExplorerStatusEnum.aggregate) {
-					if (!this.variantExplorerView) {
-						this.variantExplorerView = new variantExplorer.View(new variantExplorer.Model());
-					}
-					this.variantExplorerView.setElement($("#variant-data-container",this.$el));
-					this.variantExplorerView.render();
-				}
+				this.displayVariantExplorerButton();
 			}
 		});
 	
