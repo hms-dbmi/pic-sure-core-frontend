@@ -16,6 +16,11 @@ define(["jquery", "handlebars", "backbone", "common/config"], function($, HBS, B
 		 * the output panel, define it here.
 		 */
 		viewOverride : undefined,
+
+		/**
+		 * Replace the title of the output panel modal
+		 */
+		titleOverride: undefined,
 		/*
 		 * If you want to replace the entire Backbone.js Model that is used for
 		 * the output panel, define it here.
