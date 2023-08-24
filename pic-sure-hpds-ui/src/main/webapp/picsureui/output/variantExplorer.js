@@ -113,10 +113,10 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
                 this.$el.html('<div class="variant-exporer-error"><i class="fa fa-TODO"></i><h4>There is no data to display</h4><br><h5>The Variant Explorer is not enabled for this site</h5><div>');
             },
             reorderColumns: function(input){
-                const headersToMoveInOrder = ['CHROM', 'POSITION', 'REF', 'ALT', 'Patients with this variant in subset', 'Patients With this variant NOT in subset', 'Variant_consequence_calculated', 'Gene_with_variant', 'Variant_class', 'Variant_severity', 'Variant_frequency_in_gnomAD', 'Variant_frequency_as_text', 'AC', 'AN'];
+                const headersToMoveInOrder = ['CHROM', 'POSITION', 'REF', 'ALT', 'Patients with this variant in subset', 'Patients with this variant NOT in subset', 'Variant_consequence_calculated', 'Gene_with_variant', 'Variant_class', 'Variant_severity', 'Variant_frequency_in_gnomAD', 'Variant_frequency_as_text', 'AC', 'AN'];
                 // Create a map of header indexes for quick lookup
                 const headerIndexMap = {};
-                    input.headers.forEach((header, index) => {
+                input.headers.forEach((header, index) => {
                     headerIndexMap[header] = index;
                 });
                 const reorderedHeaders = headersToMoveInOrder.concat(input.headers.filter(header => !headersToMoveInOrder.includes(header)));
