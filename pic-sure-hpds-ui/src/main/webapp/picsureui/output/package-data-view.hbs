@@ -11,10 +11,22 @@
     </section>
     <section id="query-id-container">
         <div id="download-spinner"></div>
-        <div id="resource-id-display"></div>
-    </section>
-    <section id="buttons" class="results-div">
-        <a class="center btn btn-default" id="prepare-btn">{{#if queryButtonLabel}}{{queryButtonLabel}}{{else}}Export Data{{/if}}</a>
-        <a class="center btn btn-default hidden" download="data.csv" id="download-btn">Download</a>
+        <div id="resource-id-display" class="hidden">
+            <input id="queryid-span" type="text" value="" readonly />
+            <button id="copy-queryid-btn" class="btn btn-default">Copy Dataset Id</button> 
+            <span id="query-status"></span>
+        </div>
+        <div id="buttons">
+            <a class="center btn btn-default" id="prepare-btn">{{#if queryButtonLabel}}{{queryButtonLabel}}{{else}}Export Data{{/if}}</a>
+            <a class="center btn btn-default hidden" download="data.csv" id="download-btn">Download</a>
+            <div id="save-dataset" class="hidden">
+                {{#if datasetName}}
+                    <p class="center" id="dataset-saved"><span class="glyphicon glyphicon-ok"></span> Dataset saved as "{{datasetName}}".</p>
+                    <p>Please refer to the User Profile tab for details.</p>
+                {{else}}
+                    <a class="center btn btn-default alternate" id="save-dataset-btn">Save Dataset ID</a>
+                {{/if}}
+            </div>
+        </div>
     </section>
 </div>

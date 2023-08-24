@@ -600,9 +600,6 @@ body {
 	margin-right: 100px;
 }
 
-.results-div {
-
-}
 .numeric-label {
 	padding-top: 10px;
 }
@@ -926,7 +923,7 @@ body {
     width: 125px;
 }
 
-.header-btn.active {
+.header-btn.active, .btn.alternate {
     color: white;
     background-color: var(--picsure-alt);
 }
@@ -1063,11 +1060,56 @@ input[type='checkbox'].categorical-filter-input {
  #resource-id-display {
     display: flex;
     flex-direction: column;
-    padding: 10px;
  }
+
+ #data-summary {
+    margin-bottom: 10px;
+ }
+ 
  #queryId-span {
     width: 276px;
  }
+
+ #query-id-container {
+    margin-top: 10px;
+ }
+
+ #query-status {
+    margin-top: 10px;
+    margin-bottom: 10px;
+ }
+
+ /* ==== Named Dataset Modal ==== */
+
+#save-dataset > #dataset-saved {
+    margin-top: 10px;
+}
+
+#dataset-query-info .row {
+    display: flex;
+    margin: 0px;
+}
+
+#dataset-query-info .row div {
+    padding: 5px 0;
+}
+
+#dataset-query-info .row div:first-child {
+    min-width: 30%;
+}
+
+#dataset-query-info .row div:last-child {
+    flex-grow: 2;
+}
+
+#dataset-name.error {
+    border: solid red 1px;
+}
+
+#named-dataset #buttons {
+    margin-top: 20px;
+}
+
 /* Genomic Modal */
 
 .no-padding {
