@@ -1,10 +1,10 @@
 define(["util/notification", "picSure/settings"],
 		function(notification, settings){
-    var tokenFunctions = {
+    let tokenFunctions = {
         init: function () {}
     };
     tokenFunctions.refreshToken = function (object, callback) {
-        var failureMessage = "Failed to refresh tokens.";
+        const failureMessage = "Failed to refresh tokens.";
         $.ajax({
             url: window.location.origin + '/psama/token/refresh',
             type: 'GET',
@@ -18,7 +18,7 @@ define(["util/notification", "picSure/settings"],
         });
     }.bind(tokenFunctions);
 
-    var handleAjaxError = function (response, message) {
+    let handleAjaxError = function (response, message) {
         if (response.status !== 401) {
             notification.showFailureMessage(message);
         }
