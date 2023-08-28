@@ -51,9 +51,8 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
                 this.displayGoogleAnalytics();
             },
             execute: function (callback, args, name) {
-                // check if there is an override for the execute function
                 if (routerOverrides.execute) {
-                    routerOverrides.execute(callback, args, name);
+                    routerOverrides.execute.apply(this, [callback, args, name]);
                 } else {
                     if (publicRoutes.includes(name)) {
                         this.renderHeaderAndFooter();
@@ -219,23 +218,23 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
                 var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), settings.picSureResourceId);
                 outputPanelView.runQuery(query);
 
-            filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
-        },
-        displayGoogleAnalytics: function() {
-            let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
-            // append the analytics view to the body
-            analyticsView.render();
-            $("head").append(analyticsView.$el);
-        },
-        defaultAction: function() {
-            console.log("Default action");
-            $(".header-btn.active").removeClass('active');
-            if (routerOverrides.defaultAction)
-                routerOverrides.defaultAction();
-            else {
-                this.displayQueryBuilder();
+                filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
+            },
+            displayGoogleAnalytics: function () {
+                let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
+                // append the analytics view to the body
+                analyticsView.render();
+                $("head").append(analyticsView.$el);
+            },
+            defaultAction: function () {
+                console.log("Default action");
+                $(".header-btn.active").removeClass('active');
+                if (routerOverrides.defaultAction)
+                    routerOverrides.defaultAction();
+                else {
+                    this.displayQueryBuilder();
+                }
             }
-        }
 
 
         });
