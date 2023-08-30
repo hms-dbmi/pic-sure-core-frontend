@@ -40,10 +40,10 @@ define(["underscore"],
 			if(filter.get("searchTerm").trim().length !== 0){
 				if ( filter.attributes.valueType === "ANYRECORDOF" ){
                     //any record of filter should just pull the list of observations  and stuff them in the list.
-					if(query.query.anyRecordOf){
-						query.query.anyRecordOf = query.query.anyRecordOf.concat(filter.get("anyRecordCategories"))
+					if(query.query.anyRecordOfMulti){
+						query.query.anyRecordOfMulti.push(filter.get("anyRecordCategories"))
 					} else {
-						query.query.anyRecordOf = filter.get("anyRecordCategories");
+						query.query.anyRecordOfMulti = new Array(filter.get("anyRecordCategories"));
 					}
 				} else if(filter.attributes.constrainByValue || filter.get("constrainParams").get("constrainByValue")){
 					if(filter.attributes.valueType==="INFO"){
