@@ -19,14 +19,11 @@
         <div id="buttons">
             <a class="center btn btn-default" id="prepare-btn">{{#if queryButtonLabel}}{{queryButtonLabel}}{{else}}Export Data{{/if}}</a>
             <a class="center btn btn-default hidden" download="data.csv" id="download-btn">Download</a>
-            <div id="save-dataset" class="hidden">
-                {{#if datasetName}}
-                    <p class="center" id="dataset-saved"><span class="glyphicon glyphicon-ok"></span> Dataset saved as "{{datasetName}}".</p>
-                    <p>Please refer to the User Profile tab for details.</p>
-                {{else}}
-                    <a class="center btn btn-default alternate" id="save-dataset-btn">Save Dataset ID</a>
-                {{/if}}
+            <div id="dataset-saved" class="hidden">
+                <p class="center"><span class="glyphicon glyphicon-ok"></span> Dataset saved as "<span id="dataset-name-txt"></span>".</p>
+                <p>Please refer to the User Profile tab for details.</p>
             </div>
+            <a class="center btn btn-default alternate" id="save-dataset-btn" class="hidden">Save Dataset ID</a>
         </div>
     </section>
 </div>

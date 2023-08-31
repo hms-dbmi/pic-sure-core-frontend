@@ -22,9 +22,9 @@ define([
     const Model = overrides.modelOverride ? overrides.modelOverride : BB.Model.extend({
 		defaults: {
             query: {},
-            selectedTreeNodes: [],
             lastQueryUUID: undefined,
             datasetName: undefined,
+            treeState: undefined
         }
 	});
     const View = BB.View.extend({
@@ -37,10 +37,9 @@ define([
             this.settings = settings;
             this.updateQuery(opts.query);
             this.queryButtonLabel = settings.queryButtonLabel;
-            this.datasetName = undefined;
         },
         events: {
-            "click #prepare-btn": "prepare",
+            "click #prepare-btn": "clearAndPrepare",
             "click #copy-queryid-btn" : "copyQueryId",
             "click #save-dataset-btn" : "saveDatasetId",
         },
@@ -56,6 +55,7 @@ define([
             const onClose = () => {};
             const onSuccess = (name) => {
                 this.exportModel.set('datasetName', name);
+                this.updateNamedDatasetObjects();
             };
             const options = { ...this.modalSettings.options, width: "40%" };
             const modalView = new namedDataset({
@@ -65,8 +65,6 @@ define([
                 query: this.exportModel.get('query'),
             });
             modal.displayModal(modalView, title, onClose, options);
-
-            console.log('saved dataset button pressed');
         },
         copyQueryId: function () {
             navigator.clipboard.writeText(document.getElementById('queryid-span').value);
@@ -93,6 +91,28 @@ define([
                 }.bind(this)
             })
         }.bind(this),
+        updateNamedDatasetObjects: function() {
+            const name = this.exportModel.get('datasetName');
+            const uuid = this.exportModel.get('lastQueryUUID');
+            
+            if (name){
+                $('#dataset-name-txt', this.$el).html(name);
+                $("#dataset-saved", this.$el).removeClass('hidden');
+            } else {
+                $("#dataset-saved", this.$el).addClass('hidden');
+            }
+            if (uuid && !name){
+                $("#save-dataset-btn", this.$el).removeClass('hidden');
+            } else {
+                $("#save-dataset-btn", this.$el).addClass('hidden');
+            }
+        },
+        clearAndPrepare: function() {
+            this.exportModel.set('lastQueryUUID', undefined);
+            this.exportModel.set('datasetName', undefined);
+            this.updateNamedDatasetObjects();
+            this.prepare();
+        },
         prepare: function () {
             if (overrides && overrides.prepare) {
                 overrides.prepare();
@@ -101,7 +121,6 @@ define([
             $("#download-btn", this.$el).removeAttr("href");
             $("#download-btn", this.$el).off();
             $("#download-btn", this.$el).addClass('hidden');
-            $("#save-dataset", this.$el).addClass('hidden');
 
             const query = JSON.parse(JSON.stringify(this.exportModel.get('query')));
             query.query.fields = _.filter($('#concept-tree', this.$el).jstree().get_selected(), function (child) {
@@ -119,6 +138,7 @@ define([
 
             if (!this.settings.queryExportType || this.settings.queryExportType == "EXPORT_IMMEDIATE") {
                 this.querySync(query);
+                this.updateNamedDatasetObjects();
             } else if (this.settings.queryExportType == "EXPORT_ASYNC") {
                 let deferredQueryId = $.Deferred();
                 let self = this;
@@ -130,7 +150,7 @@ define([
                         self.downloadData(queryUUID);
                     }.bind(self));
                     $("#copy-queryid-btn", this.$el).removeClass('hidden');
-                    $("#save-dataset", this.$el).removeClass('hidden');
+                    this.updateNamedDatasetObjects();
                 }.bind(this));
             } else {  //EXPORT_DISABLED
                 let deferredQueryId = $.Deferred();
@@ -138,7 +158,7 @@ define([
                 $.when(deferredQueryId).then(function (queryUUID) {
                     this.exportModel.set('lastQueryUUID', queryUUID);
                     $("#copy-queryid-btn", this.$el).removeClass('hidden');
-                    $("#save-dataset", this.$el).removeClass('hidden');
+                    this.updateNamedDatasetObjects();
                 }.bind(this));
             }
         },
@@ -267,18 +287,13 @@ define([
                 return;
             }
 
-            const selectedTreeNodes = $('#concept-tree', this.$el).jstree().get_selected();
-            this.exportModel.set('selectedTreeNodes', selectedTreeNodes);
+            this.exportModel.set('treeState', $('#concept-tree', this.$el).jstree().get_json());
 
             const query = this.updateQueryFields();
             this.exportModel.set('query', query);
             this.updateEstimations(query);
-
-            this.exportModel.set('lastQueryUUID', undefined);
-            this.exportModel.set('datasetName', undefined);
         },
         render: function () {
-            this.datasetName = this.exportModel.get('datasetName'); // restore datasetName state on modal return
             this.$el.html(this.template(this));
 
             if (this.outputModel.get('queryRan')) {
@@ -286,19 +301,24 @@ define([
                         // tree.updateTree builds a tree of json objects, and passes it to the innter function which is
                         // responsible for rendering the elements.
                         tree.updateTree(function(tree){
-                            //order export tree according to settings category selections
-                            //look up the category indices once, so we don't spin through this array constantly.
-                            let catIndices = {};
-                            _.each(this.settings.categorySearchResultList, function(category, index){
-                                catIndices[category] = index;
-                            });
-                            tree.children = _.sortBy(tree.children, function(entry){
-                                //entry.id starts and ends with '\'
-                                entryId = entry.id.substr(1, entry.id.length - 2); 
-                                catIndex = catIndices[entryId];
-                                
-                                return (catIndex == undefined ? 999 : catIndex)  + entry.text;
-                            });
+                            const treeState = this.exportModel.get('treeState');
+                            if(treeState){ // if there was a previously saved tree state, restore it
+                                tree = treeState;
+                            } else { // this tree is fresh, so start sorting values
+                                //order export tree according to settings category selections
+                                //look up the category indices once, so we don't spin through this array constantly.
+                                let catIndices = {};
+                                _.each(this.settings.categorySearchResultList, function(category, index){
+                                    catIndices[category] = index;
+                                });
+                                tree.children = _.sortBy(tree.children, function(entry){
+                                    //entry.id starts and ends with '\'
+                                    entryId = entry.id.substr(1, entry.id.length - 2); 
+                                    catIndex = catIndices[entryId];
+                                    
+                                    return (catIndex == undefined ? 999 : catIndex)  + entry.text;
+                                });
+                            }
 
                             $("#concept-tree", this.$el).jstree({
                                 core:{
@@ -311,44 +331,46 @@ define([
                             });
                             
                             $("#concept-tree", this.$el).on('loaded.jstree', function() {
-                                const selectedTreeNodes = this.exportModel.get('selectedTreeNodes');
-                                if (selectedTreeNodes && selectedTreeNodes.length > 0){
-                                    selectedTreeNodes.forEach(key => { $("#concept-tree", this.$el).jstree('select_node', key); });
-                                } else {
+                                if(!treeState) { // if the state is fresh, open the root node
                                     _.delay(function(){$('.jstree-node[aria-level=1] > .jstree-icon').click();}, 750);
                                 }
+                                _.delay(function(){ // shift focus down after tree is expanded
+                                    document.getElementById('package-data').scrollIntoView({behavior: "instant", block: "end", inline: "center"});
+                                }, 755);
                             }.bind(this));
 
-                            $("#concept-tree", this.$el).on("before_open.jstree", function(event, data){
-                                const query = JSON.parse(JSON.stringify(this.exportModel.get('query'))) || {};
-                                query.query.expectedResultType="CROSS_COUNT";
-                                query.query.crossCountFields = _.filter(data.node.children, function(child){
-                                    let children = $('#concept-tree', this.$el).jstree().get_node(child).children;
-                                    return children == undefined || children.length === 0;
+                            if(!treeState){ // if this is a fresh tree, get all the extended node data
+                                $("#concept-tree", this.$el).on("before_open.jstree", function(event, data){
+                                    const query = JSON.parse(JSON.stringify(this.exportModel.get('query'))) || {};
+                                    query.query.expectedResultType="CROSS_COUNT";
+                                    query.query.crossCountFields = _.filter(data.node.children, function(child){
+                                        let children = $('#concept-tree', this.$el).jstree().get_node(child).children;
+                                        return children == undefined || children.length === 0;
+                                    }.bind(this));
+                                    
+                                    //we can only clear the unused consents AFTER adding the fields
+                                    if(outputOverride.updateConsentFilters){
+                                        outputOverride.updateConsentFilters(query, this.settings);
+                                    }
+                                    
+                                    $.ajax({
+                                        url: window.location.origin + "/picsure/query/sync",
+                                        type: 'POST',
+                                        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                                        contentType: 'application/json',
+                                        data: JSON.stringify(query),
+                                        success: function(crossCounts){
+                                            _.each(query.query.crossCountFields, function(child){
+                                                let childNode = $('#concept-tree', this.$el).jstree().get_node(child);
+                                                childNode.text = childNode.text.replace(/<b\>.*<\/b>/,'') +  " <b>(" + crossCounts[child] + " observations in subset)</b>";
+                                                $('#concept-tree', this.$el).jstree().redraw_node(child);
+                                            }.bind(this));
+                                            $('#prepare-btn', this.$el).removeClass('hidden');
+                                        }.bind(this),
+                                        error: console.log
+                                    });
                                 }.bind(this));
-                                
-                                //we can only clear the unused consents AFTER adding the fields
-                                if(outputOverride.updateConsentFilters){
-                                    outputOverride.updateConsentFilters(query, this.settings);
-                                }
-                                
-                                $.ajax({
-                                    url: window.location.origin + "/picsure/query/sync",
-                                    type: 'POST',
-                                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
-                                    contentType: 'application/json',
-                                    data: JSON.stringify(query),
-                                    success: function(crossCounts){
-                                        _.each(query.query.crossCountFields, function(child){
-                                            let childNode = $('#concept-tree', this.$el).jstree().get_node(child);
-                                            childNode.text = childNode.text.replace(/<b\>.*<\/b>/,'') +  " <b>(" + crossCounts[child] + " observations in subset)</b>";
-                                            $('#concept-tree', this.$el).jstree().redraw_node(child);
-                                        }.bind(this));
-                                        $('#prepare-btn', this.$el).removeClass('hidden');
-                                    }.bind(this),
-                                    error: console.log
-                                });
-                            }.bind(this));
+                            }
                         }.bind(this)), 
                         "#download-spinner",
                         "download-spinner"
@@ -360,7 +382,8 @@ define([
             this.updateEstimations();
             if(this.exportModel.get('lastQueryUUID')){
                 this.prepare();
-                _.delay(function(){$('#results-div').focus();}, 760); // shift focus down after tree is expanded
+            } else {
+                this.updateNamedDatasetObjects();
             }
             overrides.renderExt && overrides.renderExt(this);
         }
