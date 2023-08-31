@@ -137,6 +137,7 @@ define(['jquery',
                         });
                     } else {
                         this.data.searchResultOptions = _.sortBy(this.data.results);
+                        this.completedResults = true;
                     }
                 }      
             },
