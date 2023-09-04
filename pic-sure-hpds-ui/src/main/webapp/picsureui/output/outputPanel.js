@@ -1,8 +1,10 @@
 define(["jquery", "underscore", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars",
 		"overrides/outputPanel", "common/transportErrors", "common/config", "picSure/settings", "output/variantExplorer",
-		"common/modal", "filter/genomic-filter-view", "output/package-data-view"],
+		"common/modal", "filter/genomic-filter-view", "output/package-data-view", "overrides/output/variantExplorer"],
 		function($, _, outputTemplate, ontology, BB, HBS,
-				 overrides, transportErrors, config,  settings, variantExplorer, modal, genomicFilterView, packageDataView){
+				 overrides, transportErrors, config,  settings, variantExplorer, modal, genomicFilterView,
+				 packageDataView, variantExplorerOverride,
+        ){
 	var defaultModel = BB.Model.extend({
 		defaults: {
 			totalPatients : 0,
@@ -13,6 +15,7 @@ define(["jquery", "underscore", "text!output/outputPanel.hbs", "picSure/ontology
 	});
 
 	var outputModel = overrides.modelOverride ? overrides.modelOverride : defaultModel;
+	variantExplorer = variantExplorerOverride ? variantExplorerOverride : variantExplorer;
 
 	var outputView = overrides.viewOverride ? overrides.viewOverride : 
 		BB.View.extend({
