@@ -3,19 +3,21 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
     function($, _, datatables, BB, HBS, variantTableTemplate, modalTemplate, settings,
              config, spinner){
         const maxVariantCount =  settings.maxVariantCount ? settings.maxVariantCount : 1000;
-        let createDownloadLink = function(response){
+        let createDownloadLink = function(response, selector){
             //now add a handy download link!
-            $(".modal-header").append("<a id='variant-download-btn'>Download Variant Data</a>");
+            $(selector).append("<a id='variant-download-btn'>Download Variant Data</a>");
             const responseDataUrl = URL.createObjectURL(new Blob([response], {type: "octet/stream"}));
-            $("#variant-download-btn", $(".modal-header")).off('click');
-            $("#variant-download-btn", $(".modal-header")).attr("href", responseDataUrl);
-            $("#variant-download-btn", $(".modal-header")).attr("download", "variantData.tsv");
+            $("#variant-download-btn", $(selector)).off('click');
+            $("#variant-download-btn", $(selector)).attr("href", responseDataUrl);
+            $("#variant-download-btn", $(selector)).attr("download", "variantData.tsv");
         }
         let variantExplorerView = BB.View.extend({
             initialize: function(opts) {
                 this.baseQuery = opts.query;
                 this.dataErrorMsg = opts.errorMsg ? opts.errorMsg : "There was an error loading the data";
                 this.variantTableTemplate = HBS.compile(variantTableTemplate);
+                this.modalTitleSelector = opts.modalTitleSelector ? opts.modalTitleSelector : '.modal-title';
+                this.modalHeaderSelector = opts.modalTitleSelector ? opts.modalTitleSelector : '.modal-header';
             },
             createDataTable: function(){
                 let renderComplete = $.Deferred();
@@ -55,13 +57,14 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
                             let responseJson = JSON.parse(response);
                             if (responseJson.count !== undefined) {
                                 this.variantCount = responseJson.count;
-                                $(".modal-title").html("Variant Data: " + (responseJson.count - 2) + " variants found");
+                                // I have no idea why this is count - 2
+                                $(this.modalTitleSelector).html("Variant Data: " + (responseJson.count - 2) + " variants found");
                                 return;
                             }
                         }
                     }.bind(this),
                     error: function(response){
-                        console.log("ERROR: " + response);
+                        this.handleDataError(this.dataErrorMsg);
                     }.bind(this)
                 });
             },
@@ -102,12 +105,15 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
                     }.bind(this),
                     error: function(response){
                         this.handleDataError(this.dataErrorMsg);
-                        console.log("ERROR: " + response);
                     }.bind(this),
                 });
             },
             handleDataError: function(errorMsg){
-                this.$el.html('<div class="variant-exporer-error"><i class="fa fa-TODO"></i><h4>Data failed to load</h4><br><p>'+errorMsg+'</p><div>');
+                if (errorMsg) {
+                    this.$el.html('<div class="variant-exporer-error"><i class="fa fa-TODO"></i><p>'+errorMsg+'</p><div>');
+                } else {
+                    this.$el.html('<div class="variant-exporer-error"><i class="fa fa-TODO"></i><h4>Data failed to load</h4><br><p>'+errorMsg+'</p><div>');
+                }
             },
             handleSiteDisabled: function(){
                 this.$el.html('<div class="variant-exporer-error"><i class="fa fa-TODO"></i><h4>There is no data to display</h4><br><h5>The Variant Explorer is not enabled for this site</h5><div>');
@@ -143,9 +149,9 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
                     if (this.variantCount > maxVariantCount) {
                         this.handleDataError('Too many variants!  Found ' + this.variantCount + ', but cannot display more than ' + settings.maxVariantCount + ' variants.');
                     } else {
-                        return this.getVariantData().then(() => {
+                        return this.getVariantData().then((response) => {
                             if (settings.queryExportType && settings.queryExportType !== "EXPORT_DISABLED") {
-                                createDownloadLink();
+                                createDownloadLink(response, this.modalHeaderSelector);
                             }
                             return this.createDataTable();
                         });
