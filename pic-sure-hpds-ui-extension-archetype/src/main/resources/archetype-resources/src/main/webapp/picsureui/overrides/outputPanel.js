@@ -47,6 +47,11 @@ define(["jquery", "handlebars", "backbone", "common/config"], function($, HBS, B
 		 */
 		runQuery: undefined,
 
+		/*
+		 * A function add more functionality to the output panel render function. This function will be called after the default render function.
+		 */
+		renderExt: undefined,
+
 		variantExplorerStatus: config.VariantExplorerStatus.disabled
 	};
 });
