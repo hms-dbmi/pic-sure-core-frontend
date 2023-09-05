@@ -1,6 +1,10 @@
 define([], function(){
 	return {
 		/*
+		 * The timeout for the info columns query
+		 */
+		infoColumnsTimeout : undefined,
+		/*
 		 * A function that takes a PUI that is already split on forward slash and returns
 		 * the category value for that PUI.
 		 */
