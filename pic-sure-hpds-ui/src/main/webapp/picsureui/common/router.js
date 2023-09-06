@@ -1,52 +1,57 @@
-define(["backbone", "underscore", "common/session", "login/login", 'header/header', 'footer/footer', 'user/userManagement',
-        'role/roleManagement', 'privilege/privilegeManagement', "application/applicationManagement",
-        'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
-        'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
-        "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
-        "text!common/unexpected_error.hbs", "common/googleAnalytics"],
-    function (Backbone, _, session, login, header, footer, userManagement,
-              roleManagement, privilegeManagement, applicationManagement,
-              connectionManagement, tos, userFunctions,
-              HBS, accessRuleManagement, routerOverrides, filterList,
-              layoutTemplate, queryBuilder, output, settings,
-              unexpectedErrorTemplate, googleAnalytics) {
-
+define([
+    "backbone", "underscore", "common/session", "login/login", 'header/header', 'footer/footer',
+    'psamaui/user/userProfile', 'user/userManagement',
+    'role/roleManagement', 'privilege/privilegeManagement', "application/applicationManagement",
+    'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
+    'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
+    "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
+    "text!common/unexpected_error.hbs", "common/googleAnalytics"
+], function(
+    Backbone, _, session, login, header, footer, 
+    userProfile, userManagement,
+    roleManagement, privilegeManagement, applicationManagement,
+    connectionManagement, tos, userFunctions,
+    HBS, accessRuleManagement, routerOverrides, filterList,
+    layoutTemplate, queryBuilder, output, settings,
+    unexpectedErrorTemplate, googleAnalytics
+){
         var publicRoutes = ["not_authorized", "login", "logout"];
         var Router = Backbone.Router.extend({
-            routes: {
-                "psamaui/userManagement(/)": "displayUserManagement",
-                "psamaui/connectionManagement(/)": "displayConnectionManagement",
-                "psamaui/tos(/)": "displayTOS",
-                "psamaui/login(/)": "login",
-                "picsureui/login(/)": "login",
-                "psamaui/logout(/)": "logout",
-                "psamaui/not_authorized(/)": "not_authorized",
-                "psamaui/roleManagement(/)": "displayRoleManagement",
-                "psamaui/privilegeManagement(/)": "displayPrivilegeManagement",
-                "psamaui/applicationManagement(/)": "displayApplicationManagement",
-                "psamaui/accessRuleManagement(/)": "displayAccessRuleManagement",
-                "picsureui/queryBuilder(/)": "displayQueryBuilder",
-                "picsureui/not_authorized(/)": "not_authorized",
-                "picsureui/unexpected_error(/)": "unexpected_error",
-                // This path must be last in the list
-                "*path": "defaultAction"
-            },
-            initialize: function () {
-                for (const routeOverride in routerOverrides.routes) {
-                    this.route(routeOverride, routerOverrides.routes[routeOverride]);
+        routes: {
+            "psamaui/userManagement(/)" : "displayUserManagement",
+            "psamaui/connectionManagement(/)" : "displayConnectionManagement",
+            "psamaui/tos(/)" : "displayTOS",
+            "psamaui/login(/)" : "login",
+            "psamaui/logout(/)" : "logout",
+            "psamaui/not_authorized(/)" : "not_authorized",
+            "psamaui/roleManagement(/)" : "displayRoleManagement",
+            "psamaui/privilegeManagement(/)" : "displayPrivilegeManagement",
+            "psamaui/applicationManagement(/)" : "displayApplicationManagement",
+            "psamaui/accessRuleManagement(/)" : "displayAccessRuleManagement",
+            "picsureui/user(/)" : "displayUserProfile",
+            "picsureui/login(/)" : "login",
+            "picsureui/queryBuilder(/)" : "displayQueryBuilder",
+            "picsureui/not_authorized(/)" : "not_authorized",
+            "picsureui/unexpected_error(/)" : "unexpected_error",
+            // This path must be last in the list
+            "*path" : "defaultAction"
+        },
+        initialize: function(){
+            for (const routeOverride in routerOverrides.routes) {
+                this.route(routeOverride, routerOverrides.routes[routeOverride]);
+            }
+            var pushState = history.pushState;
+            this.tos = tos;
+            history.pushState = function(state, title, path) {
+                if(state.trigger){
+                    this.router.navigate(path, state);
+                }else{
+                    this.router.navigate(path, {trigger: true});
                 }
-                var pushState = history.pushState;
-                this.tos = tos;
-                history.pushState = function (state, title, path) {
-                    if (state.trigger) {
-                        this.router.navigate(path, state);
-                    } else {
-                        this.router.navigate(path, {trigger: true});
-                    }
-                    return pushState.apply(history, arguments);
-                }.bind({router: this});
-                this.layoutTemplate = HBS.compile(layoutTemplate);
-                this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
+                return pushState.apply(history, arguments);
+            }.bind({router:this});
+            this.layoutTemplate = HBS.compile(layoutTemplate);
+            this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
 
                 this.displayGoogleAnalytics();
             },
@@ -226,6 +231,17 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
                 analyticsView.render();
                 $("head").append(analyticsView.$el);
             },
+        displayUserProfile: function() {
+            $(".header-btn.active").removeClass('active');
+            $(".header-btn[href='/picsureui/user']").addClass('active');
+
+            $('#main-content').empty();
+            userFunctions.meWithToken(this, (user) => {
+                const profile = new userProfile(user);
+                $('#main-content').append(profile.$el);
+                profile.render();
+            });
+        },
             defaultAction: function () {
                 console.log("Default action");
                 $(".header-btn.active").removeClass('active');
@@ -235,8 +251,6 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
                     this.displayQueryBuilder();
                 }
             }
-
-
         });
         return new Router();
     });

@@ -3,6 +3,7 @@
     --picsure-primary: #c4c4c4;
     --picsure-secondary: #848484;
     --picsure-alt: #c4b49c;
+    --picsure-action: #c0143c;
     --picsure-other: #90a8a4;
     --picsure-lite: #90a8a4;
     --picsure-dark: #333333;
@@ -208,6 +209,10 @@
      height: 20px;
      -webkit-animation: spin 0.7s linear infinite;
      animation: spin 0.7s linear infinite;
+}
+.spinning {
+    -webkit-animation: spin 0.7s linear infinite;
+    animation: spin 0.7s linear infinite;
 }
  .spinner-medium {
      width: 40px;
@@ -703,10 +708,24 @@ body {
 }
 
 .bordered-block {
-    margin-top: 3px;
-    margin-bottom: 3px;
+    margin-bottom: 6px;
     padding: 6px;
-    border: 1px solid #4a90e2;
+    border: solid 1px #D6D6D6;
+    background-color: #F8F8F8;
+}
+
+#user-token div {
+    margin: 2px 0px;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+#user-profile .panel-body h3 {
+    margin: 0px 0px 14px;
 }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th{
@@ -931,6 +950,14 @@ body {
     color: white;
     background-color: var(--picsure-alt);
 }
+.btn.primary {
+    color: white;
+    background-color: var(--picsure-blue);
+}
+.btn.action {
+    color: white;
+    background-color: var(--picsure-action);
+}
 
 .header-btn:hover {
     background-color: var(--picsure-secondary);
@@ -1093,12 +1120,14 @@ input[type='checkbox'].categorical-filter-input {
     margin-top: 10px;
 }
 
-#dataset-query-info .row {
+#dataset-query-info .row,
+#dataset-view .row {
     display: flex;
     margin: 0px;
 }
 
-#dataset-query-info .row div {
+#dataset-query-info .row div,
+#dataset-view .row div {
     padding: 5px 0;
 }
 
@@ -1116,6 +1145,37 @@ input[type='checkbox'].categorical-filter-input {
 
 #named-dataset #buttons {
     margin-top: 20px;
+}
+
+/* ==== Named Dataset Management ==== */
+#dataset-management button.btn {
+    text-transform: capitalize;
+}
+
+#dataset-management .mt {
+    margin-top: 40px;
+}
+
+/* ==== Named Dataset View ==== */
+#dataset-view .row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#dataset-view .bordered {
+    border: solid 2px var(--picsure-alt);
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 15px;
+}
+
+#dataset-view .bordered ol {
+    padding-left: 14px;
+    margin-bottom: 0px;
+}
+
+#dataset-view .list-title {
+    text-transform: capitalize;
 }
 
 /* Genomic Modal */

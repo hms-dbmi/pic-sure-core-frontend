@@ -1,11 +1,10 @@
-define(["jquery", "backbone", "underscore", "handlebars", "text!header/header.hbs", "overrides/header", "picSure/settings",
-        "common/transportErrors", "common/modal", "header/userProfile",
-        "util/notification", "psamaui/overrides/userProfile", "picSure/userFunctions","common/pic-dropdown", 
-        "common/menu-nav-controls","common/keyboard-nav", "picSure/applicationFunctions"],
-		function($, BB, _, HBS, template, overrides, settings,
-                 transportErrors, modal, userProfile,
-                 notification, profileOverride, userFunctions, dropdown,
-                 menuNavControls, keyboardNav, applicationFunctions){
+define([
+	"jquery", "backbone", "underscore", "handlebars", "text!header/header.hbs", "overrides/header",
+	"picSure/settings", "common/pic-dropdown", "common/menu-nav-controls","common/keyboard-nav"
+], function(
+	$, BB, _, HBS, template, overrides, 
+	settings, dropdown, menuNavControls, keyboardNav
+){
 
     let headerTabs = undefined;
 	/*
@@ -86,7 +85,6 @@ define(["jquery", "backbone", "underscore", "handlebars", "text!header/header.hb
 		},
 		events : {
 			"click #logout-btn" : "gotoLogin",
-            "click #user-profile-btn": "userProfile",
             "click .header-navigation": "headerClick",
             "keypress #help-dropdown": "helpDropdownFocused"
 		},
@@ -106,16 +104,6 @@ define(["jquery", "backbone", "underscore", "handlebars", "text!header/header.hb
         gotoLogin: function (event) {
             this.logout();
             window.location = "/psamaui/login" + window.location.search;
-        },
-        userProfile: function (event) {
-        	if(profileOverride.userProfile) {
-        		profileOverride.userProfile(event, this);
-        	} else {
-	            keyboardNav.setCurrentView(undefined);
-		        userFunctions.meWithToken(this, (user) => {
-			        modal.displayModal(new userProfile(user), 'User Profile', ()=>{event.target.focus();}, {isHandleTabs: true});
-                });
-        	}
         },
         headerClick: function(event) {
 		    if ($(event.target).data("href")) {
