@@ -2,6 +2,7 @@ define([
     'backbone',
     'handlebars',
     'underscore',
+    'jstree',
     'picSure/settings',
     'text!output/package-data-view.hbs',
     'output/tree',
@@ -9,8 +10,8 @@ define([
     'common/modal',
     'overrides/outputPanel',
     'overrides/package-data-view',
-    'output/named-dataset',
-], function (BB, HBS, _, settings, view, tree, spinner, modal, outputOverride, overrides, namedDataset) {
+    'dataset/dataset-save',
+], function (BB, HBS, _, jstree, settings, view, tree, spinner, modal, outputOverride, overrides, namedDataset) {
     let triggerDownload = function (response) {
         const responseDataUrl = URL.createObjectURL(new Blob([response], { type: "octet/stream" }));
         $("#download-btn", this.$el).off('click');

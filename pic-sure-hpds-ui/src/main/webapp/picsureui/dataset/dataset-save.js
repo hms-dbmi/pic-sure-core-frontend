@@ -3,12 +3,12 @@ define([
     'handlebars',
     'underscore',
     "common/modal",
-    'text!output/named-dataset.hbs',
-    'overrides/named-dataset'
-], function (BB, HBS, _, modal, view, overrides) {
+    'text!dataset/dataset-save.hbs',
+    'overrides/dataset/dataset-save'
+], function (BB, HBS, _, modal, template, overrides) {
     return BB.View.extend({
         initialize: function (opts) {
-            this.template = HBS.compile(view);
+            this.template = HBS.compile(overrides.template ? overrides.template : template);
             this.modalSettings = opts.modalSettings;
             this.previousModal = opts.previousModal;
             this.queryUUID = opts.queryUUID;
@@ -73,7 +73,7 @@ define([
         },
         render: function () {
             this.$el.html(this.template(this));
-            overrides.renderOverride && overrides.renderOverride(this);
+            overrides.renderExt && overrides.renderExt(this);
         }
     });
 });
