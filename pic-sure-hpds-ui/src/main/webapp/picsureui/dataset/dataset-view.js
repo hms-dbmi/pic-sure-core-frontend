@@ -28,7 +28,6 @@ define([
                 renderId: "detail-filters",
                 render: function(filters = {}){
                     const filtersList = Object.entries(filters);
-                    if (filtersList.length === 0) return;
 
                     const filterString = filtersList.map(([filter, values]) => {
                         const { category } = /(\\[^\\]+)*\\(?<category>[^\\]+)\\/.exec(filter).groups;
@@ -42,7 +41,6 @@ define([
                 renderId: "detail-filters",
                 render: function(filters = {}){
                     const filtersList = Object.entries(filters);
-                    if (filtersList.length === 0) return;
 
                     const filterString = filtersList.map(([filter, { min, max }]) => {
                         const { category } = /(\\[^\\]+)*\\(?<category>[^\\]+)\\/.exec(filter).groups;
@@ -63,7 +61,6 @@ define([
                         const values = map[path] || [];
                         return { ...map, [path]: [ ...values, field] };
                     }, {}));
-                    if (variableList.length === 0) return;
 
                     const variableString = variableList.map(([filter, values]) => {
                         const { field } = /([^\\]+\\)*(?<field>[^\\]+)/.exec(filter).groups;

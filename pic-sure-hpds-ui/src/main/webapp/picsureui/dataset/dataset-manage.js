@@ -111,9 +111,8 @@ define([
                     type: "GET",
                     headers: { "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token },
                     contentType: "application/json",
-                    dataType: "text",
-                    success: function (response) {
-                        const datasets = JSON.parse(response)
+                    dataType: "json",
+                    success: function (datasets) {
                         const { false: active = [], true: archived = [] } = _.groupBy(datasets, (dataset) => dataset.archived);
     
                         this.renderTable("active", active);
@@ -139,7 +138,7 @@ define([
                 type: "PUT",
                 headers: { "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token },
                 contentType: "application/json",
-                dataType: "text",
+                dataType: "json",
                 data: JSON.stringify(body),
                 success: onSuccess,
                 error: onError
