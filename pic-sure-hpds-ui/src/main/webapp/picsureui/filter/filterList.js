@@ -1,6 +1,6 @@
-define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList", "filter/searchHelpTooltipView", "common/modal",
+define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList", "filter/searchHelpTooltipView", "common/modal", "underscore", "filter/genomic-filter-view", "filter/selected-genomic-filters",
 	"underscore"],
-		function($, HBS, queryBuilder, filter, ontology, overrides, helpView, modal, _){
+		function($, HBS, queryBuilder, filter, ontology, overrides, helpView, modal, _, genomicFilterView, selectedGenomicFilters){
 
 	var defaultRenderHelpCallback = function(filterView) {
         ontology.getInstance().allInfoColumnsLoaded.then(function(){
@@ -30,6 +30,19 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
 			this.outputPanelView = outputPanelView;
 			this.queryTemplate = queryTemplate;
 			this.addFilter();
+			const dataForSelectedFitlers = {
+				title: 'Selected Genomic Filters', 
+				editAction: this.editGenomicFilters.bind(this),
+				clearButton: true,
+				clearAction: () => {
+					this.selectedGenomicFilters.clearLists();
+					this.runQuery();
+				}
+			}
+			this.selectedGenomicFilters = new selectedGenomicFilters(dataForSelectedFitlers);
+			this.selectedGenomicFilters.render();
+			$("#selected-genomic-filter").html(this.selectedGenomicFilters.$el);
+			Backbone.pubSub.on("update:genomicFilter", this.addGenomicFilter);
 		}
 	};
 	filterList.addFilter = function(){
@@ -48,9 +61,22 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
 			this.renderHelpCallback(this);
 		}
 	}.bind(filterList);
-	filterList.runQuery = function(){
+	filterList.addGenomicFilter = function(newFilter){
+		let filter = {
+			Gene_with_variant: newFilter?.categoryVariantInfoFilters?.Gene_with_variant,
+			Variant_frequency_as_text: newFilter?.categoryVariantInfoFilters?.Variant_frequency_as_text,
+			Variant_consequence_calculated: newFilter?.categoryVariantInfoFilters?.Variant_consequence_calculated
+		}
+		this.selectedGenomicFilters.updateFilter(filter);
+		this.selectedGenomicFilters.render();
+		this.runQuery(newFilter);
+	}.bind(filterList);
+	filterList.runQuery = function(genomicFilter){
 		var query = queryBuilder.generateQuery(
 				_.pluck(this.filters, "model"), this.queryTemplate, this.resourceUUID);
+		if (genomicFilter) {
+			query.query.variantInfoFilters = [genomicFilter];
+		}
 		this.outputPanelView.runQuery(query);
 		if(_.countBy(this.filters, function(filter){
 			return $(".search-box", filter.$el).is(":visible") ? "visible" : "hidden";
@@ -58,6 +84,14 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
             this.addFilter();
         }
 	}.bind(filterList);
+	filterList.editGenomicFilters = function(){
+		const filter = this.selectedGenomicFilters.getCurrentFilter();
+		let genomicFilter = new genomicFilterView({el: $(".modal-body"), currentFilter: filter});
+		genomicFilter.render();
+		modal.displayModal(genomicFilter, 'Genomic Filtering', function() {
+			$('#filter-list').focus();
+		});
+	};
 	filterList.removeFilter = function (cid) {
          var indexToRemove;
         for (var i = 0; i < this.filters.length; i++) {
@@ -76,3 +110,4 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
 
 	return filterList;
 });
+// Backbone.pubSub.on("update:genomicFilter", );

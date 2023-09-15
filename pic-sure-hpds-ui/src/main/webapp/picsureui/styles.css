@@ -23,12 +23,15 @@
 }
  #patient-count-box {
      line-height: 1;
-     border-width: 1px;
-     border-style: solid;
-     border-color: lightgrey;
-     padding: 40px 0px;
-     background-color: rgb(223, 238, 255);
-     border-radius: 4px;
+}
+
+.no-top-margin {
+    margin-top: 0px;
+}
+
+#selected-genomic-filter {
+    margin: auto;
+    max-width: 650px;
 }
 
 /************************* Outline Buttons ******************************/
@@ -131,14 +134,16 @@
      width: 100%;
 }
  .filter-list-entry {
-     padding: 10px 10px 10px 10px;
+     padding: 0;
 }
  .filter-row {
      width: 100%;
 }
  .filter-search-row {
-     background-color: rgb(223, 238, 255);
      padding: 10px;
+}
+.filter-row .row {
+    margin: 0;
 }
 
  .filter-search {
@@ -491,10 +496,6 @@ body {
     margin-right: 0;
 }
 
-.search-box, .filter-search-box {
-    width: 80%;
-}
-
 .tab-pane {
     overflow-y: unset;
     max-height: unset;
@@ -566,6 +567,7 @@ body {
 
 .search-tooltip-help-icon {
     float: left;
+    padding: 0 0 9px 0;
 }
 
 .anyvalueof-value-list {
@@ -1211,3 +1213,114 @@ input[type='checkbox'].categorical-filter-input {
 .tree-select-container .panel-body .jstree-themeicon {
     display: none;
 }
+
+/* ==== Search ==== */
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+#search-box {
+    display: inline;
+    vertical-align: bottom;
+}
+#search-button {
+    width:6em;
+}
+#genomic-filter-btn {
+    width:10em;
+}
+
+#search-controls {
+    width: 100%;
+}
+
+#search-controls:not([type="reset"]) {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: end;
+}
+#search-controls > button:last-child {
+    margin-right: 11px;
+}
+#search-controls > *:not([type="reset"]):not(:last-child) {
+    margin-right: 0.5em;
+}
+#search-controls > *:not([type="reset"]):not(:first-child):not(label) {
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%);
+}
+#search-controls > label:first-of-type:first-child {
+    margin-left: 1em;
+}
+#search-controls label {
+    align-self: center;
+}
+.reset-button {
+    align-self: center;
+}
+
+/************************* STARTS Search X/reset button ******************************/
+
+input[type="search"]::-webkit-search-cancel-button {
+    /* Remove default */
+    -webkit-appearance: none;
+    /* X image */
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAn0lEQVR42u3UMQrDMBBEUZ9WfQqDmm22EaTyjRMHAlM5K+Y7lb0wnUZPIKHlnutOa+25Z4D++MRBX98MD1V/trSppLKHqj9TTBWKcoUqffbUcbBBEhTjBOV4ja4l4OIAZThEOV6jHO8ARXD+gPPvKMABinGOrnu6gTNUawrcQKNCAQ7QeTxORzle3+sDfjJpPCqhJh7GixZq4rHcc9l5A9qZ+WeBhgEuAAAAAElFTkSuQmCC);
+    background-repeat: no-repeat;
+    background-size: 14px;
+    height: 14px;
+    width: 14px;
+    display: block;
+    cursor: pointer;
+}
+
+@supports selector(::-webkit-search-cancel-button) {
+    input[type="search"] > input[type="reset"],
+    input[type="search"] + input[type="reset"] {
+        display: none;
+    }
+}
+
+/* Firefox (A bug in Safari allows it to impact for Safari) */
+@supports not selector(::-webkit-search-cancel-button) {
+    input[type="search"] > input[type="reset"],
+    input[type="search"] + input[type="reset"] {
+        display: inline-block;
+        background-color: transparent;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAn0lEQVR42u3UMQrDMBBEUZ9WfQqDmm22EaTyjRMHAlM5K+Y7lb0wnUZPIKHlnutOa+25Z4D++MRBX98MD1V/trSppLKHqj9TTBWKcoUqffbUcbBBEhTjBOV4ja4l4OIAZThEOV6jHO8ARXD+gPPvKMABinGOrnu6gTNUawrcQKNCAQ7QeTxORzle3+sDfjJpPCqhJh7GixZq4rHcc9l5A9qZ+WeBhgEuAAAAAElFTkSuQmCC);
+        background-repeat: no-repeat;
+        background-size: 14px;
+        height: 14px;
+        width: 14px;
+        padding: 4px;
+        z-index: 100;
+        cursor: pointer;
+        position: relative;
+        margin-right: -14px;
+        right: 35px;
+    }
+    #search-box:not(:valid) ~ input[type="reset"] {
+        visibility: hidden;
+    }
+}
+
+/* Safari 9+ (no impact to Chrome or Firefox)
+remove when above bug is fixed */
+@supports (-webkit-hyphens:none) {
+    input[type="search"] > input[type="reset"],
+    input[type="search"] + input[type="reset"] {
+        display: none;
+    }
+    #search-box:valid ~ #search-button,
+    #search-box:valid ~ #genomic-filter-btn {
+        position: static;
+    }
+}
+
+/************************* ENDS Search X ******************************/
