@@ -31,7 +31,7 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
 			this.queryTemplate = queryTemplate;
 			this.addFilter();
 			const dataForSelectedFitlers = {
-				title: 'Selected Genomic Filters', 
+				title: 'Genomic Filters', 
 				editAction: this.editGenomicFilters.bind(this),
 				clearButton: true,
 				clearAction: () => {
@@ -41,7 +41,6 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
 			}
 			this.selectedGenomicFilters = new selectedGenomicFilters(dataForSelectedFitlers);
 			this.selectedGenomicFilters.render();
-			$("#selected-genomic-filter").html(this.selectedGenomicFilters.$el);
 			Backbone.pubSub.on("update:genomicFilter", this.addGenomicFilter);
 		}
 	};
@@ -62,6 +61,9 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
 		}
 	}.bind(filterList);
 	filterList.addGenomicFilter = function(newFilter){
+		if ($("#selected-genomic-filter").html() == undefined || $("#selected-genomic-filter").html() == "") {
+			$("#selected-genomic-filter").html(this.selectedGenomicFilters.$el);
+		}
 		let filter = {
 			Gene_with_variant: newFilter?.categoryVariantInfoFilters?.Gene_with_variant,
 			Variant_frequency_as_text: newFilter?.categoryVariantInfoFilters?.Variant_frequency_as_text,
