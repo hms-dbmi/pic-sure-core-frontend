@@ -17,7 +17,8 @@ define([
 	"text!filter/constrainFilterMenuAnyRecordOf.hbs",
 	"picSure/settings",
 	"filter/genomic-filter-view",
-	"common/modal"
+	"common/modal",
+	"picSure/ontology"
   ], function (
 	$,
 	_,
@@ -37,7 +38,8 @@ define([
 	constrainFilterMenuAnyRecordOfTemplate,
 	settings,
 	genomicFilterView,
-	modal
+	modal,
+	ontology
   ) {
 	var valueConstrainModel = BB.Model.extend({
 	  defaults: {
@@ -71,6 +73,7 @@ define([
 		this.restoreSearchResults = this.restoreSearchResults.bind(this);
 		this.showSearchResults = this.showSearchResults.bind(this);
 		this.removeFilter = opts.removeFilter;
+		this.hasGenomicData = ontology.getInstance().allInfoColumns() !== undefined;
 		this.constrainFilterMenuTemplate = HBS.compile(
 		  constrainFilterMenuTemplate
 		);
@@ -87,6 +90,7 @@ define([
 		  constrainFilterMenuAnyRecordOfTemplate
 		);
 		this.resourceUUID = opts.resourceUUID;
+
   
 		this.showSearchResults = overrides.showSearchResults
 		  ? overrides.showSearchResults.bind(this)
@@ -776,6 +780,8 @@ define([
 		  this.model.attributes.filterId =
 			Math.random().toString(36).substring(2) + Date.now().toString(36);
 		}
+
+		this.model.set("genomicFilteringEnabled", this.hasGenomicData);
   
 	    //add selectedFiltersPanel to dom at the div with id="selected-filters-panel"
 		this.$el.html(this.template(this.model.attributes));

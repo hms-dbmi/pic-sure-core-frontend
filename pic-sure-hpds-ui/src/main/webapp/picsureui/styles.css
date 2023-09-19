@@ -1,6 +1,7 @@
 :root {
     /*PIC-SURE Primary*/
     --picsure-primary: #c4b49c;
+    --picsure-primary-hover: #9c8f7c;
     --picsure-secondary: #848484;
     --picsure-alt: #c4b49c;
     --picsure-other: #90a8a4;
@@ -25,6 +26,11 @@
 .btn-primary {
 	background-color: var(--picsure-primary);
 	border-color: var(--picsure-primary);
+}
+
+.btn-primary:hover {
+	background-color: var(--picsure-primary-hover);
+	border-color: var(--picsure-primary-hover);
 }
 
 #query-builder h3 {
@@ -1226,6 +1232,10 @@ input[type='checkbox'].categorical-filter-input {
 }
 
 .space-even section:not(:last-child) {
+    margin-right: auto;
+}
+
+.space-even div:not(:last-child) {
     margin-right: auto;
 }
 

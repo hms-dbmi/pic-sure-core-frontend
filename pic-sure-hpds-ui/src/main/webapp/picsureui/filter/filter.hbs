@@ -21,11 +21,13 @@
 					<button id="search-button" type="button" class='btn btn-primary col'
 					aria-label="You are on the search button"
 					>Search</button>
+					{{#if genomicFilteringEnabled}}
 					<button id="genomic-filter-btn" type="button" class='btn btn-outline primary col'
 					aria-label="You are on the Genomic Filtering button"
 					data-intro="#genomic-filter-btn"
 					data-sequence="2"
 					>Genomic Filtering</button>
+					{{/if}}
 					<button id="search-reset-button" type="button" class='btn btn-outline danger' 
 					aria-label="You are on the reset button">Reset</button>
 				</form>

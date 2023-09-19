@@ -77,7 +77,8 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
 		var query = queryBuilder.generateQuery(
 				_.pluck(this.filters, "model"), this.queryTemplate, this.resourceUUID);
 		if (genomicFilter) {
-			query.query.variantInfoFilters = [genomicFilter];
+			const merged = {...query.query.variantInfoFilters, ...genomicFilter};
+			query.query.variantInfoFilters = merged;
 		}
 		this.outputPanelView.runQuery(query);
 		if(_.countBy(this.filters, function(filter){
