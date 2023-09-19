@@ -73,8 +73,11 @@ define([
 		this.restoreSearchResults = this.restoreSearchResults.bind(this);
 		this.showSearchResults = this.showSearchResults.bind(this);
 		this.removeFilter = opts.removeFilter;
-		const infoColumns = ontology.getInstance().allInfoColumns();
-		this.hasGenomicData = infoColumns !== undefined && infoColumns.length !== 0;
+		ontology.getInstance().allInfoColumnsLoaded.then(() => {
+			const infoColumns = ontology.getInstance().allInfoColumns();
+			this.hasGenomicData = infoColumns !== undefined && infoColumns.length !== 0;
+			this.render();
+		});
 		this.constrainFilterMenuTemplate = HBS.compile(
 		  constrainFilterMenuTemplate
 		);
