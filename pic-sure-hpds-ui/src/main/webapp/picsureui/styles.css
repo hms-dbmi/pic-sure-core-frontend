@@ -1,6 +1,6 @@
 :root {
     /*PIC-SURE Primary*/
-    --picsure-primary: #c4c4c4;
+    --picsure-primary: #c4b49c;
     --picsure-secondary: #848484;
     --picsure-alt: #c4b49c;
     --picsure-other: #90a8a4;
@@ -22,11 +22,22 @@
      padding-bottom: 2em;
 }
 
+.btn-primary {
+	background-color: var(--picsure-primary);
+	border-color: var(--picsure-primary);
+}
+
 #query-builder h3 {
     margin-top: 0;
 }
  #patient-count-box {
-     line-height: 1;
+    line-height: 1;
+    padding-bottom: 16px;
+}
+
+#query-results .panel-heading {
+	text-align: center;
+	margin-bottom: 8px;
 }
 
 .no-top-margin {
