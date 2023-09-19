@@ -74,7 +74,7 @@ define([
 		this.showSearchResults = this.showSearchResults.bind(this);
 		this.removeFilter = opts.removeFilter;
 		const infoColumns = ontology.getInstance().allInfoColumns();
-		this.hasGenomicData = infoColumns !== undefined || infoColumns != [];
+		this.hasGenomicData = infoColumns !== undefined || infoColumns == [];
 		this.constrainFilterMenuTemplate = HBS.compile(
 		  constrainFilterMenuTemplate
 		);
