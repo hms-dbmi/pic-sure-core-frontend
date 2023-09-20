@@ -22,5 +22,16 @@ define([],  function(){
 		 * If defined, this function executes after the normal render function.
 		 */
 		renderExt: undefined,
+
+		/*
+		 * Mapper ovrrides - Overried the static columns and their definitions.
+		 */
+		staticColumns: [],
+		staticColumnDefs: [],
+
+		/*
+		 * Update or change the mapped actions.
+		 */
+		actions: undefined
     };
 });

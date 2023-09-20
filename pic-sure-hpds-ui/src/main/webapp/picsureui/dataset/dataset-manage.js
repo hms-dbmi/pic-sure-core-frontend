@@ -19,12 +19,24 @@ define([
             { title: "Dataset ID", data: "uuid" },
             { title: "Created", type: "datetime", data: "query.startTime" },
             { title: "Query ID", data: "query.uuid" },
-            { title: "Metadata", data: "metadata" }
+            { title: "Metadata", data: "metadata" },
+            ...(overrides.staticColumns || [])
         ],
-        getColumnsAndActions: function(tableId) {
+        staticColumnDefs: [
+            { // format uquery created as date
+                targets: 2,
+                render: seconds => new Date(seconds).toDateString()
+            },
+            { // hide query id column
+                targets: [3, 4],
+                visible: false
+            },
+            ...(overrides.staticColumnDefs || [])
+        ],
+        actions: function() {
             const actions = {
-                active: [
-                    {
+                active: {
+                    copy: {
                         title: "Copy",
                         name: "copy",
                         style: "alternate",
@@ -39,7 +51,7 @@ define([
                             _.delay(() => { document.getElementById(key).innerText = originalText; }, 4500);
                         }
                     },
-                    {
+                    view: {
                         title: "View",
                         name: "view",
                         style: "alternate",
@@ -57,22 +69,26 @@ define([
                             );
                         }
                     },
-                    {
+                    archive: {
                         title: "Archive",
                         name: "archive",
                         style: "action",
                         handler: this.archiveRow(true)
                     }
-                ],
-                archived: [
-                    {
+                },
+                archived: {
+                    restore: {
                         title: "Restore",
                         name: "restore",
                         style: "action",
                         handler: this.archiveRow(false)
                     }
-                ]
-            }[tableId];
+                }
+            };
+            return overrides.actions ? overrides.actions(actions, this) : actions;
+        },
+        getColumnsAndActions: function(tableId) {
+            const actions = Object.values(this.actions()[tableId]);
 
             const columns = [ 
                 ...this.staticColumns,
@@ -80,14 +96,7 @@ define([
             ];
 
             const columnDefs = [
-                { // format uquery created as date
-                    targets: 2,
-                    render: seconds => new Date(seconds).toDateString()
-                },
-                { // hide query id column
-                    targets: [3, 4],
-                    visible: false
-                },
+                ...this.staticColumnDefs,
                 ...actions.map(({name, style}, index) => ({
                     data: null,
                     render: row => this.renderButton(row.uuid, name, style),
