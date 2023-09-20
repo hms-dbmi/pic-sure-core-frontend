@@ -219,9 +219,17 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
         },
         displayGoogleAnalytics: function() {
             let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
-            // append the analytics view to the body
             analyticsView.render();
             $("head").append(analyticsView.$el);
+	    $("body").prepend(
+		  '<!-- Google Tag Manager (noscript) --> \
+		  <noscript> \
+		  <iframe src="https://www.googletagmanager.com/ns.html?id='+settings.analyticsId+'" \
+		    height="0" width="0" style="display:none;visibility:hidden"> \
+		  </iframe> \
+		  </noscript> \
+		  <!-- End Google Tag Manager (noscript) -->'
+	    );
         },
         defaultAction: function() {
             console.log("Default action");
