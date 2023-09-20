@@ -3,10 +3,9 @@ define(["backbone", "handlebars", "text!common/googleAnalytics.hbs", "picSure/se
         var googleAnalytics = BB.View.extend({
             initialize: function () {
                 this.template = HBS.compile(template);
-                this.settings = settings;
             },
             render: function () {
-                let analyticsId = this.settings.analyticsId;
+                let analyticsId = settings.analyticsId;
                 if (analyticsId === undefined || analyticsId === "__ANALYTICS_ID__") {
                     analyticsId = false;
                 }
