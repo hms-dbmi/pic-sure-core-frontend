@@ -25,8 +25,8 @@ define([
             modal.displayModal(view, title, onClose, options);
         },
         onClose: function() {
-            this.modalSettings.onClose();
             this.modalReturn();
+            this.modalSettings.onClose();
         },
         onError: function(text){
             $('#errors').html(text);
@@ -34,7 +34,7 @@ define([
         },
         onSave: function() {
             if (overrides && overrides.onSave) {
-                overrides.onSave();
+                overrides.onSave(this);
                 return;
             }
 
@@ -73,6 +73,10 @@ define([
         },
         render: function () {
             this.$el.html(this.template(this));
+            
+            this.previousModal && $('.close')?.off('click');
+            this.previousModal && $('.close')?.on('click', this.onClose.bind(this));
+
             overrides.renderExt && overrides.renderExt(this);
         }
     });
