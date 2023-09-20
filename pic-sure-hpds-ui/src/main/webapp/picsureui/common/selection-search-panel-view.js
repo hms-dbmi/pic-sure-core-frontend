@@ -16,6 +16,9 @@ define(['jquery',
     ) {
         const LIST_ITEM = 'list-item';
         const SELECTED = 'selected';
+        let hasScrollbar = function(element) {
+            return element.scrollHeight > element.clientHeight;
+        }
         let selectionSearchView = BB.View.extend({
             initialize: function(opts){
                 if (opts && opts.heading) {
@@ -83,6 +86,10 @@ define(['jquery',
             selectItem: function(e) {
                 const index = this.data.searchResultOptions.indexOf(e.target.value);
                 this.moveItem(this.data.searchResultOptions, this.data.selectedResults, index);
+                const valueContainer = $('.selection-search-results')?.get(0);
+                if (!hasScrollbar(valueContainer)) {
+                    this.handleScroll({target: valueContainer})
+                };
             },
             unselectItem: function(e) {
                 const index = this.data.selectedResults.indexOf(e.target.value);
