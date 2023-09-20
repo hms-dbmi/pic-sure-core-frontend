@@ -25,7 +25,13 @@ define([
         staticColumnDefs: [
             { // format uquery created as date
                 targets: 2,
-                render: seconds => new Date(seconds).toDateString()
+                render: seconds => {
+                    const dt = new Date(seconds);
+                    const year = dt.toLocaleString("default", { year: "numeric" });
+                    const month = dt.toLocaleString("default", { month: "2-digit" });
+                    const day = dt.toLocaleString("default", { day: "2-digit" });
+                    return year + "-" + month + "-" + day;
+                }
             },
             { // hide query id column
                 targets: [3, 4],
