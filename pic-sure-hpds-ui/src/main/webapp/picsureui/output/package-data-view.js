@@ -34,7 +34,7 @@ define([
             this.modalSettings = opts.modalSettings;
             this.outputModel = opts.model;
             this.exportModel = opts.exportModel;
-            this.modal = opts.modal;
+            this.modal = modal;
             this.settings = settings;
             this.updateQuery(opts.query);
             this.queryButtonLabel = settings.queryButtonLabel;
@@ -46,7 +46,7 @@ define([
         },
         saveDatasetId: function(){
             if (overrides && overrides.saveDatasetId) {
-                overrides.saveDatasetId();
+                overrides.saveDatasetId(this);
                 return;
             }
 
@@ -93,6 +93,10 @@ define([
             })
         }.bind(this),
         updateNamedDatasetObjects: function() {
+            if (overrides && overrides.updateNamedDatasetObjects) {
+                overrides.updateNamedDatasetObjects(this);
+                return;
+            }
             const name = this.exportModel.get('datasetName');
             const uuid = this.exportModel.get('lastQueryUUID');
             
