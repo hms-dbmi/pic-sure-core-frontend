@@ -9,7 +9,7 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
                 connectionManagement, tos, userFunctions,
                 HBS, accessRuleManagement, routerOverrides, filterList,
                  layoutTemplate, queryBuilder, output, settings,
-                 unexpectedErrorTemplate, googleAnalytics, cookieConsent){
+                 unexpectedErrorTemplate, googleAnalytics){
 
         var publicRoutes = ["not_authorized", "login", "logout"];
         var Router = Backbone.Router.extend({
