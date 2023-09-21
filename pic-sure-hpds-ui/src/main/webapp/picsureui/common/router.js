@@ -3,13 +3,13 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
         'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
         'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
         "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
-        "text!common/unexpected_error.hbs", "common/googleAnalytics"],
+        "text!common/unexpected_error.hbs", "analytics/googleAnalytics"],
         function(Backbone, _, session, login, header, footer, userManagement,
                 roleManagement, privilegeManagement, applicationManagement,
                 connectionManagement, tos, userFunctions,
                 HBS, accessRuleManagement, routerOverrides, filterList,
                  layoutTemplate, queryBuilder, output, settings,
-                 unexpectedErrorTemplate, googleAnalytics){
+                 unexpectedErrorTemplate, googleAnalytics, cookieConsent){
 
         var publicRoutes = ["not_authorized", "login", "logout"];
         var Router = Backbone.Router.extend({
@@ -221,15 +221,15 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
             let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
             analyticsView.render();
             $("head").append(analyticsView.$el);
-	    $("body").prepend(
-		  '<!-- Google Tag Manager (noscript) --> \
-		  <noscript> \
-		  <iframe src="https://www.googletagmanager.com/ns.html?id='+settings.analyticsId+'" \
-		    height="0" width="0" style="display:none;visibility:hidden"> \
-		  </iframe> \
-		  </noscript> \
-		  <!-- End Google Tag Manager (noscript) -->'
-	    );
+            $("body").prepend(
+            '<!-- Google Tag Manager (noscript) --> \
+            <noscript> \
+            <iframe src="https://www.googletagmanager.com/ns.html?id='+settings.analyticsId+'" \
+                height="0" width="0" style="display:none;visibility:hidden"> \
+            </iframe> \
+            </noscript> \
+            <!-- End Google Tag Manager (noscript) -->'
+            );
         },
         defaultAction: function() {
             console.log("Default action");
