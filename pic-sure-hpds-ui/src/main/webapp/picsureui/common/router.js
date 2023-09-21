@@ -28,7 +28,7 @@ define(["backbone", "underscore", "common/session", "login/login", 'header/heade
                 connectionManagement, tos, userFunctions,
                 HBS, accessRuleManagement, routerOverrides, filterList,
                  layoutTemplate, queryBuilder, output, settings,
-                 unexpectedErrorTemplate, googleAnalytics, cookieConsent){
+                 unexpectedErrorTemplate, googleAnalytics){
 
 >>>>>>> 22f5d8d (first pass at cookie consent banner)
         var publicRoutes = ["not_authorized", "login", "logout"];

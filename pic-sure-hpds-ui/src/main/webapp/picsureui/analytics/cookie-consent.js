@@ -9,17 +9,16 @@ define([
             this.template = HBS.compile(viewTemplate);
         },
         events: {
-            'click #cookie-consent-acceptAll' : 'acceptAll',
-            'click #cookie-consent-accept-necessary' : 'acceptNecessary',
+            'click #cookie-consent-accept-all' : 'acceptAll',
             'click #cookie-consent-accept-some' : 'accept',
-            'click #cookie-consent-reject' : 'rejectAll',
+            'click #cookie-consent-reject-all' : 'rejectAll',
+            'click #close-cookie-popup' : 'acceptNecessary',
         },
         acceptAll: function(){
             this.setConsent({
                 necessary: true,
                 preferences: true,
                 analytics: true,
-                marketing: true,
             });
             this.hideBanner();
         },
@@ -30,13 +29,13 @@ define([
                 analytics: false,
                 marketing: false,
             });
+            this.hideBanner();
         },
         accept: function(){
             this.setConsent({
                 necessary: $('#consent-necessary').is(':checked'),
-                preferences: $('#consent-necessary').is(':checked'),
-                analytics: $('#consent-necessary').is(':checked'),
-                marketing: $('#consent-necessary').is(':checked'),
+                preferences: $('#consent-preferences').is(':checked'),
+                analytics: $('#consent-analytics').is(':checked'),
             });
             this.hideBanner();
         },
@@ -61,14 +60,14 @@ define([
             localStorage.setItem('consentMode', JSON.stringify(consentMode));
         },
         hideBanner: function() {
-            this.$el.hide();
+            $('#cookie-consent-container').remove();
         },
         render: function(){
             if (!settings.analyticsId || settings.analyticsId === "__ANALYTICS_ID__" || settings.analyticsId === "") {
                 return;
             }
-            this.$el.html(this.template(this));
-            $("#btn-accept-all").focus();
+            this.$el.html(this.template());
+            // $("#btn-accept-all").focus();
         }
     });
     return CookieBanner;
