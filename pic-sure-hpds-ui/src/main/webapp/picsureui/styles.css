@@ -1386,6 +1386,7 @@ input[type='checkbox'].categorical-filter-input {
     display: none;
 }
 
+<<<<<<< HEAD
 /* ==== Search ==== */
 
 .flex-container {
@@ -1494,3 +1495,35 @@ remove when above bug is fixed */
 }
 
 /************************* ENDS Search X ******************************/
+=======
+
+
+/* ==== Cookie prefs ==== */
+
+#cookie-consent-container {
+    position: fixed;
+    bottom: 35px;
+    left: 25%;
+    z-index: 1000;
+    max-width: 50%;
+}
+
+#cookie-consent-banner {
+    box-shadow: 0 0 10px 0 rgba(0,0,0,.2);
+}
+
+#cookie-consent-banner .cookie-consent-options {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+}
+
+#cookie-consent-banner .cookie-consent-options button, #cookie-consent-banner .cookie-consent-options input {
+    margin: 0 5px;
+    padding: 10px;
+    align-self: center;
+}
+/* ==== END Cookie prefs ==== */
+>>>>>>> 9e10e2c (Styles and fixes for cookie dialog)
