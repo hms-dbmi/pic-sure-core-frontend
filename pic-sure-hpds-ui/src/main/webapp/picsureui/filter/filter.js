@@ -148,7 +148,7 @@ define([
 		this.model.set("constrainParams", new valueConstrainModel());
 	  },
 	  resetPage: function () {
-		confirm("Are you sure?") ? window.location.reload() : null;
+		confirm("Are you sure? This will remove all fitlers.") ? window.location.reload() : null;
 	  },
 	  enterButtonEventHandler: function (event) {
 		$(".constrain-filter", this.$el).hide();
