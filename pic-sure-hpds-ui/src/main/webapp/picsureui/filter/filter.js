@@ -148,7 +148,8 @@ define([
 		this.model.set("constrainParams", new valueConstrainModel());
 	  },
 	  resetPage: function () {
-		confirm("Are you sure? This will remove all fitlers.") ? window.location.reload() : null;
+		let message = this.hasGenomicData ? "Are you sure you want to clear all active search results, variable filters and genomic filters?" : "Are you sure you want to clear all active search results and variable filters?";
+		confirm(message) ? window.location.reload() : null;
 	  },
 	  enterButtonEventHandler: function (event) {
 		$(".constrain-filter", this.$el).hide();
