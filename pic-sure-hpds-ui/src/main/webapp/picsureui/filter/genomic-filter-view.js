@@ -288,7 +288,7 @@ define(['jquery', 'backbone','handlebars', "underscore",
                   "/values/?genomicConceptPath=" + this.data.genomicConceptPath +
                   "&query=" + searchTerm +
                   "&page=" + page + "&size=20";
-                return fetch(attributeEncode(url), {
+                return fetch(encodeURI(url), {
                     method: 'GET',
                     headers: {'Authorization': 'Bearer ' + JSON.parse(sessionStorage.getItem('session')).token, 'content-type': 'application/json'},
                 }).then(response => response.json()).then(data => {
