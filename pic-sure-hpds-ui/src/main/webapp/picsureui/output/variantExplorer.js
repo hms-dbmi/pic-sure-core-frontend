@@ -57,8 +57,7 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
                             let responseJson = JSON.parse(response);
                             if (responseJson.count !== undefined) {
                                 this.variantCount = responseJson.count;
-                                // I have no idea why this is count - 2
-                                $(this.modalTitleSelector).html("Variant Data: " + (responseJson.count - 2) + " variants found");
+                                $(this.modalTitleSelector).html("Variant Data: " + (responseJson.count) + " variants found");
                                 return;
                             }
                         }
