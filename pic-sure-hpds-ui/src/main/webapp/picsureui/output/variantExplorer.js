@@ -3,6 +3,9 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
     function($, _, datatables, BB, HBS, variantTableTemplate, modalTemplate, settings,
              config, spinner){
         const maxVariantCount =  settings.maxVariantCount ? settings.maxVariantCount : 1000;
+        // TODO: this is a temp fix to silence a data tables alert that doesn't seem to impact the dt output
+        // We should delete this line and fix what's causing the alert
+        datatables.ext.errMode = 'none';
         let createDownloadLink = function(response, selector){
             //now add a handy download link!
             $(selector).append("<a id='variant-download-btn'>Download Variant Data</a>");
