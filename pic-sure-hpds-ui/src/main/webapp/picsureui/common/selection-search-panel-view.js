@@ -16,7 +16,7 @@ define(['jquery',
     ) {
         const LIST_ITEM = 'list-item';
         const SELECTED = 'selected';
-        let hasScrollbar = function(element) {
+        let hasScrollbar = (element) => {
             return element.scrollHeight > element.clientHeight;
         }
         let selectionSearchView = BB.View.extend({
