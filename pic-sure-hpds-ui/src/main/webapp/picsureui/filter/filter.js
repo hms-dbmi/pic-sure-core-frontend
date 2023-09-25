@@ -291,9 +291,6 @@ define([
 		  $(".category-filter-restriction", this.$el).val("RESTRICT");
 		}
 	  },
-	  editGenomicFilters: function () {
-		console.log("editGenomicFilters");
-	  },
 	  openGenomicFilteringModal: function() {
 		const genomicFilter = new genomicFilterView({el: $(".modal-body"), genomicConceptPath:'Gene_with_variant'});
 		modal.displayModal(genomicFilter, 'Genomic Filtering', function() {
