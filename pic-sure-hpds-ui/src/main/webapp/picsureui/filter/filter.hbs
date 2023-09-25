@@ -1,13 +1,37 @@
-<div id="{{filterId}}" class="filter-row container">
-	<div class="filter-search-row row">
+<div id="{{filterId}}" class="filter-row">
+	<div class="row">
         <div class="filter-edit">
             <div class="filter-qualifier col-md-3">
             </div>
-            <div class="filter-search-box col-md-7">
-			<i class="btn glyphicon glyphicon-info-sign search-tooltip-help-icon show-help-modal"></i>
-                <input class="search-box form-control" placeholder="Search..." value="{{searchValue}}"></input>
-                
-            </div>
+			<section id="search-container" class="filter-search-box flex-container space-between">
+				<form id="search-controls" class="col">
+					<i class="btn glyphicon glyphicon-info-sign search-tooltip-help-icon show-help-modal"></i>
+					<label for='search-box' class='col'>Search:</label>
+					<input id='search-box' type="search" autocomplete="on" role='search' class='search-box form-control col' 
+					aria-label="Type search terms here, use enter or the search button to submit search"
+					title="Type search terms here, use enter or the search button to submit search"
+					placeholder="Search..."
+					onsubmit="return false"
+					data-intro="#search-box"
+					data-sequence="1"
+					value="{{searchValue}}"
+					required>
+						<input class="btn bg-transparent reset-button" value="" accesskey="r" type="reset"></input>
+					</input>
+					<button id="search-button" type="button" class='btn btn-primary col'
+					aria-label="You are on the search button"
+					>Search</button>
+					{{#if genomicFilteringEnabled}}
+					<button id="genomic-filter-btn" type="button" class='btn btn-outline primary col'
+					aria-label="You are on the Genomic Filtering button"
+					data-intro="#genomic-filter-btn"
+					data-sequence="2"
+					>Genomic Filtering</button>
+					{{/if}}
+					<button id="search-reset-button" type="button" class='btn btn-outline danger' 
+					aria-label="You are on the reset button">Reset</button>
+				</form>
+			</section>
             <div class="spinner-div" id="spinner-div"></div>
         </div>
         <div class="filter-saved">

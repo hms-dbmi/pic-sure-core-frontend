@@ -7,7 +7,7 @@ define(['jquery', 'backbone','handlebars', "underscore",
 'picSure/ontology', "common/spinner",
 'common/keyboard-nav', 'common/tree-select',
 'filter/selected-genomic-filters',
-'text!../studyAccess/variant-data.json',
+'text!filter/variant-data.json',
 'picSure/settings', 'common/transportErrors'],
     function($, BB, HBS, _, overrides, genomicView, searchPanel, selectionPanel, filterContainer, ontology, spinner, keyboardNav, treeSelect, selectedGenomicFilters, variantDataJson, settings, transportErrorHandlers) {
         const geneKey = 'Gene_with_variant';
@@ -112,14 +112,14 @@ define(['jquery', 'backbone','handlebars', "underscore",
                 this.selectedFiltersPanel = new selectedGenomicFilters(dataForSelectedFitlers);
             },
             applyGenomicFilters: function(){
-                if (overrides && overrides.applyGenomicFilters) {
-                    overrides.applyGenomicFilters(this);
-                    return;
-                }
                 let filtersForQuery = {
                     categoryVariantInfoFilters: this.data.categoryVariantInfoFilters,
                     numericVariantInfoFilters: {}
                 };
+                if (overrides && overrides.applyGenomicFilters) {
+                    overrides.applyGenomicFilters(this, filtersForQuery);
+                    return;
+                }
                 //this.createUniqueId(filtersForQuery); uncomment to support multiple filters
                 //filterModel.addGenomicFilter(filtersForQuery, this.previousUniqueId); //TODO fix for baseline
                 this.cancelGenomicFilters();
@@ -286,9 +286,9 @@ define(['jquery', 'backbone','handlebars', "underscore",
                 const url =
                   window.location.origin + "/picsure/search/" + settings.picSureResourceId +
                   "/values/?genomicConceptPath=" + this.data.genomicConceptPath +
-                  "&query=" + searchTerm +
+                  "&query=" + encodeURIComponent(searchTerm) +
                   "&page=" + page + "&size=20";
-                return fetch(url, {
+                return fetch(encodeURI(url), {
                     method: 'GET',
                     headers: {'Authorization': 'Bearer ' + JSON.parse(sessionStorage.getItem('session')).token, 'content-type': 'application/json'},
                 }).then(response => response.json()).then(data => {
@@ -296,6 +296,7 @@ define(['jquery', 'backbone','handlebars', "underscore",
                 }).catch(error => {
                     console.error(error);
                     transportErrorHandlers.handleAll(error);
+                    return [];
                 });
             },
             render: function(){
