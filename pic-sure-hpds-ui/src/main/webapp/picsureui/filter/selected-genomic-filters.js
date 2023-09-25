@@ -30,13 +30,13 @@ define([
             this.editAction();
         },
         getCurrentFilter: function(){
-            return {variantInfoFilters: {categoryVariantInfoFilters: 
+            return {variantInfoFilters: [{categoryVariantInfoFilters: 
                     {
                         Gene_with_variant: this.selectedVariants,
                         Variant_frequency_as_text: this.selectedFrequencies,
                         Variant_consequence_calculated: this.selectedConsequences
                     }
-                }};
+                }]};
         },
         updateFilter: function(filter){
             this.selectedVariants = filter?.Gene_with_variant;

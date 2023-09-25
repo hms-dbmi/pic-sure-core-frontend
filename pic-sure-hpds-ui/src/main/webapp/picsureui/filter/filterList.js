@@ -1,6 +1,6 @@
-define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList", "filter/searchHelpTooltipView", "common/modal", "underscore", "filter/genomic-filter-view", "filter/selected-genomic-filters",
+define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/filter", "picSure/ontology", "overrides/filterList", "filter/searchHelpTooltipView", "common/modal", "underscore", "filter/genomic-filter-view", "filter/selected-genomic-filters",
 	"underscore"],
-		function($, HBS, queryBuilder, filter, ontology, overrides, helpView, modal, _, genomicFilterView, selectedGenomicFilters){
+		function($, HBS, _, queryBuilder, filter, ontology, overrides, helpView, modal, _, genomicFilterView, selectedGenomicFilters){
 
 	var defaultRenderHelpCallback = function(filterView) {
         ontology.getInstance().allInfoColumnsLoaded.then(function(){
@@ -15,7 +15,81 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
             });
         }.bind(filterView));
     };
+	const mergeVariantInfoFilters = (...arrays) => {
+		const mergedFilter = {
+		categoryVariantInfoFilters: {
+			Gene_with_variant: [],
+			Variant_frequency_as_text: [],
+			Variant_consequence_calculated: [],
+		},
+		numericVariantInfoFilters: {},
+		};
+
+		arrays.forEach((array) => {
+		if (array && array.length > 0) {
+			const filter = ensureFilterQuality(array[0]);
+			mergedFilter.categoryVariantInfoFilters.Gene_with_variant = mergeTwo(
+			mergedFilter.categoryVariantInfoFilters.Gene_with_variant,
+			filter.categoryVariantInfoFilters.Gene_with_variant
+			);
+			mergedFilter.categoryVariantInfoFilters.Variant_frequency_as_text =
+			mergeTwo(
+				mergedFilter.categoryVariantInfoFilters.Variant_frequency_as_text,
+				filter.categoryVariantInfoFilters.Variant_frequency_as_text
+			);
+			mergedFilter.categoryVariantInfoFilters.Variant_consequence_calculated =
+			mergeTwo(
+				mergedFilter.categoryVariantInfoFilters
+				.Variant_consequence_calculated,
+				filter.categoryVariantInfoFilters.Variant_consequence_calculated
+			);
+			mergedFilter.numericVariantInfoFilters = mergeNumericFilters(
+			mergedFilter.numericVariantInfoFilters,
+			filter.numericVariantInfoFilters
+			);
+		}
+		});
+
+		//if any of the merged filters arrays are empty, remove them
+		if (mergedFilter.categoryVariantInfoFilters.Gene_with_variant.length === 0) {
+			delete mergedFilter.categoryVariantInfoFilters.Gene_with_variant;
+		}
+		if (mergedFilter.categoryVariantInfoFilters.Variant_frequency_as_text.length === 0) {
+			delete mergedFilter.categoryVariantInfoFilters.Variant_frequency_as_text;
+		}
+		if (mergedFilter.categoryVariantInfoFilters.Variant_consequence_calculated.length === 0) {
+			delete mergedFilter.categoryVariantInfoFilters.Variant_consequence_calculated;
+		}
+
+		return mergedFilter;
+	};
+
+  const ensureFilterQuality = (filter = {}) => {
+	filter.categoryVariantInfoFilters = filter.categoryVariantInfoFilters || {
+	  Gene_with_variant: [],
+	  Variant_frequency_as_text: [],
+	  Variant_consequence_calculated: [],
+	};
+  
+	filter.numericVariantInfoFilters = filter.numericVariantInfoFilters || {};
+  
+	return filter;
+  };
+  
+
+  const mergeTwo = (a = [], b = [], predicate = (a, b) => a === b) => {
+	const c = new Set(Array.isArray(a) ? a : []);
 	
+	if (Array.isArray(b)) {
+	  b.forEach((bItem) => c.add(bItem));
+	}
+  
+	return [...c];
+  };
+
+  const mergeNumericFilters = (a, b) => {
+    return { ...a, ...b }; // Merging numeric filters by object spread, TODO: make better someday if needed
+  };
 	var filterList = {
 			//BDC has two different help callbacks, so we can't use the basic 'overrides' mechanism
 		init : function(resourceUUID, outputPanelView, queryTemplate, renderHelpCallbackOverride){
@@ -64,10 +138,15 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
 		if ($("#selected-genomic-filter").html() == undefined || $("#selected-genomic-filter").html() == "") {
 			$("#selected-genomic-filter").html(this.selectedGenomicFilters.$el);
 		}
-		let filter = {
-			Gene_with_variant: newFilter?.categoryVariantInfoFilters?.Gene_with_variant,
-			Variant_frequency_as_text: newFilter?.categoryVariantInfoFilters?.Variant_frequency_as_text,
-			Variant_consequence_calculated: newFilter?.categoryVariantInfoFilters?.Variant_consequence_calculated
+		let filter = {};
+		if (newFilter?.categoryVariantInfoFilters?.Gene_with_variant) {
+			filter.Gene_with_variant = newFilter?.categoryVariantInfoFilters?.Gene_with_variant;
+		}
+		if (newFilter?.categoryVariantInfoFilters?.Variant_frequency_as_text) {
+			filter.Variant_frequency_as_text = newFilter?.categoryVariantInfoFilters?.Variant_frequency_as_text;
+		}
+		if (newFilter?.categoryVariantInfoFilters?.Variant_consequence_calculated) {
+			filter.Variant_consequence_calculated = newFilter?.categoryVariantInfoFilters?.Variant_consequence_calculated;
 		}
 		this.selectedGenomicFilters.updateFilter(filter);
 		this.selectedGenomicFilters.render();
@@ -76,10 +155,11 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
 	filterList.runQuery = function(genomicFilter){
 		var query = queryBuilder.generateQuery(
 				_.pluck(this.filters, "model"), this.queryTemplate, this.resourceUUID);
-		if (genomicFilter) {
-			const merged = {...query.query.variantInfoFilters, ...genomicFilter};
-			query.query.variantInfoFilters = merged;
-		}
+		let filterFromSelectedGenomicFilters = genomicFilter || this.selectedGenomicFilters.getCurrentFilter()?.variantInfoFilters;
+		!Array.isArray(filterFromSelectedGenomicFilters) ? filterFromSelectedGenomicFilters = [filterFromSelectedGenomicFilters] : undefined;
+		query.query.variantInfoFilters = [
+			mergeVariantInfoFilters(query.query.variantInfoFilters, filterFromSelectedGenomicFilters)
+		];
 		this.outputPanelView.runQuery(query);
 		if(_.countBy(this.filters, function(filter){
 			return $(".search-box", filter.$el).is(":visible") ? "visible" : "hidden";
@@ -88,8 +168,14 @@ define(["jquery", "handlebars", "picSure/queryBuilder", "filter/filter", "picSur
         }
 	}.bind(filterList);
 	filterList.editGenomicFilters = function(){
-		const filter = this.selectedGenomicFilters.getCurrentFilter();
-		let genomicFilter = new genomicFilterView({el: $(".modal-body"), currentFilter: filter});
+		let filter = this.selectedGenomicFilters.getCurrentFilter();
+		let filterToEdit = undefined;
+		if (filter?.variantInfoFilters[0]) {
+			filterToEdit = {
+				variantInfoFilters: filter.variantInfoFilters[0]
+			}
+		}
+		let genomicFilter = new genomicFilterView({el: $(".modal-body"), currentFilter: filterToEdit});
 		genomicFilter.render();
 		modal.displayModal(genomicFilter, 'Genomic Filtering', function() {
 			$('#filter-list').focus();

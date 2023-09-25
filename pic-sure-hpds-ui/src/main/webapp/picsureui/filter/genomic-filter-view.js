@@ -286,7 +286,7 @@ define(['jquery', 'backbone','handlebars', "underscore",
                 const url =
                   window.location.origin + "/picsure/search/" + settings.picSureResourceId +
                   "/values/?genomicConceptPath=" + this.data.genomicConceptPath +
-                  "&query=" + searchTerm +
+                  "&query=" + encodeURIComponent(searchTerm) +
                   "&page=" + page + "&size=20";
                 return fetch(encodeURI(url), {
                     method: 'GET',
