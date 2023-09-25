@@ -150,13 +150,12 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 		}
 		this.selectedGenomicFilters.updateFilter(filter);
 		this.selectedGenomicFilters.render();
-		this.runQuery(newFilter);
+		this.runQuery();
 	}.bind(filterList);
-	filterList.runQuery = function(genomicFilter){
+	filterList.runQuery = function(){
 		var query = queryBuilder.generateQuery(
 				_.pluck(this.filters, "model"), this.queryTemplate, this.resourceUUID);
-		let filterFromSelectedGenomicFilters = genomicFilter || this.selectedGenomicFilters.getCurrentFilter()?.variantInfoFilters;
-		!Array.isArray(filterFromSelectedGenomicFilters) ? filterFromSelectedGenomicFilters = [filterFromSelectedGenomicFilters] : undefined;
+		let filterFromSelectedGenomicFilters = this.selectedGenomicFilters.getCurrentFilter()?.variantInfoFilters;
 		query.query.variantInfoFilters = [
 			mergeVariantInfoFilters(query.query.variantInfoFilters, filterFromSelectedGenomicFilters)
 		];
