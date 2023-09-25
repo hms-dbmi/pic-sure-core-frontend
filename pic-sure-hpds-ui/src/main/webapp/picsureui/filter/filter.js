@@ -78,24 +78,13 @@ define([
 			this.hasGenomicData = infoColumns !== undefined && infoColumns.length !== 0;
 			this.render();
 		});
-		this.constrainFilterMenuTemplate = HBS.compile(
-		  constrainFilterMenuTemplate
-		);
-		this.constrainFilterMenuCategoriesTemplate = HBS.compile(
-		  constrainFilterMenuCategoriesTemplate
-		);
-		this.constrainFilterMenuGeneticsTemplate = HBS.compile(
-		  constrainFilterMenuGeneticsTemplate
-		);
-		this.constrainFilterMenuVariantInfoNumericTemplate = HBS.compile(
-		  constrainFilterMenuVariantInfoNumericTemplate
-		);
-		this.constrainFilterMenuAnyRecordOfTemplate = HBS.compile(
-		  constrainFilterMenuAnyRecordOfTemplate
-		);
+		this.constrainFilterMenuTemplate = HBS.compile(constrainFilterMenuTemplate);
+		this.constrainFilterMenuCategoriesTemplate = HBS.compile(constrainFilterMenuCategoriesTemplate);
+		this.constrainFilterMenuGeneticsTemplate = HBS.compile(constrainFilterMenuGeneticsTemplate);
+		this.constrainFilterMenuVariantInfoNumericTemplate = HBS.compile(constrainFilterMenuVariantInfoNumericTemplate);
+		this.constrainFilterMenuAnyRecordOfTemplate = HBS.compile(constrainFilterMenuAnyRecordOfTemplate);
 		this.resourceUUID = opts.resourceUUID;
 
-  
 		this.showSearchResults = overrides.showSearchResults
 		  ? overrides.showSearchResults.bind(this)
 		  : this.showSearchResults.bind(this);
