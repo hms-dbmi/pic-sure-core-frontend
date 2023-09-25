@@ -137,7 +137,9 @@ define([
 		this.model.set("constrainParams", new valueConstrainModel());
 	  },
 	  resetPage: function () {
-		let message = this.hasGenomicData ? "Are you sure you want to clear all active search results, variable filters, and genomic filters?" : "Are you sure you want to clear all active search results and variable filters?";
+		let message = this.hasGenomicData ? 
+			"Are you sure you want to clear all active search results, variable filters, and genomic filters?" : 
+			"Are you sure you want to clear all active search results and variable filters?";
 		confirm(message) ? window.location.reload() : null;
 	  },
 	  enterButtonEventHandler: function (event) {
