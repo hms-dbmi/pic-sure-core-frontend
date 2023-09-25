@@ -1,10 +1,15 @@
 <div class="panel panel-default no-padding" aria-label="{{description}}">
     <div class="panel-heading space-out panel-extra-large">
         <h4 class="panel-title">{{title}}</h4>
-        {{#if clearButton}}
-        <button id="selected-genomic-clear-btn" tabindex="0" class="btn btn-default tabable">Clear</button>
-        {{/if}}
-    </div>
+        <div>
+            {{#if editButton}}
+            <button id="selected-genomic-edit-btn" tabindex="0" class="btn btn-default tabable">Edit</button>
+            {{/if}}
+            {{#if clearButton}}
+            <button id="selected-genomic-clear-btn" tabindex="0" class="btn btn-default tabable">Clear</button>
+            {{/if}}
+        </div>
+        </div>
     <div class="panel-body">
         <div class="filter-section">
             <span class="p-b-8">Gene with variant: </span>

@@ -16,6 +16,9 @@ define(['jquery',
     ) {
         const LIST_ITEM = 'list-item';
         const SELECTED = 'selected';
+        let hasScrollbar = (element) => {
+            return element.scrollHeight > element.clientHeight;
+        }
         let selectionSearchView = BB.View.extend({
             initialize: function(opts){
                 if (opts && opts.heading) {
@@ -83,6 +86,10 @@ define(['jquery',
             selectItem: function(e) {
                 const index = this.data.searchResultOptions.indexOf(e.target.value);
                 this.moveItem(this.data.searchResultOptions, this.data.selectedResults, index);
+                const valueContainer = $('.selection-search-results')?.get(0);
+                if (!hasScrollbar(valueContainer)) {
+                    this.handleScroll({target: valueContainer})
+                };
             },
             unselectItem: function(e) {
                 const index = this.data.selectedResults.indexOf(e.target.value);
@@ -190,7 +197,7 @@ define(['jquery',
                     const scrollThreshold = 5;
                     if (contentHeight - (scrollTop + containerHeight) <= scrollThreshold) {
                         this.data.page++;
-                        let searchTerm = $('#gene-with-variant').val();
+                        let searchTerm = $(this.data.searchId).val();
                         if (!searchTerm) { // .val() could return empty string
                             searchTerm = undefined;
                         }
@@ -224,15 +231,15 @@ define(['jquery',
                     `<input id="${item}" class="categorical-filter-input selectable list-item" role="option" type="checkbox" value="${item}" checked disabled/>${item}<br/>` : 
                     `<input id="${item}" class="categorical-filter-input selectable list-item" role="option" type="checkbox" value="${item}" />${item}<br/>`;
                 }, this);
-                newHTMLList.push('<div id="list-spinner"></div>');
+                newHTMLList?.push('<div id="list-spinner"></div>');
                 const newHTMLRSelectionList  = this.data.selectedResults?.map((item) => {
                     return `<input id="${item}" class="categorical-filter-input selectable list-item" type="checkbox" value="${item}" checked/>${item}<br/>`;
                 });      
                 this.$el.find('.selections').html(newHTMLRSelectionList).fadeIn('fast');
                 const search = this.$el.find('#'+this.data.searchId)[0] ? this.$el.find('#'+this.data.searchId)[0].value : '';
-                if (this.data.searchResultOptions.length <= 0 && search) {
+                if (this.data.searchResultOptions && this.data.searchResultOptions.length <= 0 && search) {
                     this.$el.find('.value-container.selection-search-results').html('<span>No results found</span>');
-                } else if (this.data.searchResultOptions.length <= 0 && !search && this.data.results.length > this.data.selectedResults.length) {
+                } else if (this.data.searchResultOptions && this.data.searchResultOptions.length <= 0 && !search && this.data.results.length > this.data.selectedResults.length) {
                     this.$el.find('.value-container.selection-search-results').html('<span style="color: #AAA">Try searching for more</span>');
                 } else {
                     this.$el.find('.selection-search-results').html(newHTMLList).fadeIn('fast');
