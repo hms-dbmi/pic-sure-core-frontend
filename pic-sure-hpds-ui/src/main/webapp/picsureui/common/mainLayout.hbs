@@ -1,23 +1,10 @@
-
-{{#if analyticsId}}
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id={{analyticsId}}"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', '{{analyticsId}}');
-</script>
-{{/if}}
-
-<div id="query-builder" class="col-md-8">
-    <div class="row">
-        <span class="query-builder-heading col-md-12">QUERY BUILDER</span>
-    </div>
-    <div class="row">
-        <span class="query-name col-md-11">&nbsp;&nbsp;</span>
-    </div>
-    <ul class="container" id="filter-list"></ul>
+<div id="query-builder" class="col-md-9">
+    <section id="phenotypic-filters-container">
+        <ul class="container" id="filter-list"></ul>
+    </section>
+	<hr class="no-top-margin">
+    <section id="genomic-filters-container">
+        <div id="selected-genomic-filter"></div>
+    </section>
 </div>
-<div id="query-results" class="col-md-4"></div>
+<div id="query-results" class="col-md-3"></div>
