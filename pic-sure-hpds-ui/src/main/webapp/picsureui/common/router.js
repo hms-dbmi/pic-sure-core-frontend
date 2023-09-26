@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 define([
     "backbone", "underscore", "common/session", "login/login", 'header/header', 'footer/footer',
     'psamaui/user/userProfile', 'user/userManagement',
@@ -16,21 +16,6 @@ define([
     layoutTemplate, queryBuilder, output, settings,
     unexpectedErrorTemplate, googleAnalytics
 ){
-=======
-define(["backbone", "underscore", "common/session", "login/login", 'header/header', 'footer/footer','user/userManagement',
-        'role/roleManagement', 'privilege/privilegeManagement', "application/applicationManagement",
-        'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
-        'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
-        "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
-        "text!common/unexpected_error.hbs", "analytics/googleAnalytics"],
-        function(Backbone, _, session, login, header, footer, userManagement,
-                roleManagement, privilegeManagement, applicationManagement,
-                connectionManagement, tos, userFunctions,
-                HBS, accessRuleManagement, routerOverrides, filterList,
-                 layoutTemplate, queryBuilder, output, settings,
-                 unexpectedErrorTemplate, googleAnalytics){
-
->>>>>>> 22f5d8d (first pass at cookie consent banner)
         var publicRoutes = ["not_authorized", "login", "logout"];
         var Router = Backbone.Router.extend({
         routes: {
