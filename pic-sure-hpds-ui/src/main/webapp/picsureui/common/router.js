@@ -1,4 +1,3 @@
-
 define([
     "backbone", "underscore", "common/session", "login/login", 'header/header', 'footer/footer',
     'psamaui/user/userProfile', 'user/userManagement',
