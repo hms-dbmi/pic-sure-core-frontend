@@ -10,32 +10,13 @@ define([
         },
         events: {
             'click #cookie-consent-accept-all' : 'acceptAll',
-            'click #cookie-consent-accept-some' : 'accept',
             'click #cookie-consent-reject-all' : 'rejectAll',
-            'click #close-cookie-popup' : 'acceptNecessary',
         },
         acceptAll: function(){
             this.setConsent({
                 necessary: true,
                 preferences: true,
                 analytics: true,
-            });
-            this.hideBanner();
-        },
-        acceptNecessary: function(){
-            this.setConsent({
-                necessary: true,
-                preferences: false,
-                analytics: false,
-                marketing: false,
-            });
-            this.hideBanner();
-        },
-        accept: function(){
-            this.setConsent({
-                necessary: $('#consent-necessary').is(':checked'),
-                preferences: $('#consent-preferences').is(':checked'),
-                analytics: $('#consent-analytics').is(':checked'),
             });
             this.hideBanner();
         },
@@ -67,7 +48,6 @@ define([
                 return;
             }
             this.$el.html(this.template());
-            // $("#btn-accept-all").focus();
         }
     });
     return CookieBanner;
