@@ -1,21 +1,12 @@
 <div id="cookie-consent-banner" class="panel panel-default">
-    <div class="panel-heading space-out">
-        <h4>Cookie settings</h4>
-        <button id="close-cookie-popup" type="button" class="close" aria-label="close modal" tabindex="3000">&times;</button>
-    </div>
-    <div class="panel-body">
-      <p>We use cookies to provide you with the best possible experience. They also allow us to analyze user behavior in order to constantly improve the website for you.</p>
-      <p>To see how Google uses information from sites or apps that use our services click <a href="http://www.google.com/policies/privacy/partners/" target="_blank">here</a></p>
-      <div class="cookie-consent-options">
-        <button id="cookie-consent-accept-all" class="cookie-consent-button btn btn-primary">Accept All</button>
-        <button id="cookie-consent-accept-some" class="cookie-consent-button btn btn-outline">Accept Selection</button>
-        <button id="cookie-consent-reject-all" class="cookie-consent-button btn btn-grayscale">Reject All</button>
+    <div class="panel-body cookie-banner-bottom">
+      <div>
+        <p>We use cookies to provide you with the best possible experience. They also allow us to analyze user behavior in order to constantly improve the website for you.</p>
+        <p>To see how Google uses information from sites or apps that use our services click <a href="http://www.google.com/policies/privacy/partners/" target="_blank">here</a>.</p>
       </div>
       <div class="cookie-consent-options">
-        <label><input id="consent-necessary" type="checkbox" value="Necessary" checked disabled>Necessary</label>
-        <label><input id="consent-analytics" type="checkbox" value="Analytics" checked>Analytics</label>
-        <label><input id="consent-preferences" type="checkbox" value="Preferences" checked>Preferences</label>
-        {{!--  <label><input id="consent-marketing" type="checkbox" value="Marketing">Marketing</label> --}}
+        <button id="cookie-consent-accept-all" class="cookie-consent-button btn btn-primary">Accept</button>
+        <button id="cookie-consent-reject-all" class="cookie-consent-button btn btn-outline secondary">Reject</button>
       </div>
     </div>
 </div>
