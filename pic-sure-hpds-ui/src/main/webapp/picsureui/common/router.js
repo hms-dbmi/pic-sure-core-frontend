@@ -229,15 +229,6 @@ define([
                 let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
                 analyticsView.render();
                 $("head").append(analyticsView.$el);
-                $("body").prepend(
-                '<!-- Google Tag Manager (noscript) --> \
-                <noscript> \
-                <iframe src="https://www.googletagmanager.com/ns.html?id='+settings.analyticsId+'" \
-                    height="0" width="0" style="display:none;visibility:hidden"> \
-                </iframe> \
-                </noscript> \
-                <!-- End Google Tag Manager (noscript) -->'
-                );
             },
         displayUserProfile: function() {
             $(".header-btn.active").removeClass('active');
