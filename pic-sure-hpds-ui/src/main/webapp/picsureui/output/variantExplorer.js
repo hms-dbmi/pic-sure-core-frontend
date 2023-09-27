@@ -149,7 +149,7 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
                 this.$el.html(this.variantTableTemplate());
                 let loading = this.getVariantCount().then(() => {
                     if (this.variantCount > maxVariantCount) {
-                        this.handleDataError('Too many variants!  Found ' + this.variantCount + ', but cannot display more than ' + settings.maxVariantCount + ' variants.');
+                        this.handleDataError('Too many variants!  Found ' + this.variantCount + ', but cannot display more than ' + maxVariantCount + ' variants.');
                     } else {
                         return this.getVariantData().then((response) => {
                             if (settings.queryExportType && settings.queryExportType !== "EXPORT_DISABLED") {
