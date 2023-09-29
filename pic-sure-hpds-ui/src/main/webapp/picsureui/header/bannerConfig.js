@@ -8,6 +8,7 @@ define(["text!settings/banner_config.json"], function (settings) {
     try {
         return JSON.parse(settings);
     } catch (e) {
+        console.error("Error parsing banner_config.json", e);
         return undefined;
     }
 });
