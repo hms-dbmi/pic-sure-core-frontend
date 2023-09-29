@@ -27,8 +27,6 @@ define(["jquery", "backbone", "handlebars", "text!header/banner.hbs"], function 
                 return this;
             }
 
-            console.log("Rendering banner with text: " + this.bannerText + " and styles: " + this.bannerStyles);
-
             this.$el.html(this.template({
                 bannerText: this.bannerText,
                 bannerStyles: this.bannerStyles,
@@ -37,7 +35,6 @@ define(["jquery", "backbone", "handlebars", "text!header/banner.hbs"], function 
 
             // Set the color of the close button based on the background color of the banner
             const backgroundColor = this.$('#banner').css('background-color');
-            console.log("Banner background color: " + backgroundColor);
 
             // Check if the background color is white or black. We cannot be sure if rgb, rgba, hex, or named color is used
             const isWhiteBackground = backgroundColor === 'rgb(255, 255, 255)' || backgroundColor === 'rgba(255, 255, 255, 0)' || backgroundColor === '#ffffff' || backgroundColor === 'white';
