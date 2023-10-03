@@ -262,15 +262,14 @@ define([
             var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), settings.picSureResourceId);
             outputPanelView.runQuery(query);
 
-            filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
-        },
-        displayGoogleAnalytics: function () {
-            let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
-            // append the analytics view to the body
-            analyticsView.render();
-            $("head").append(analyticsView.$el);
-        },
-        displayUserProfile: function () {
+                filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
+            },
+            displayGoogleAnalytics: function() {
+                let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
+                analyticsView.render();
+                $("head").append(analyticsView.$el);
+            },
+        displayUserProfile: function() {
             $(".header-btn.active").removeClass('active');
             $(".header-btn[href='/picsureui/user']").addClass('active');
 

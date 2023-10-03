@@ -1494,3 +1494,41 @@ remove when above bug is fixed */
 }
 
 /************************* ENDS Search X ******************************/
+
+/* ==== Cookie prefs ==== */
+
+#cookie-consent-container {
+    position: fixed;
+    bottom: 35px;
+    left: 5%;
+    z-index: 1000;
+    width: 90%;
+}
+
+#cookie-consent-banner {
+    box-shadow: 0 0 10px 0 rgba(0,0,0,.2);
+}
+
+#cookie-consent-banner .cookie-banner-bottom {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#cookie-consent-banner .cookie-consent-options {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#cookie-consent-banner .cookie-consent-options button, #cookie-consent-banner .cookie-consent-options input {
+    margin: 0 5px;
+    padding: 10px;
+    align-self: center;
+}
+
+#cookie-consent-banner .cookie-consent-options button:not(:last-child) {
+    margin-bottom: 10px;
+}
+/* ==== END Cookie prefs ==== */
