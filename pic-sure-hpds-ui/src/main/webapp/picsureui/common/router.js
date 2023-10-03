@@ -5,7 +5,7 @@ define([
     'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
     'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
     "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
-    "text!common/unexpected_error.hbs", "common/googleAnalytics", "header/bannerConfig", "header/banner"
+    "text!common/unexpected_error.hbs", "analytics/googleAnalytics", "header/bannerConfig", "header/banner"
 ], function (
     Backbone, _, session, login, header, footer,
     userProfile, userManagement,
