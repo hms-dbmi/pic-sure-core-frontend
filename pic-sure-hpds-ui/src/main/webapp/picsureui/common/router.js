@@ -104,10 +104,10 @@ define([
 
             this.renderBanner();
 
-                var footerView = new footer.View({});
-                footerView.render();
-                $('#footer-content').html(footerView.$el);
-            },
+            var footerView = new footer.View({});
+            footerView.render();
+            $('#footer-content').html(footerView.$el);
+        },
         renderBanner: function () {
             // check if the file is present
             if (bannerConfig) {
@@ -146,22 +146,22 @@ define([
                 }
             }
         },
-            displayUserManagement: function () {
-                $(".header-btn.active").removeClass('active');
-                $(".header-btn[data-href='/psamaui/userManagement']").addClass('active');
-                $('#main-content').empty();
-                userFunctions.me(this, function (data) {
-                    var userMngmt = new userManagement.View({model: new userManagement.Model()});
-                    userMngmt.render();
-                    $('#main-content').html(userMngmt.$el);
-                });
-            },
-            displayTOS: function () {
-                $(".header-btn.active").removeClass('active');
-                $('#main-content').empty();
-                var termsOfService = new this.tos.View({model: new this.tos.Model()});
-                termsOfService.render();
-                $('#main-content').html(termsOfService.$el);
+        displayUserManagement: function () {
+            $(".header-btn.active").removeClass('active');
+            $(".header-btn[data-href='/psamaui/userManagement']").addClass('active');
+            $('#main-content').empty();
+            userFunctions.me(this, function (data) {
+                var userMngmt = new userManagement.View({model: new userManagement.Model()});
+                userMngmt.render();
+                $('#main-content').html(userMngmt.$el);
+            });
+        },
+        displayTOS: function () {
+            $(".header-btn.active").removeClass('active');
+            $('#main-content').empty();
+            var termsOfService = new this.tos.View({model: new this.tos.Model()});
+            termsOfService.render();
+            $('#main-content').html(termsOfService.$el);
         },
         displayApplicationManagement: function () {
             $(".header-btn.active").removeClass('active');
