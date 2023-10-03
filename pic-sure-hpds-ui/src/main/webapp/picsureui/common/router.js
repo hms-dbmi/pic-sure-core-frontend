@@ -266,7 +266,6 @@ define([
             },
             displayGoogleAnalytics: function() {
                 let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
-            let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
                 analyticsView.render();
                 $("head").append(analyticsView.$el);
             },
