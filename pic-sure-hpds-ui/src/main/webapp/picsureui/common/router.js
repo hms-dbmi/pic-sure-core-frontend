@@ -53,12 +53,12 @@ define([
             this.layoutTemplate = HBS.compile(layoutTemplate);
             this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
 
-            this.displayGoogleAnalytics();
-        },
-        execute: function (callback, args, name) {
-            if (routerOverrides.execute) {
-                routerOverrides.execute.apply(this, [callback, args, name]);
-            } else {
+                this.displayGoogleAnalytics();
+            },
+            execute: function (callback, args, name) {
+                if (routerOverrides.execute) {
+                    routerOverrides.execute.apply(this, [callback, args, name]);
+                } else {
                 if (publicRoutes.includes(name)) {
                     this.renderHeaderAndFooter();
                     callback.apply(this, args);
@@ -76,7 +76,7 @@ define([
                         }
                     }.bind(this));
                 }
-            }
+                }
         },
         login: function () {
             $(".header-btn.active").removeClass('active');
@@ -104,10 +104,10 @@ define([
 
             this.renderBanner();
 
-            var footerView = new footer.View({});
-            footerView.render();
-            $('#footer-content').html(footerView.$el);
-        },
+                var footerView = new footer.View({});
+                footerView.render();
+                $('#footer-content').html(footerView.$el);
+            },
         renderBanner: function () {
             // check if the file is present
             if (bannerConfig) {
@@ -135,32 +135,33 @@ define([
                                 isDismissible: config.isDismissible
                             });
 
-                            let banner = bannerView.render();
-                            // Render the banner at the top of the page.
-                            $('#header').prepend(banner.$el);
-                            break; // Stop the loop once a matching banner is found and displayed
+                            if ($('#banner').length === 0) { // Temporary fix to avoid duplicate banners
+                                let banner = bannerView.render();
+                                // Render the banner at the top of the page.
+                                $('#header').prepend(banner.$el);
+                                break; // Stop the loop once a matching banner is found and displayed
+                            }
                         }
                     }
                 }
             }
         },
-        displayUserManagement: function () {
-            $(".header-btn.active").removeClass('active');
-            $(".header-btn[data-href='/psamaui/userManagement']").addClass('active');
-            $('#main-content').empty();
-            userFunctions.me(this, function (data) {
-                var userMngmt = new userManagement.View({model: new userManagement.Model()});
-                userMngmt.render();
-                $('#main-content').html(userMngmt.$el);
-            });
-        },
-        displayTOS: function () {
-            $(".header-btn.active").removeClass('active');
-            $('#main-content').empty();
-            var termsOfService = new this.tos.View({model: new this.tos.Model()});
-            termsOfService.render();
-            $('#main-content').html(termsOfService.$el);
-
+            displayUserManagement: function () {
+                $(".header-btn.active").removeClass('active');
+                $(".header-btn[data-href='/psamaui/userManagement']").addClass('active');
+                $('#main-content').empty();
+                userFunctions.me(this, function (data) {
+                    var userMngmt = new userManagement.View({model: new userManagement.Model()});
+                    userMngmt.render();
+                    $('#main-content').html(userMngmt.$el);
+                });
+            },
+            displayTOS: function () {
+                $(".header-btn.active").removeClass('active');
+                $('#main-content').empty();
+                var termsOfService = new this.tos.View({model: new this.tos.Model()});
+                termsOfService.render();
+                $('#main-content').html(termsOfService.$el);
         },
         displayApplicationManagement: function () {
             $(".header-btn.active").removeClass('active');
@@ -280,15 +281,15 @@ define([
                 profile.render();
             });
         },
-        defaultAction: function () {
-            console.log("Default action");
-            $(".header-btn.active").removeClass('active');
-            if (routerOverrides.defaultAction)
-                routerOverrides.defaultAction();
-            else {
-                this.displayQueryBuilder();
+            defaultAction: function () {
+                console.log("Default action");
+                $(".header-btn.active").removeClass('active');
+                if (routerOverrides.defaultAction)
+                    routerOverrides.defaultAction();
+                else {
+                    this.displayQueryBuilder();
+                }
             }
-        }
+        });
+        return new Router();
     });
-    return new Router();
-});
