@@ -40,20 +40,13 @@ define(["underscore"],
 			if(filter.get("searchTerm").trim().length !== 0){
 				if ( filter.attributes.valueType === "ANYRECORDOF" ){
                     //any record of filter should just pull the list of observations  and stuff them in the list.
-					if(query.query.anyRecordOf){
-						query.query.anyRecordOf = query.query.anyRecordOf.concat(filter.get("anyRecordCategories"))
+					if(query.query.anyRecordOfMulti){
+						query.query.anyRecordOfMulti.push(filter.get("anyRecordCategories"))
 					} else {
-						query.query.anyRecordOf = filter.get("anyRecordCategories");
+						query.query.anyRecordOfMulti = new Array(filter.get("anyRecordCategories"));
 					}
 				} else if(filter.attributes.constrainByValue || filter.get("constrainParams").get("constrainByValue")){
 					if(filter.attributes.valueType==="INFO"){
-						if ( ! query.query.variantInfoFilters[0] ){
-							query.query.variantInfoFilters.push({
-								categoryVariantInfoFilters:{},
-								numericVariantInfoFilters:{}
-							    });
-						}
-
 						if( filter.get("constrainParams").get("metadata").continuous){
 							query.query.variantInfoFilters[0].numericVariantInfoFilters[filter.attributes.category] =
 							{
@@ -61,8 +54,19 @@ define(["underscore"],
 									max: filter.attributes.constrainParams.attributes.constrainValueTwo
 							}
 						} else {
-							query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category] = filter.get("constrainParams").get("constrainValueOne");
-							
+						    // This is my attempt to make multi gene queries work. Previously, only the last gene
+						    // was getting queried. This code is very defensive because I don't really understand
+						    // everything that's going on here, but I do know that I have to add all the genes
+						    // to the same array to get back a result that makes some sense.
+						    // I'm trying to do this without changing the logic for anything else.
+						    if (Array.isArray(filter.get("constrainParams").get("constrainValueOne"))) {
+						        if (!query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category]) {
+						            query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category] = [];
+						        }
+							    query.query.variantInfoFilters[0].categoryVariantInfoFilters[filter.attributes.category]
+							        .push(...filter.get("constrainParams").get("constrainValueOne"));
+						    }
+
 						}
 					} else if(filter.attributes.valueType==="NUMBER"){
 						var one = filter.attributes.constrainParams.attributes.constrainValueOne;

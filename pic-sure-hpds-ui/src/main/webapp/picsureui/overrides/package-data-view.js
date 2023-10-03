@@ -1,5 +1,4 @@
-define([
-], function() {
+define([], function() {
     return {
         /*
 		 * Hook to allow overrides to customize the download data function
@@ -31,5 +30,20 @@ define([
 		 * Hook to allow overrides to customize the updateQuery function
 		 */
         updateQuery: undefined,
+
+        /*
+         * Hook to extend the render function, loaded after the main package dataview render method.
+         */
+        renderExt: undefined,
+
+        /*
+         * Hook to override dataset name box rendering functionality
+         */
+        updateNamedDatasetObjects: undefined,
+
+        /*
+         * Hook to override dataset name api call
+         */
+        saveDatasetId : undefined,
     };
 });

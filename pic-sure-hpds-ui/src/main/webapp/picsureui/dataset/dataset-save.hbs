@@ -1,0 +1,19 @@
+<div id="named-dataset">
+    <section id="dataset-query-info">
+        <p>Fill out the following information to save your dataset ID for future use. To view and manage your dataset ID's, go to the "User Profile" tab.</p>
+        <div class="row"><div>Dataset ID Name:</div><div><input type="text" id="dataset-name" value="" /></div></div>
+        <div class="row">
+            <div>Dataset ID:</div>
+            <div>
+                <span id="dataset-id">{{queryUUID}}</span>
+                <button id='copy-queryid-btn' class='btn btn-default alternate'>Copy</button>
+            </div>
+        </div>
+        <div class="row"><div>Username:</div><div>{{username}}</div></div>
+    </section>
+    <div id="errors" class="alert alert-danger hidden center" role="alert"></div>
+    <section id="buttons" class="row">
+        <div class="center col-lg-6"><button id="cancel-btn" class="btn btn-default">Cancel</button></div>
+        <div class="center col-lg-6"><button id="save-btn" class="btn btn-default alternate">Save Dataset ID</button></div>
+    </section>
+</div>

@@ -1,0 +1,49 @@
+{
+    "consequences" : [
+        {
+            "text": "High Severity",
+            "state": {
+                "opened": true,
+                "selected": false
+            },
+            "children": [
+                {"text": "splice_acceptor_variant"},
+                {"text": "splice_donor_variant"},
+                {"text": "stop_gained"},
+                {"text": "frameshift_variant"},
+                {"text": "stop_lost"},
+                {"text": "start_lost"}
+            ]
+        },
+        {
+            "text": "Medium Severity",
+            "state": {
+                "opened": true,
+                "selected": false
+            },
+            "children": [
+                {"text": "inframe_insertion"},
+                {"text": "inframe_deletion"},
+                {"text": "missense_variant"},
+                {"text": "Protein_altering_variant"}
+            ]
+        },
+        {
+            "text": "Low Severity",
+            "state": {
+                "opened": true,
+                "selected": false
+            },
+            "children": [
+                {"text": "splice_region_variant"},
+                {"text": "splice_donor_5th_base_variant"},
+                {"text": "splice_donor_region_variant"},
+                {"text": "splice_polypyrimidine_tract_variant"},
+                {"text": "incomplete_terminal_codon_variant"},
+                {"text": "start_retained_variant"},
+                {"text": "stop_retained_variant"},
+                {"text": "synonymous_variant"}
+            ]
+        }
+    ]
+}

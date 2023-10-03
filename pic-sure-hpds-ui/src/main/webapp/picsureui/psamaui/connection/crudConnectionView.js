@@ -1,10 +1,11 @@
 define([
     'backbone',
     'handlebars',
+    'underscore',
     'text!connection/crudConnection.hbs',
     'picSure/picsureFunctions',
     'util/notification',
-], function(BB, HBS, template, picsureFunctions, notification) {
+], function(BB, HBS, _, template, picsureFunctions, notification) {
     var CrudConnectionView = BB.View.extend({
         initialize: function(opts){
             this.opts = opts;

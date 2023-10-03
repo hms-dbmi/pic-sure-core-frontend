@@ -1,8 +1,10 @@
 define(["jquery", "underscore", "text!output/outputPanel.hbs", "picSure/ontology", "backbone", "handlebars",
 		"overrides/outputPanel", "common/transportErrors", "common/config", "picSure/settings", "output/variantExplorer",
-		"common/modal", "filter/genomic-filter-view", "output/package-data-view"],
+		"common/modal", "filter/genomic-filter-view", "output/package-data-view", "overrides/output/variantExplorer"],
 		function($, _, outputTemplate, ontology, BB, HBS,
-				 overrides, transportErrors, config,  settings, variantExplorer, modal, genomicFilterView, packageDataView){
+				 overrides, transportErrors, config,  settings, variantExplorer, modal, genomicFilterView,
+				 packageDataView, variantExplorerOverride,
+        ){
 	var defaultModel = BB.Model.extend({
 		defaults: {
 			totalPatients : 0,
@@ -13,6 +15,7 @@ define(["jquery", "underscore", "text!output/outputPanel.hbs", "picSure/ontology
 	});
 
 	var outputModel = overrides.modelOverride ? overrides.modelOverride : defaultModel;
+	var variantExplorer = variantExplorerOverride.apply ? variantExplorerOverride : variantExplorer;
 
 	var outputView = overrides.viewOverride ? overrides.viewOverride : 
 		BB.View.extend({
@@ -36,12 +39,16 @@ define(["jquery", "underscore", "text!output/outputPanel.hbs", "picSure/ontology
 			},
 			select: function(event){
 				if(this.model.get("queryRan")){
-					modal.displayModal(
-						new packageDataView({model: this.model, query: JSON.parse(JSON.stringify(this.model.baseQuery)), modal: modal}), 
-						overrides.titleOverride ? overrides.titleOverride : "Select Data for Export",
-						()=>{$('#select-btn').focus();}, 
-						{isHandleTabs: true}
-					);
+					const title = overrides.titleOverride ? overrides.titleOverride : "Select Data for Export";
+					const onClose = () => { $('#select-btn').focus(); };
+					const options = { isHandleTabs: true, width: "70%" };
+					const modalView = new packageDataView.View({
+						modalSettings: { title, onClose, options },
+						model: this.model,
+						exportModel: new packageDataView.Model(),
+						query: JSON.parse(JSON.stringify(this.model.baseQuery)),
+					});
+					modal.displayModal(modalView, title, onClose, options);
 				}
 			},
 			queryRunning: function(){

@@ -1,0 +1,20 @@
+<div id="user-token">
+    <div>
+        <b>Email:</b> {{user.email}}
+    </div>
+    <div>
+        <b>Token:</b>
+        <div tabindex="3006" class="bordered-block" id="user_token_textarea" style="width: 100%; word-wrap: break-word;" token="{{user.token}}">**************************************************************************************************************************************************************************************************************************************************************************************</div>
+        <div id="user_token_expiration"><b>Token expiration time:</b> {{{tokenExpiration user.token}}}</div>
+    </div>
+    <div class="clearfix" style="margin-top: 4px;">
+        <button id="user-token-copy-button" type="button" class="btn-small btn btn-success" tabindex="3001" uuid="{{user.uuid}}" style="float: right; margin-right: 4px;" alt="Copy">Copy</button>
+        <button id="user-token-reveal-button" type="button" class="btn-small btn btn-info" tabindex="3002" uuid="{{user.uuid}}" style="float: right; margin-right: 4px;" alt="Reveal">Reveal</button>
+        <button id="user-token-refresh-button" type="button" class="btn-small btn btn-warning" tabindex="3003" uuid="{{user.uuid}}" style="float: right; margin-right: 4px;" alt="Refresh">Refresh</button>
+        <div id="user-token-refresh-confirm-container" style="float: right; display: none; margin-right: 4px;">
+            Refresh will inactivate the old token. Do you want to continue?
+            <button id="user-token-yes-button" type="button" class="btn-small btn btn-success" tabindex="3004" alt="Yes">Yes</button>
+            <button id="user-token-no-button" type="button" class="btn-small btn btn-danger" tabindex="3005" alt="No">No</button>
+        </div>
+    </div>
+</div>

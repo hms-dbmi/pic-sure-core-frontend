@@ -1,6 +1,7 @@
-define([], 
-	function(){
+define([],  function(){
 	return {
-		userProfile: undefined
+		renderOverride: undefined,
+		displayUserTokenBox: undefined,
+		displayDatasetManagementBox: undefined,
     };
 });

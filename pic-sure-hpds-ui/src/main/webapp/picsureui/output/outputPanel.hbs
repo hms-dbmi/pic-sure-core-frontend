@@ -1,16 +1,19 @@
-<div>
-<div id="patient-count-box">
-	<span class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</span>
-	<span id="patient-count" class="blue center large">{{#if queryRan}}{{#if countDisplayOverride}}{{> (countDisplayOverride) totalPatients}}{{else}}{{outputPanel_obfuscate totalPatients}}{{/if}}{{else}}-{{/if}}</span><br></br>
-	<span class="center medium">Total Participants</span><br></br>
-    <div class="container hidden" id="variant-data-container">
-		<a class="center btn btn-default" id="variant-data-btn">Variant Explorer</a>
-    </div>
-	<div class="container" id="pic-sure-instances">
-<a class="center btn btn-default" id="select-btn">Select Data For Export</a>
-<div id="select-spinner"></div>
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4 class="panel-title">Results Panel</h4>
 	</div>
-</div>
-<div id="concept-tree-div">
-</div>
+	<div id="patient-count-box">
+		<span class="center large" id="spinner-total">{{#if spinning}}{{> spinner spinnerClasses}}{{/if}}</span>
+		<span id="patient-count" class="blue center large">{{#if queryRan}}{{#if countDisplayOverride}}{{> (countDisplayOverride) totalPatients}}{{else}}{{outputPanel_obfuscate totalPatients}}{{/if}}{{else}}-{{/if}}</span><br></br>
+		<span class="center medium">Total Participants</span><br></br>
+		<div class="container hidden" id="variant-data-container">
+			<a class="center btn btn-default" id="variant-data-btn">Variant Explorer</a>
+		</div>
+		<div class="container" id="pic-sure-instances">
+	<a class="center btn btn-default" id="select-btn">Select Data For Export</a>
+	<div id="select-spinner"></div>
+		</div>
+	</div>
+	<div id="concept-tree-div">
+	</div>
 </div>
