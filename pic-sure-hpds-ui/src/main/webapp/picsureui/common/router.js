@@ -135,10 +135,12 @@ define([
                                 isDismissible: config.isDismissible
                             });
 
-                            let banner = bannerView.render();
-                            // Render the banner at the top of the page.
-                            $('#header').prepend(banner.$el);
-                            break; // Stop the loop once a matching banner is found and displayed
+                            if ($('#banner').length === 0) { // Temporary fix to avoid duplicate banners
+                                let banner = bannerView.render();
+                                // Render the banner at the top of the page.
+                                $('#header').prepend(banner.$el);
+                                break; // Stop the loop once a matching banner is found and displayed
+                            }
                         }
                     }
                 }
@@ -160,7 +162,6 @@ define([
             var termsOfService = new this.tos.View({model: new this.tos.Model()});
             termsOfService.render();
             $('#main-content').html(termsOfService.$el);
-
         },
         displayApplicationManagement: function () {
             $(".header-btn.active").removeClass('active');
