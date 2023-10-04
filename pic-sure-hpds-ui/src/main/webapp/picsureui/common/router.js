@@ -5,7 +5,7 @@ define([
     'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
     'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
     "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
-    "text!common/unexpected_error.hbs", "common/googleAnalytics", "header/bannerConfig", "header/banner"
+    "text!common/unexpected_error.hbs", "analytics/googleAnalytics", "header/bannerConfig", "header/banner"
 ], function (
     Backbone, _, session, login, header, footer,
     userProfile, userManagement,
@@ -53,12 +53,12 @@ define([
             this.layoutTemplate = HBS.compile(layoutTemplate);
             this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
 
-            this.displayGoogleAnalytics();
-        },
-        execute: function (callback, args, name) {
-            if (routerOverrides.execute) {
-                routerOverrides.execute.apply(this, [callback, args, name]);
-            } else {
+                this.displayGoogleAnalytics();
+            },
+            execute: function (callback, args, name) {
+                if (routerOverrides.execute) {
+                    routerOverrides.execute.apply(this, [callback, args, name]);
+                } else {
                 if (publicRoutes.includes(name)) {
                     this.renderHeaderAndFooter();
                     callback.apply(this, args);
@@ -76,7 +76,7 @@ define([
                         }
                     }.bind(this));
                 }
-            }
+                }
         },
         login: function () {
             $(".header-btn.active").removeClass('active');
@@ -135,10 +135,12 @@ define([
                                 isDismissible: config.isDismissible
                             });
 
-                            let banner = bannerView.render();
-                            // Render the banner at the top of the page.
-                            $('#header').prepend(banner.$el);
-                            break; // Stop the loop once a matching banner is found and displayed
+                            if ($('#banner').length === 0) { // Temporary fix to avoid duplicate banners
+                                let banner = bannerView.render();
+                                // Render the banner at the top of the page.
+                                $('#header').prepend(banner.$el);
+                                break; // Stop the loop once a matching banner is found and displayed
+                            }
                         }
                     }
                 }
@@ -160,7 +162,6 @@ define([
             var termsOfService = new this.tos.View({model: new this.tos.Model()});
             termsOfService.render();
             $('#main-content').html(termsOfService.$el);
-
         },
         displayApplicationManagement: function () {
             $(".header-btn.active").removeClass('active');
@@ -261,15 +262,14 @@ define([
             var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), settings.picSureResourceId);
             outputPanelView.runQuery(query);
 
-            filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
-        },
-        displayGoogleAnalytics: function () {
-            let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
-            // append the analytics view to the body
-            analyticsView.render();
-            $("head").append(analyticsView.$el);
-        },
-        displayUserProfile: function () {
+                filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
+            },
+            displayGoogleAnalytics: function() {
+                let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
+                analyticsView.render();
+                $("head").append(analyticsView.$el);
+            },
+        displayUserProfile: function() {
             $(".header-btn.active").removeClass('active');
             $(".header-btn[href='/picsureui/user']").addClass('active');
 
@@ -280,15 +280,15 @@ define([
                 profile.render();
             });
         },
-        defaultAction: function () {
-            console.log("Default action");
-            $(".header-btn.active").removeClass('active');
-            if (routerOverrides.defaultAction)
-                routerOverrides.defaultAction();
-            else {
-                this.displayQueryBuilder();
+            defaultAction: function () {
+                console.log("Default action");
+                $(".header-btn.active").removeClass('active');
+                if (routerOverrides.defaultAction)
+                    routerOverrides.defaultAction();
+                else {
+                    this.displayQueryBuilder();
+                }
             }
-        }
+        });
+        return new Router();
     });
-    return new Router();
-});
