@@ -2,7 +2,7 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
         "common/config", "common/spinner"],
     function($, _, datatables, BB, HBS, variantTableTemplate, modalTemplate, settings,
              config, spinner){
-        const maxVariantCount =  settings.maxVariantCount ? settings.maxVariantCount : 1000;
+        const maxVariantCount =  settings.maxVariantCount ? settings.maxVariantCount : 10000;
         // TODO: this is a temp fix to silence a data tables alert that doesn't seem to impact the dt output
         // We should delete this line and fix what's causing the alert
         datatables.ext.errMode = 'none';

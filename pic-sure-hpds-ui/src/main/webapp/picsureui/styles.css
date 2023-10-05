@@ -207,13 +207,13 @@
     margin: 0;
 }
 
- .filter-search {
-     background-color: rgb(223, 238, 255);
- }
+.filter-boolean-operator-btn {
+    background-color: #4a90e2;
+    color: white;
+}
 
- .filter-boolean-operator-btn {
-     background-color: #4a90e2;
-     color: white;
+#phenotypic-filters-container:last-of-type .filter-boolean-operator {
+    display: none;
 }
 
 .spinner-div {
@@ -311,7 +311,6 @@
 }
 
 .picsure-border-frame {
-    border: 2px solid rgb(223, 238, 255);
     border-top: 0px;
 }
 
@@ -329,7 +328,6 @@
 }
 
 .treeview .list-group-item {
-    border-top: 1px solid rgb(223, 238, 255);
     border-radius: 0px !important;
 }
 
@@ -347,7 +345,6 @@
     overflow-y: auto;
     max-height: 300px;
     background: white;
-    border-bottom: 1px solid rgb(223, 238, 255);
 }
 
 .nav-pills {
@@ -402,7 +399,6 @@
 }
 
 .constrain-row {
-    background-color: rgb(193, 222, 254);
     padding: 10px;
 }
 
@@ -482,10 +478,6 @@ input[type=number] {
     float: left;
 }
 
-.subcat-row {
-    background-color: rgb(223, 238, 255)
-}
-
 body {
     background-color: #f4f4f6;
     font-family: 'Nunito Sans', sans-serif;
@@ -556,7 +548,6 @@ body {
 }
 
 .filter-search-row {
-    background-color: rgb(223, 238, 255);
     padding: 10px;
     border-radius: 4px;
     margin-left: 0;
@@ -571,7 +562,6 @@ body {
 .search-result-list {
     overflow-y: auto;
     max-height: 300px;
-    border-bottom: 1px solid rgb(223, 238, 255);
 }
 
 .search-value {
@@ -1017,10 +1007,7 @@ body {
     color: white;
     background-color: var(--picsure-alt);
 }
-.btn.primary {
-    color: white;
-    background-color: var(--picsure-blue);
-}
+
 .btn.action {
     color: white;
     background-color: var(--picsure-action);

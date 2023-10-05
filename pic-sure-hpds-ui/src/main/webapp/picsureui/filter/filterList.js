@@ -110,6 +110,7 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 				clearButton: true,
 				clearAction: () => {
 					this.selectedGenomicFilters.clearLists();
+					this.selectedGenomicFilters.$el.html('');
 					this.runQuery();
 				}
 			}
@@ -128,7 +129,7 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 		});
 		newFilter.render();
 		this.filters.push(newFilter);
-		$('#filter-list').append(newFilter.$el);
+		$('#filter-list').prepend(newFilter.$el);
 
 		if (typeof this.renderHelpCallback !== 'undefined') {
 			this.renderHelpCallback(this);
