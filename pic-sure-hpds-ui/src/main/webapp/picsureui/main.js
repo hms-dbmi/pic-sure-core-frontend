@@ -58,10 +58,13 @@ require.config({
 });
 
 require(["backbone", "common/session", "common/router", "underscore", "jquery", "bootstrap"],
-    function(Backbone, session, router, _){
-        Backbone.history.start({pushState:true});
-		Backbone.pubSub = _.extend({}, Backbone.Events);
+    function (Backbone, session, router, _) {
+        Backbone.pubSub = _.extend({}, Backbone.Events);
         document.onmousemove = session.activity;
         document.onkeyup = session.activity;
+
+		// This must be last in order to ensure that the above is initialized before the
+        // Backbone.history.start() call.
+        Backbone.history.start({pushState: true});
     }
 );
