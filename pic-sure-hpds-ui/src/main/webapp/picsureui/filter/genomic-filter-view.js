@@ -13,7 +13,6 @@ define(['jquery', 'backbone','handlebars', "underscore",
         const geneKey = 'Gene_with_variant';
         const consequenceKey = 'Variant_consequence_calculated';
         const severityKey = 'Variant_severity';
-        const classDescription = 'A standardized term from the Sequence Ontology (http://www.sequenceontology.org) to describe the type of a variant. Possible values: deletion, insertion.';
         const frequencyDescription = 'The variant allele frequency in gnomAD exomes of combined population as discrete text categories. Possible values: Rare (variant frequency less than 1%), Common (variant frequency greater than or equal to 1%).';
         const TABABLE_CLASS = '.tabable';
         const SELECTED = 'selected';
@@ -32,12 +31,18 @@ define(['jquery', 'backbone','handlebars', "underscore",
                 }, (error)=>{console.error(error)});
                 this.loadingInfoColumns = ontology.getInstance().allInfoColumnsLoaded.then(function(){
                     this.infoColumns = ontology.getInstance().allInfoColumns();
-                    this.data.geneDesc = this.infoColumns.find(col => col.key === geneKey).description.split('"')[1] || 'Error loading description';
-                    this.data.consequenceDesc = this.infoColumns.find(col => col.key === consequenceKey).description.split('"')[1] || 'Error loading description';
-                    this.data.severityDescription = this.infoColumns.find(col => col.key === severityKey).description.split('"')[1] || 'Error loading description';
-                    this.data.classDescription = classDescription;
+                    this.data.geneDesc = this.infoColumns.find(col => col.key === geneKey).description.split('"')[1]
+                                      || this.infoColumns.find(col => col.key === geneKey).description.split('"')[0] 
+                                      || 'Error loading description';
+                    this.data.consequenceDesc = this.infoColumns.find(col => col.key === consequenceKey).description.split('"')[1]
+                                             || this.infoColumns.find(col => col.key === consequenceKey).description.split('"')[0]
+                                             || 'Error loading description';
+                    this.data.severityDescription = this.infoColumns.find(col => col.key === severityKey).description.split('"')[1]
+                                                 || this.infoColumns.find(col => col.key === severityKey).description.split('"')[0]
+                                                 || 'Error loading description';
                     this.data.frequencyDescription = frequencyDescription;
                     this.data.severityDescription = this.data.severityDescription.substring(0, this.data.severityDescription.lastIndexOf(','))+'.';
+                    this.data.consequenceDesc += ' Severity: ' + this.data.severityDescription;
                     this.render();
                 }.bind(this)).catch((error)=>{
                     console.error(error);
