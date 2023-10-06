@@ -75,6 +75,18 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
   
 	return filter;
   };
+
+  const hasGenomicFiltersFromFilterModal = (filter = {}) => {
+	return filter?.variantInfoFilters?.[0]?.categoryVariantInfoFilters?.Gene_with_variant?.length > 0 ||
+	  filter?.variantInfoFilters?.[0]?.categoryVariantInfoFilters?.Variant_frequency_as_text?.length > 0 ||
+	  filter?.variantInfoFilters?.[0]?.categoryVariantInfoFilters?.Variant_consequence_calculated?.length > 0;
+  }
+
+  const handleFinalAnd = (filterList = [], filter = {}) => {
+	filterList.length > 1 && hasGenomicFiltersFromFilterModal(filter) 
+			? $('#phenotypic-filters-container .filter-list-entry:last-of-type .filter-boolean-operator').show() 
+			: $('#phenotypic-filters-container .filter-list-entry:last-of-type .filter-boolean-operator').hide();
+  };
   
 
   const mergeTwo = (a = [], b = [], predicate = (a, b) => a === b) => {
@@ -111,6 +123,7 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 				clearAction: () => {
 					this.selectedGenomicFilters.clearLists();
 					this.selectedGenomicFilters.$el.html('');
+					handleFinalAnd(this.filters, undefined);
 					this.runQuery();
 				}
 			}
@@ -130,7 +143,7 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 		newFilter.render();
 		this.filters.push(newFilter);
 		$('#filter-list').prepend(newFilter.$el);
-
+		handleFinalAnd(this.filters, this.selectedGenomicFilters?.getCurrentFilter());
 		if (typeof this.renderHelpCallback !== 'undefined') {
 			this.renderHelpCallback(this);
 		}
@@ -151,12 +164,13 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 		}
 		this.selectedGenomicFilters.updateFilter(filter);
 		this.selectedGenomicFilters.render();
+		handleFinalAnd(this.filters, this.selectedGenomicFilters?.getCurrentFilter());
 		this.runQuery();
 	}.bind(filterList);
 	filterList.runQuery = function(){
 		var query = queryBuilder.generateQuery(
 				_.pluck(this.filters, "model"), this.queryTemplate, this.resourceUUID);
-		let filterFromSelectedGenomicFilters = this.selectedGenomicFilters.getCurrentFilter()?.variantInfoFilters;
+		let filterFromSelectedGenomicFilters = this.selectedGenomicFilters?.getCurrentFilter()?.variantInfoFilters;
 		query.query.variantInfoFilters = [
 			mergeVariantInfoFilters(query.query.variantInfoFilters, filterFromSelectedGenomicFilters)
 		];
@@ -168,7 +182,7 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
         }
 	}.bind(filterList);
 	filterList.editGenomicFilters = function(){
-		let filter = this.selectedGenomicFilters.getCurrentFilter();
+		let filter = this.selectedGenomicFilters?.getCurrentFilter();
 		let filterToEdit = undefined;
 		if (filter?.variantInfoFilters[0]) {
 			filterToEdit = {

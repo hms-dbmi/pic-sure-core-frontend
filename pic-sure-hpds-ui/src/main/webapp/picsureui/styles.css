@@ -212,7 +212,7 @@
     color: white;
 }
 
-#phenotypic-filters-container:last-of-type .filter-boolean-operator {
+#phenotypic-filters-container .filter-list-entry:last-of-type .filter-boolean-operator {
     display: none;
 }
 
@@ -591,6 +591,7 @@ body {
 }
 .back-btn {
 	float: right;
+    width: unset;
     margin: 5px;
 }
 .constrain-range-separator {
@@ -610,7 +611,6 @@ body {
 }
 
 .edit {
-    padding: 6px 6px;
     width: unset;
     float:right;
     margin: 5px;
@@ -618,6 +618,7 @@ body {
 
 .delete {
     float: right;
+    width: unset;
     margin: 5px;
 }
 
