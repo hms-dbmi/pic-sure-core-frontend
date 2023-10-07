@@ -11,12 +11,14 @@ define(["backbone", "handlebars", "text!analytics/googleAnalytics.hbs", "picSure
                 $("#cookie-consent-container").append(cookieBanner.$el);
             },
             render: function () {
-                let analyticsId = settings.analyticsId;
-                if (analyticsId === undefined || analyticsId === "__ANALYTICS_ID__") {
+                let analyticsId = settings.analyticsId && settings.analyticsId !== "__ANALYTICS_ID__" ? settings.analyticsId : false;
+                let tagManagerId = settings.tagManagerId && settings.tagManagerId !== "__TAG_MANAGER_ID__" ? settings.tagManagerId : false;
+                // if neither analyticsId nor tagManagerId are set, don't render anything
+                if (!tagManagerId && !analyticsId) {
                     return;
                 }
 
-                this.$el.html(this.template({analyticsId: analyticsId}));
+                this.$el.html(this.template({analyticsId: analyticsId, tagManagerId: settings.tagManagerId}));
                 if (analyticsId && localStorage.getItem('consentMode') === null) {
                     this.displayCookieConsent();
                 }
