@@ -21,7 +21,7 @@ RUN sed -i '/^#LoadModule socache_shmcb_module modules\/mod_socache_shmcb.so/s/^
 RUN mkdir /usr/local/apache2/logs/ssl_mutex
 
 COPY target/webjars/META-INF/resources/webjars /usr/local/apache2/htdocs/picsureui/webjars
-RUN sed -i 's/\.\.\/images\//\/picsureui\/webjars\/datatables\/1\.10\.25\/images\//g' ${HTTPD_PREFIX}/htdocs/picsureui/webjars/datatables/1.10.25/css/jquery.dataTables.min.css
+RUN sed -i 's/\.\.\/images\//\/picsureui\/webjars\/datatables\/1\.13\.5\/images\//g' ${HTTPD_PREFIX}/htdocs/picsureui/webjars/datatables/1.13.5/css/jquery.dataTables.min.css
 
 COPY src/main/webapp/picsureui /usr/local/apache2/htdocs/picsureui
 COPY src/main/resources /usr/local/apache2/htdocs/picsureui/settings
