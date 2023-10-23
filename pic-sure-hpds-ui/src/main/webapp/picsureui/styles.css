@@ -312,6 +312,7 @@
 
 .picsure-border-frame {
     border-top: 0px;
+    border-bottom: 1px solid var(--picsure-dark);
 }
 
 .list-group-item {
@@ -396,6 +397,13 @@
 
 .constrain-filter {
     margin-left: 40px;
+    border: 1px solid var(--picsure-dark);
+    margin-top: 4px;
+}
+
+.constrain-filter:empty {
+    border: none;
+    margin-top: 0px;
 }
 
 .constrain-row {
@@ -562,6 +570,8 @@ body {
 .search-result-list {
     overflow-y: auto;
     max-height: 300px;
+    margin-top: 4px;
+    border: 1px solid var(--picsure-dark);
 }
 
 .search-value {
