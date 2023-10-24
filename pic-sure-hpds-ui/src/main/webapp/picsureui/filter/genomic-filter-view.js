@@ -296,7 +296,12 @@ define(['jquery', 'backbone','handlebars', "underscore",
                 return fetch(encodeURI(url), {
                     method: 'GET',
                     headers: {'Authorization': 'Bearer ' + JSON.parse(sessionStorage.getItem('session')).token, 'content-type': 'application/json'},
-                }).then(response => response.json()).then(data => {
+                }).then(response => {
+                    if (!response.ok || response.status === 401) {
+                        throw response;
+                    }
+                    return response.json();
+                }).then(data => {
                     return data;
                 }).catch(error => {
                     console.error(error);
