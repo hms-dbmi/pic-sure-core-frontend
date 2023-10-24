@@ -21,6 +21,7 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 			Gene_with_variant: [],
 			Variant_frequency_as_text: [],
 			Variant_consequence_calculated: [],
+			Variant_severity: []
 		},
 		numericVariantInfoFilters: {},
 		};
@@ -43,6 +44,11 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 				.Variant_consequence_calculated,
 				filter.categoryVariantInfoFilters.Variant_consequence_calculated
 			);
+			mergedFilter.categoryVariantInfoFilters.Variant_severity =
+			mergeTwo(
+				mergedFilter.categoryVariantInfoFilters.Variant_severity,
+				filter.categoryVariantInfoFilters.Variant_severity
+			);
 			mergedFilter.numericVariantInfoFilters = mergeNumericFilters(
 			mergedFilter.numericVariantInfoFilters,
 			filter.numericVariantInfoFilters
@@ -59,6 +65,9 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 		}
 		if (mergedFilter.categoryVariantInfoFilters.Variant_consequence_calculated.length === 0) {
 			delete mergedFilter.categoryVariantInfoFilters.Variant_consequence_calculated;
+		}
+		if (mergedFilter.categoryVariantInfoFilters.Variant_severity.length === 0) {
+			delete mergedFilter.categoryVariantInfoFilters.Variant_severity;
 		}
 
 		return mergedFilter;
