@@ -397,8 +397,9 @@
 
 .constrain-filter {
     margin-left: 40px;
-    border: 1px solid var(--picsure-dark);
     margin-top: 4px;
+    border: 1px solid var(--picsure-dark);
+    border-radius: 4px;
 }
 
 .constrain-filter:empty {
@@ -572,6 +573,7 @@ body {
     max-height: 300px;
     margin-top: 4px;
     border: 1px solid var(--picsure-dark);
+    border-radius: 4px;
 }
 
 .search-value {
