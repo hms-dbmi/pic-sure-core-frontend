@@ -316,6 +316,7 @@ define([
                                 _.each(this.settings.categorySearchResultList, function(category, index){
                                     catIndices[category] = index;
                                 });
+                                tree.state.opened = true; // expand root node
                                 tree.children = _.sortBy(tree.children, function(entry){
                                     //entry.id starts and ends with '\'
                                     entryId = entry.id.substr(1, entry.id.length - 2); 
@@ -328,6 +329,7 @@ define([
                             $("#concept-tree", this.$el).jstree({
                                 core:{
                                     data:tree,
+                                    expand_selected_onload: false
                                 },
                                 "checkbox" : {
                                     "keep_selected_style" : false,
@@ -336,9 +338,6 @@ define([
                             });
                             
                             $("#concept-tree", this.$el).on('loaded.jstree', function() {
-                                if(!treeState) { // if the state is fresh, open the root node
-                                    _.delay(function(){$('.jstree-node[aria-level=1] > .jstree-icon').click();}, 750);
-                                }
                                 _.delay(function(){ // shift focus down after tree is expanded
                                     document.getElementById('package-data').scrollIntoView({behavior: "instant", block: "end", inline: "center"});
                                 }, 755);
