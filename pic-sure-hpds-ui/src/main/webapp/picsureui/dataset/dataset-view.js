@@ -1,7 +1,11 @@
 define([
-    "jquery", "backbone", "handlebars", "underscore", "text!dataset/dataset-view.hbs", "overrides/dataset/dataset-view"
+    "jquery", "backbone", "handlebars", "underscore",
+    "text!dataset/dataset-view.hbs", "overrides/dataset/dataset-view",
+    "common/modal"
 ], function(
-    $, BB, HBS, _, template, overrides
+    $, BB, HBS, _,
+    template, overrides,
+    modal
 ){
     return BB.View.extend({
         initialize : function(dataset, handlers){
@@ -88,6 +92,7 @@ define([
             });
 
             overrides.renderExt && overrides.renderExt(this);
+            modal.createTabIndex(); // always do this at end
         }
     });
 });
