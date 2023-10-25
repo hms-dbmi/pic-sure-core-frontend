@@ -91,9 +91,8 @@ define([
                 $("#" + renderId).append(render ? render(data) : data);
             });
 
-            modal.createTabIndex();
-
             overrides.renderExt && overrides.renderExt(this);
+            modal.createTabIndex(); // always do this at end
         }
     });
 });
