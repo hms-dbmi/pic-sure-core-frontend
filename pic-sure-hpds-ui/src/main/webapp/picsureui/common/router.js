@@ -53,12 +53,12 @@ define([
             this.layoutTemplate = HBS.compile(layoutTemplate);
             this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
 
-                this.displayGoogleAnalytics();
-            },
-            execute: function (callback, args, name) {
-                if (routerOverrides.execute) {
-                    routerOverrides.execute.apply(this, [callback, args, name]);
-                } else {
+            this.displayGoogleAnalytics();
+        },
+        execute: function (callback, args, name) {
+            if (routerOverrides.execute) {
+                routerOverrides.execute.apply(this, [callback, args, name]);
+            } else {
                 if (publicRoutes.includes(name)) {
                     this.renderHeaderAndFooter();
                     callback.apply(this, args);
@@ -76,7 +76,7 @@ define([
                         }
                     }.bind(this));
                 }
-                }
+            }
         },
         login: function () {
             $(".header-btn.active").removeClass('active');
@@ -95,7 +95,7 @@ define([
         unexpected_error: function () {
             $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
-            $('#main-content').html(this.unexpectedErrorTemplate(settings))
+            $('#main-content').html(this.unexpectedErrorTemplate(settings));
         },
         renderHeaderAndFooter: function () {
             var headerView = new header.View({});
@@ -108,6 +108,22 @@ define([
             footerView.render();
             $('#footer-content').html(footerView.$el);
         },
+        shouldDisplayBanner: function (config) {
+            let startDate = new Date(config.startDate);
+            let endDate = new Date(config.endDate);
+
+            let currentDate = new Date();
+            // EST is UTC-5
+            let estOffset = -5 * 60 * 60000;
+            // calculates the time difference between UTC and the user's local time in milliseconds
+            let userOffset = currentDate.getTimezoneOffset() * 60000;
+            // computes the current users date-time in EST
+            let estCurrentDate = new Date(currentDate.getTime() + userOffset + estOffset);
+
+            return (estCurrentDate.getTime() >= startDate.getTime() &&
+                estCurrentDate.getTime() <= endDate.getTime() &&
+                config.styles && config.text && config.disabled !== true);
+        },
         renderBanner: function () {
             // check if the file is present
             if (bannerConfig) {
@@ -118,16 +134,9 @@ define([
 
                     for (let i = 0; i < bannerConfiguration.length; i++) {
                         let config = bannerConfiguration[i];
+                        let banner = $('#banner');
 
-                        // Manually parse the date string to avoid timezone conversion
-                        let [year, month, day] = config.startDate.split("T")[0].split("-").map(Number);
-                        let startDate = new Date(year, month - 1, day); // Months are 0-indexed in JavaScript
-
-                        let [endYear, endMonth, endDay] = config.endDate.split("T")[0].split("-").map(Number);
-                        let endDate = new Date(endYear, endMonth - 1, endDay);
-
-                        // Check if the banner date is today's date and both text and color are present
-                        if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= endDate.getTime() && config.styles && config.text && config.disabled !== true) {
+                        if (this.shouldDisplayBanner(config) && banner.length === 0) {
                             // Instantiate and render the Banner View
                             let bannerView = new BannerView({
                                 bannerStyles: config.styles,
@@ -135,12 +144,10 @@ define([
                                 isDismissible: config.isDismissible
                             });
 
-                            if ($('#banner').length === 0) { // Temporary fix to avoid duplicate banners
-                                let banner = bannerView.render();
-                                // Render the banner at the top of the page.
-                                $('#header').prepend(banner.$el);
-                                break; // Stop the loop once a matching banner is found and displayed
-                            }
+                            let banner = bannerView.render();
+                            // Render the banner at the top of the page.
+                            $('#header').prepend(banner.$el);
+                            break; // Stop the loop once a matching banner is found and displayed
                         }
                     }
                 }
@@ -262,14 +269,14 @@ define([
             var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), settings.picSureResourceId);
             outputPanelView.runQuery(query);
 
-                filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
-            },
-            displayGoogleAnalytics: function() {
-                let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
-                analyticsView.render();
-                $("head").append(analyticsView.$el);
-            },
-        displayUserProfile: function() {
+            filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
+        },
+        displayGoogleAnalytics: function () {
+            let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
+            analyticsView.render();
+            $("head").append(analyticsView.$el);
+        },
+        displayUserProfile: function () {
             $(".header-btn.active").removeClass('active');
             $(".header-btn[href='/picsureui/user']").addClass('active');
 
@@ -280,15 +287,15 @@ define([
                 profile.render();
             });
         },
-            defaultAction: function () {
-                console.log("Default action");
-                $(".header-btn.active").removeClass('active');
-                if (routerOverrides.defaultAction)
-                    routerOverrides.defaultAction();
-                else {
-                    this.displayQueryBuilder();
-                }
+        defaultAction: function () {
+            console.log("Default action");
+            $(".header-btn.active").removeClass('active');
+            if (routerOverrides.defaultAction)
+                routerOverrides.defaultAction();
+            else {
+                this.displayQueryBuilder();
             }
-        });
-        return new Router();
+        }
     });
+    return new Router();
+});
