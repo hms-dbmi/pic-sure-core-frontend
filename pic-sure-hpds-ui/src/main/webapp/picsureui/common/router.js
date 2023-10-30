@@ -109,20 +109,31 @@ define([
             $('#footer-content').html(footerView.$el);
         },
         shouldDisplayBanner: function (config) {
+            // Parse the ISO strings and convert to Date objects
             let startDate = new Date(config.startDate);
             let endDate = new Date(config.endDate);
 
-            let currentDate = new Date();
-            // EST is UTC-5
-            let estOffset = -5 * 60 * 60000;
-            // calculates the time difference between UTC and the user's local time in milliseconds
-            let userOffset = currentDate.getTimezoneOffset() * 60000;
-            // computes the current users date-time in EST
-            let estCurrentDate = new Date(currentDate.getTime() + userOffset + estOffset);
+            console.log("startDate: " + startDate.getTime());
+            console.log("endDate: " + endDate.getTime());
 
-            return (estCurrentDate.getTime() >= startDate.getTime() &&
-                estCurrentDate.getTime() <= endDate.getTime() &&
-                config.styles && config.text && config.disabled !== true);
+            // Get the current date and time
+            let currentDate = new Date();
+
+            // Calculate the offset between the local time zone and UTC-5 in minutes
+            let offset = currentDate.getTimezoneOffset() + 5 * 60;
+
+            // Adjust the current date and time by the offset to convert to UTC-5
+            currentDate.setTime(currentDate.getTime() - offset * 60000);
+
+            console.log("currentDate: " + currentDate.getTime());
+            console.log("currentDate >= startDate: " + (currentDate.getTime() >= startDate.getTime()));
+            console.log("currentDate <= endDate: " + (currentDate.getTime() <= endDate.getTime()));
+
+            return (
+                currentDate >= startDate &&
+                currentDate <= endDate &&
+                config.styles && config.text && config.disabled !== true
+            );
         },
         renderBanner: function () {
             // check if the file is present
@@ -176,7 +187,7 @@ define([
             $('#main-content').empty();
             userFunctions.me(this, function (data) {
                 if (_.find(data.privileges, function (element) {
-                    return (element === 'SUPER_ADMIN')
+                    return (element === 'SUPER_ADMIN');
                 })) {
                     var appliMngmt = new applicationManagement.View({model: new applicationManagement.Model()});
                     appliMngmt.render();
