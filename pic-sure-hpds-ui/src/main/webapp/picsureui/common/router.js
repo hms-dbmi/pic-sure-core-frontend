@@ -5,7 +5,8 @@ define([
     'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
     'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
     "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
-    "text!common/unexpected_error.hbs", "analytics/googleAnalytics", "header/bannerConfig", "header/banner"
+    "text!common/unexpected_error.hbs", "analytics/googleAnalytics", "header/bannerConfig", "header/banner",
+    "moment", "moment_timezone"
 ], function (
     Backbone, _, session, login, header, footer,
     userProfile, userManagement,
@@ -13,7 +14,8 @@ define([
     connectionManagement, tos, userFunctions,
     HBS, accessRuleManagement, routerOverrides, filterList,
     layoutTemplate, queryBuilder, output, settings,
-    unexpectedErrorTemplate, googleAnalytics, bannerConfig, BannerView
+    unexpectedErrorTemplate, googleAnalytics, bannerConfig, BannerView,
+    moment, moment_timezone
 ) {
     var publicRoutes = ["not_authorized", "login", "logout"];
     var Router = Backbone.Router.extend({
@@ -109,25 +111,12 @@ define([
             $('#footer-content').html(footerView.$el);
         },
         shouldDisplayBanner: function (config) {
-            // Parse the ISO strings and convert to Date objects
-            let startDate = new Date(config.startDate);
-            let endDate = new Date(config.endDate);
-
-            console.log("startDate: " + startDate.getTime());
-            console.log("endDate: " + endDate.getTime());
-
-            // Get the current date and time
-            let currentDate = new Date();
-
-            // Calculate the offset between the local time zone and UTC-5 in minutes
-            let offset = currentDate.getTimezoneOffset() + 5 * 60;
-
-            // Adjust the current date and time by the offset to convert to UTC-5
-            currentDate.setTime(currentDate.getTime() - offset * 60000);
-
-            console.log("currentDate: " + currentDate.getTime());
-            console.log("currentDate >= startDate: " + (currentDate.getTime() >= startDate.getTime()));
-            console.log("currentDate <= endDate: " + (currentDate.getTime() <= endDate.getTime()));
+            let currentDate = moment().tz("America/New_York").toDate();
+            // Convert the start and end dates to UTC -5 (EST).
+            // They are string values, so we need to convert them to Date objects.
+            // The format of the string is "YYYY-MM-DD HH:mm:ss"
+            let startDate = moment(config.startDate).tz("America/New_York").toDate();
+            let endDate = moment(config.endDate).tz("America/New_York").toDate();
 
             return (
                 currentDate >= startDate &&
