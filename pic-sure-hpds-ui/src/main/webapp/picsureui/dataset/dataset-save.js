@@ -78,6 +78,7 @@ define([
             this.previousModal && $('.close')?.on('click', this.onClose.bind(this));
 
             overrides.renderExt && overrides.renderExt(this);
+            modal.createTabIndex(); // always do this at end
         }
     });
 });
