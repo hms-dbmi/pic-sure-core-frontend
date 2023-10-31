@@ -141,7 +141,8 @@ define([
                             let bannerView = new BannerView({
                                 bannerStyles: config.styles,
                                 bannerText: config.text,
-                                isDismissible: config.isDismissible
+                                isDismissible: config.isDismissible,
+                                class: config.class
                             });
 
                             let banner = bannerView.render();

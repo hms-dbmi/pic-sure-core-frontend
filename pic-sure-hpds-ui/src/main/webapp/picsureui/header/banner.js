@@ -7,6 +7,7 @@ define(["jquery", "backbone", "handlebars", "text!header/banner.hbs"], function 
             this.bannerText = options.bannerText;
             this.bannerStyles = options.bannerStyles;
             this.isDismissible = options.isDismissible;
+            this.bannerClass = options.class;
             this.template = HBS.compile(template);
         },
         events: {
@@ -30,7 +31,8 @@ define(["jquery", "backbone", "handlebars", "text!header/banner.hbs"], function 
             this.$el.html(this.template({
                 bannerText: this.bannerText,
                 bannerStyles: this.bannerStyles,
-                isDismissible: this.isDismissible
+                isDismissible: this.isDismissible,
+                bannerClass: this.bannerClass
             }));
 
             // Set the color of the close button based on the background color of the banner
