@@ -389,6 +389,14 @@
     display: none;
 }
 
+#tour-container {
+    display: none;
+}
+
+.filter-edit {
+    text-align: center;
+}
+
 .filter-result-saved {
     font-size: 1.2em;
     border: 1px solid black;
@@ -1532,3 +1540,16 @@ remove when above bug is fixed */
     margin-bottom: 10px;
 }
 /* ==== END Cookie prefs ==== */
+
+/* ==== Tour ==== */
+
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(16, 16, 16, 0.5);
+}
+
+/* ==== END Tour ==== */

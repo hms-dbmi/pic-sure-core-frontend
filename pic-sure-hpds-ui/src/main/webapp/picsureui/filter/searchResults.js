@@ -6,6 +6,7 @@ define(["underscore", "jquery", "filter/searchResult", "handlebars", "text!filte
 				this.searchSubCategories = HBS.compile(searchSubCatTemplate);
 				this.searchSubCategoriesContainer = HBS.compile(searchSubCategoriesContainerTemplate)
 				this.addSearchResultRows(data, view, callback, view.model.get("searchTerm"));
+				Backbone.pubSub.trigger('searchResultsRenderCompleted');
 			}
 	};
 	searchResults.addSearchResultRows = function(data, filterView, queryCallback, searchTerm){

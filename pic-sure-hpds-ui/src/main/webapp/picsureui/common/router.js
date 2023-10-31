@@ -5,7 +5,8 @@ define([
     'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
     'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
     "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
-    "text!common/unexpected_error.hbs", "analytics/googleAnalytics", "header/bannerConfig", "header/banner"
+    "text!common/unexpected_error.hbs", "analytics/googleAnalytics", "header/bannerConfig", "header/banner",
+    'tour/tour-view', 'common/modal'
 ], function (
     Backbone, _, session, login, header, footer,
     userProfile, userManagement,
@@ -13,7 +14,8 @@ define([
     connectionManagement, tos, userFunctions,
     HBS, accessRuleManagement, routerOverrides, filterList,
     layoutTemplate, queryBuilder, output, settings,
-    unexpectedErrorTemplate, googleAnalytics, bannerConfig, BannerView
+    unexpectedErrorTemplate, googleAnalytics, bannerConfig, BannerView,
+    tourView, modal,
 ) {
     var publicRoutes = ["not_authorized", "login", "logout"];
     var Router = Backbone.Router.extend({
@@ -262,13 +264,24 @@ define([
             var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), settings.picSureResourceId);
             outputPanelView.runQuery(query);
 
-                filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
+            let filterRef = filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
+            if (settings.enableTour) {
+                const idsToWaitFor = settings.idsToWaitFor;
+                const tour = new tourView({idsToWaitFor: idsToWaitFor})
+                
+                document.getElementById('guide-me-button').addEventListener('click', () => {
+                    let deferredSearchResults = filterRef.searchTerm('asthma');
+                    $.when(deferredSearchResults).then(()=>{
+                        tour.render();
+                    });
+                });
+            }
             },
-            displayGoogleAnalytics: function() {
-                let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
-                analyticsView.render();
-                $("head").append(analyticsView.$el);
-            },
+        displayGoogleAnalytics: function() {
+            let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
+            analyticsView.render();
+            $("head").append(analyticsView.$el);
+        },
         displayUserProfile: function() {
             $(".header-btn.active").removeClass('active');
             $(".header-btn[href='/picsureui/user']").addClass('active');

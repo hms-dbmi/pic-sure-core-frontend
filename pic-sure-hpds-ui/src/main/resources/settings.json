@@ -28,5 +28,8 @@
 		"SOME_PATH" : "Value"
 	},
 	"variantExplorerStatus": "disabled",
-	"maxVariantCount": 100
+	"maxVariantCount": 100,
+	"idsToWaitFor": [
+		"search-results-container"
+	]
 }

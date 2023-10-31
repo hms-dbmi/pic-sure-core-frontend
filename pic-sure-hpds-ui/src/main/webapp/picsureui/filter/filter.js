@@ -123,6 +123,7 @@ define([
 		"keypress #search-box": "enterButtonEventHandler",
 		"click #genomic-filter-btn": "openGenomicFilteringModal",
 		"click #search-reset-button": "resetPage",
+		"click #guide-me-button": "startTour",
 	  },
 	  showAnyRecordOfVariables: function (event) {
 		var valueListEl = $(".anyrecordof-value-list", this.$el);
@@ -174,6 +175,7 @@ define([
 		  );
 		  search.execute(term, deferredSearchResults.resolve, this.resourceUUID);
 		  $.when(deferredSearchResults).then(this.showSearchResults);
+		  return deferredSearchResults;
 		}
 	  },
 	  showGeneticSelectionOptions: function (term) {

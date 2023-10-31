@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "overrides/session", "picSure/settings", "common/styles"], 
-		 function($, _, sessionOverrides, settings){
+define(["jquery", "underscore", "overrides/session", "picSure/settings", "common/styles", 'common/transportErrors'], 
+		 function($, _, sessionOverrides, settings, styles, transportErrors){
 	//Styles are loaded here (and only here) for some reason; we don't need to reference the module, just load it
 	
 	let storedSession = JSON.parse(
