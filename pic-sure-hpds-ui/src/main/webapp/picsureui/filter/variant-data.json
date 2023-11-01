@@ -25,7 +25,7 @@
                 {"text": "inframe_insertion"},
                 {"text": "inframe_deletion"},
                 {"text": "missense_variant"},
-                {"text": "Protein_altering_variant"}
+                {"text": "protein_altering_variant"}
             ]
         },
         {
