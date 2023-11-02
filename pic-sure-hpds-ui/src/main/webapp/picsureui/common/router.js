@@ -277,6 +277,7 @@ define([
 
             let filterRef = filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
             if (settings.enableTour) {
+                $('#tour-container').show();
                 document.getElementById('guide-me-button').addEventListener('click', () => {
                     const dialogOptions = [
                         {title: "Cancel", "action": ()=>{$('.close')?.get(0).click();}, classes: "btn btn-default"},
