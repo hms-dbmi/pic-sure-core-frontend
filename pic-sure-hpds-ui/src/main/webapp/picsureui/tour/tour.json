@@ -14,11 +14,11 @@
         "position": "bottom"
     },
     "#search-results-sub-categories": {
-        "text": "Results are categorized further by  group.",
+        "text": "Results are categorized further by group.",
         "position": "bottom"
     },
     "#first-search-result-row": {
-        "text": "To learn more about a variable, click on the row."
+        "text": "To add a filter, click on the variable of interest in the row."
     },
     "#first-search-result-ellipses": {
         "text": "Click the blue ellipsis box to view the concept path for a specific search result. This path shows the hierarchical arrangement of search results, organized according to ACT ontology categories. You can also expand your filter to encompass variables and values higher in the data hierarchy.",
