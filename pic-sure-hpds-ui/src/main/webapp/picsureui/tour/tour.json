@@ -33,7 +33,7 @@
         "position": "left"
     },
     "#package-data": {
-        "text": "Get text from Emily or Rachel.",
+        "text": "The Select and Package data feature allows users to select additional unfiltered data they would like to analyze in conjunction with the data included in their cohort.",
         "position": "left"
     },
     "#help-header-button": {
