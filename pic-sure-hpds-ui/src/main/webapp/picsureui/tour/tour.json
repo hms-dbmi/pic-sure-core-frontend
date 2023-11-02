@@ -10,7 +10,7 @@
         "text": "The results of the search are displayed in this area. Each row describes a different variable that matches your search result."
     },
     "#search-results-categories": {
-        "text": "Results are categorized by search result type, including biospecimens, COVID-19, demographics, diagnosis, genomic variants, laboratory results, medications, and procedures.",
+        "text": "Results are categorized by search result type.",
         "position": "bottom"
     },
     "#search-results-sub-categories": {
@@ -21,7 +21,7 @@
         "text": "To add a filter, click on the variable of interest in the row."
     },
     "#first-search-result-ellipses": {
-        "text": "Click the blue ellipsis box to view the concept path for a specific search result. This path shows the hierarchical arrangement of search results, organized according to ACT ontology categories. You can also expand your filter to encompass variables and values higher in the data hierarchy.",
+        "text": "Click the blue ellipsis box to view the concept path for a specific search result. This path shows the hierarchical arrangement of search results. You can also expand your filter to encompass variables and values higher in the data hierarchy.",
         "position": "right"        
     },
     "#results-panel": {
