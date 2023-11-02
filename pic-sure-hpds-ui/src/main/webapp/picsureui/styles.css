@@ -1561,6 +1561,10 @@ remove when above bug is fixed */
     background-color: rgba(16, 16, 16, 0.5);
 }
 
+.spinner-vert-center {
+    top: 25%;
+}
+
 #tour-container {
     display: flex;
     flex-direction: row;
