@@ -92,7 +92,7 @@ define([
                 const timeoutCount = 15;
                 let count = 0;
                 let interval = setInterval(function() {
-                    let overlay = $('body').chardinJs({ url: './tour/guide-me.json'});
+                    let overlay = $('body').chardinJs({ url: './tour/tour.json'});
                     if (overlay && overlay.sequencedItems && overlay.data_helptext) {
                         if (overlay.sequencedItems.toArray().every((element) => element.isConnected === true)) {
                             clearInterval(interval);

@@ -34,6 +34,18 @@
 	border-color: var(--picsure-primary-hover);
 }
 
+.btn-tertiary {
+    background-color: var(--picsure-primary);
+	border-color: var(--picsure-primary);
+    color: #ffffff;
+}
+
+.btn-tertiary:hover {
+    background-color: var(--picsure-primary-hover);
+	border-color: var(--picsure-primary-hover);
+    color: #ffffff;
+}
+
 #query-builder h3 {
     margin-top: 0;
 }
@@ -386,10 +398,6 @@
 }
 
 .saved .filter-edit {
-    display: none;
-}
-
-#tour-container {
     display: none;
 }
 
@@ -1340,6 +1348,7 @@ input[type='checkbox'].categorical-filter-input {
     flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
 .space-even section:not(:last-child) {
@@ -1550,6 +1559,13 @@ remove when above bug is fixed */
     width: 100%;
     height: 100%;
     background-color: rgba(16, 16, 16, 0.5);
+}
+
+#tour-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 /* ==== END Tour ==== */

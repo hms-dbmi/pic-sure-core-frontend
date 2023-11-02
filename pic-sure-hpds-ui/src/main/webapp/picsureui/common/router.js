@@ -6,7 +6,7 @@ define([
     'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
     "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
     "text!common/unexpected_error.hbs", "analytics/googleAnalytics", "header/bannerConfig", "header/banner",
-    'tour/tour-view', 'common/modal'
+    'tour/tour-view', 'common/pic-sure-dialog-view', 'common/modal'
 ], function (
     Backbone, _, session, login, header, footer,
     userProfile, userManagement,
@@ -15,9 +15,20 @@ define([
     HBS, accessRuleManagement, routerOverrides, filterList,
     layoutTemplate, queryBuilder, output, settings,
     unexpectedErrorTemplate, googleAnalytics, bannerConfig, BannerView,
-    tourView, modal,
+    tourView, dialog, modal,
 ) {
     var publicRoutes = ["not_authorized", "login", "logout"];
+    let setUpTour = (filterRef, tour) => {
+        let deferredSearchResults = filterRef.searchTerm('age');
+        document.getElementById('search-box').value = 'age';
+        $.when(deferredSearchResults).then(()=>{
+            const ulElement = document.querySelector('ul.nav.nav-pills');
+            const secondChild = ulElement?.children[1]?.children[0];
+            secondChild?.click(); //Second child of Age has subcategories
+            tour.render();
+            $('#tour-container').hide();
+        });
+    };
     var Router = Backbone.Router.extend({
         routes: {
             "psamaui/userManagement(/)": "displayUserManagement",
@@ -266,14 +277,29 @@ define([
 
             let filterRef = filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
             if (settings.enableTour) {
-                const idsToWaitFor = settings.idsToWaitFor;
-                const tour = new tourView({idsToWaitFor: idsToWaitFor})
-                
                 document.getElementById('guide-me-button').addEventListener('click', () => {
-                    let deferredSearchResults = filterRef.searchTerm('asthma');
-                    $.when(deferredSearchResults).then(()=>{
-                        tour.render();
-                    });
+                    const dialogOptions = [
+                        {title: "Cancel", "action": ()=>{$('.close')?.get(0).click();}, classes: "btn btn-default"},
+                        {title: "Start Tour", "action": ()=>{
+                            this.isStartTour = true;
+                            $('.close')?.get(0).click();
+                        }, classes: "btn btn-primary"}
+                    ];
+                    const messages = [
+                        'PIC-SURE Search allows you to search for variable level data.',
+                        'Once the tour starts you can click anywhere to go to the next step. You can press the escape key to stop the tour at any point. You may also use the arrow keys, enter key, or the spacebar to navigate the tour.'
+                    ];
+                    const dialogView = new dialog({options: dialogOptions, messages: messages});
+                    modal.displayModal(dialogView, 'Welcome to PIC-SURE', () => {
+                        const idsToWaitFor = settings.idsToWaitFor;
+                        const tour = new tourView({idsToWaitFor: idsToWaitFor});
+                        if (this.isStartTour) {
+                            setUpTour(filterRef, tour);
+                        } else {
+                            tour.destroy();
+                            $('#guide-me-button').focus();
+                        }
+                    }, {isHandleTabs: true, width: 400});
                 });
             }
             },
@@ -293,15 +319,15 @@ define([
                 profile.render();
             });
         },
-            defaultAction: function () {
-                console.log("Default action");
-                $(".header-btn.active").removeClass('active');
-                if (routerOverrides.defaultAction)
-                    routerOverrides.defaultAction();
-                else {
-                    this.displayQueryBuilder();
-                }
+        defaultAction: function () {
+            console.log("Default action");
+            $(".header-btn.active").removeClass('active');
+            if (routerOverrides.defaultAction)
+                routerOverrides.defaultAction();
+            else {
+                this.displayQueryBuilder();
             }
+        }
         });
         return new Router();
     });

@@ -9,6 +9,12 @@ define(["underscore", "jquery", "filter/searchResult", "handlebars", "text!filte
 				Backbone.pubSub.trigger('searchResultsRenderCompleted');
 			}
 	};
+	let addDynamicTourAttributes = (firstResult) => {
+        firstResult?.setAttribute('data-intro', '#first-search-result-row');
+        firstResult?.setAttribute('data-sequence', '6');
+        firstResult?.getElementsByClassName('pui-elipses')[0]?.setAttribute('data-intro', '#first-search-result-ellipses');
+		firstResult?.getElementsByClassName('pui-elipses')[0]?.setAttribute('data-sequence', '7');
+    };
 	searchResults.addSearchResultRows = function(data, filterView, queryCallback, searchTerm){
 		
 		//we want case INsensitive comparisons always
@@ -108,8 +114,6 @@ define(["underscore", "jquery", "filter/searchResult", "handlebars", "text!filte
 					}));
 				}
 
-				
-
 				// identify any sub categories, and save them.  do not add a sub category for leaf nodes.  
 				valuePath = value.data.substr(1, value.data.length-2).split('\\');;
 				if(valuePath.length > 2){
@@ -179,9 +183,13 @@ define(["underscore", "jquery", "filter/searchResult", "handlebars", "text!filte
 				});
 			}
 
+			categorySearchResultViews.length > 0 ? 
+				addDynamicTourAttributes(categorySearchResultViews[0]?.el) :
+				null;
 			$(".search-result-list", tabPane).append(_.pluck(categorySearchResultViews, "$el"));
 
 		});
+
 
 		$("#"+_.first(aliases)).addClass("active");
 		$(".nav-pills li:first-child").addClass("active");
