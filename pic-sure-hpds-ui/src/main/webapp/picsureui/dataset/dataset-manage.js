@@ -33,8 +33,8 @@ define([
                     return year + "-" + month + "-" + day;
                 }
             },
-            { // hide query id column
-                targets: [3, 4],
+            { // hide dataset id and metadata column
+                targets: [1, 4],
                 visible: false
             },
             ...(overrides.staticColumnDefs || [])
@@ -45,11 +45,11 @@ define([
                     copy: {
                         title: "Copy",
                         name: "copy",
-                        style: "alternate",
+                        style: "btn-default alternate",
                         handler: row => {
-                            const { uuid } = row.data();
+                            const { query: { uuid: queryId }, uuid } = row.data();
                             const key = "dataset-action-copy-" + uuid?.split("-")[0];
-                            navigator.clipboard.writeText(uuid);
+                            navigator.clipboard.writeText(queryId);
                             const originalText = document.getElementById(key).innerText;
                             document.getElementById(key).innerText = "Copied!";
 
@@ -60,15 +60,18 @@ define([
                     view: {
                         title: "View",
                         name: "view",
-                        style: "alternate",
+                        style: "btn-default alternate",
                         handler: row => {
                             const onClose = (view) => {
                                 $(".close").click();
                                 row.node().focus();
                             };
                             const onArchive = () => this.archiveRow(true)(row);
+                            const data = { ...row.data() };
+                            const parsedQuery = JSON.parse(data.query.query);
+                            data.query = { ...data.query, ...parsedQuery.query, query: undefined };
                             modal.displayModal(
-                                new viewDataset(row.data(), { onClose, onArchive }),
+                                new viewDataset(data, { onClose, onArchive }),
                                 "View Dataset",
                                 onClose,
                                 { width: "40%" }
@@ -78,7 +81,7 @@ define([
                     archive: {
                         title: "Archive",
                         name: "archive",
-                        style: "action",
+                        style: "btn-default action",
                         handler: this.archiveRow(true)
                     }
                 },
@@ -86,7 +89,7 @@ define([
                     restore: {
                         title: "Restore",
                         name: "restore",
-                        style: "action",
+                        style: "btn-default action",
                         handler: this.archiveRow(false)
                     }
                 }
@@ -190,7 +193,7 @@ define([
         },
         renderButton: function(uuid, type, style){
             const key = "dataset-action-" + type + "-" + uuid?.split("-")[0];
-            const styles = ["btn btn-default", "action-" + type, style ].join(" ");
+            const styles = [ "btn", style, "action-" + type ].join(" ");
             return  `<button id="${key}" class="${styles}" data-loading-text="` +
                 `<span class='glyphicon glyphicon glyphicon-refresh spinning' aria-hidden='true'></span> Loading" ` +
             `aria-label="Left Align">${type}</button>`;
