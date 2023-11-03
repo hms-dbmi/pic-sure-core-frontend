@@ -14,9 +14,9 @@ define([
             this.dataset = JSON.parse(JSON.stringify(dataset));
         },
         events: {
-            "click #cancel-btn": "onClose",
-            "click #archive-btn": "onArchive",
-            "click #download-btn": "onDownload"
+            "click #dataset-view-cancel-btn": "onClose",
+            "click #dataset-view-archive-btn": "onArchive",
+            "click #dataset-view-download-btn": "onDownload"
         },
         mappers: function() {
             const map = {
@@ -91,9 +91,7 @@ define([
 
             Object.values(this.mappers()).forEach(({ path, renderId, render }) => {
                 const data = _.get(this.dataset, path);
-                if(data){ // only execute render method if the data path exists
-                    $("#" + renderId).append(render ? render(data) : data);
-                }
+                data && $("#" + renderId).append(render ? render(data) : data);
             });
 
             // remove elements that could be empty
@@ -106,8 +104,8 @@ define([
             }
 
             // Remove buttons we don't need
-            !this.handlers.onArchive && $("#archive-btn").parent().remove();
-            !this.handlers.onDownload && $("#download-btn").parent().remove();
+            !this.handlers.onArchive && $("#dataset-view-archive-btn").parent().remove();
+            !this.handlers.onDownload && $("#dataset-view-download-btn").parent().remove();
 
             // Set the column spacing based on the buttons that are still available
             const buttons = $("#buttons > div");

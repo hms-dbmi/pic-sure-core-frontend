@@ -15,23 +15,11 @@ define([ "overrides/dataset/utilities" ],  function(overrides){
                 return { title, range: { min, max } };
             });
         },
-        categoryVariant: function(filter = {}){
-            const {
-                Gene_with_variant: gene = [],
-                Variant_consequence_calculated: consequenceList = [],
-                Variant_frequency_as_text: frequency = []
-            } = filter;
-            const filtersList = [];
-            if(gene.length > 0){
-                filtersList.push({ title: `Gene${gene.length > 1 ? 's' : ''} with Variant`, values: gene });
-            }
-            if(frequency.length > 0){
-                filtersList.push({ title: 'Variant Frequency', values: frequency });
-            }
-            if(consequenceList.length > 0){
-                filtersList.push({ title: 'Calculated Variant Consequence', values: consequenceList });
-            }
-            return filtersList;
+        categoryVariant: function(filters = {}){
+            const filtersList = Object.entries(filters);
+            return filtersList.map(([ title, values ]) => {
+                return { title: title.replaceAll("_", " "), values };
+            });
         },
         numericVariant: function(filters = {}) {
             const filtersList = Object.entries(filters);

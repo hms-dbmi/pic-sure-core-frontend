@@ -125,14 +125,12 @@
     color: white;
 }
 
-.btn-outline.danger,
 .btn-outline.action {
     border: 1px solid var(--picsure-action);
     background-color: white;
     color:  var(--picsure-action);
 }
 
-.btn-outline.danger:hover,
 .btn-outline.action:hover {
     border: 1px solid var(--picsure-action);
     background-color: var(--picsure-action);
