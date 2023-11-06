@@ -1,6 +1,13 @@
-define([ "overrides/dataset/utilities" ],  function(overrides){
+define([ "underscore", "overrides/dataset/utilities" ],  function(_, overrides){
     const titleRegex = /(\\[^\\]+)*\\(?<title>[^\\]+)\\/;
+    function anyRecordOf(filters = []){
+        return filters.map(filter => titleRegex.exec(filter).groups);
+    }
     const format = {
+        anyRecordOf,
+        anyRecordOfMulti: function(filters = []){
+            return _.flatten(filters.map(filter => anyRecordOf(filter)));
+        },
         categories: function(filters = {}) {
             const filtersList = Object.entries(filters);
             return filtersList.map(([ filter, values ]) => {
@@ -56,7 +63,7 @@ define([ "overrides/dataset/utilities" ],  function(overrides){
             return list.map((item) => {
                 const { title, range } = item;
                 const values = range ? buildRange(range) : item.values;
-                if (values.length > 0){
+                if (values && values.length > 0){
                     return `<span class="list-title">${title}:</span> ${valuesPrefix}${values.join(", ")}`;
                 } else {
                     return `<span class="list-title">${title}</span>`;
@@ -66,8 +73,12 @@ define([ "overrides/dataset/utilities" ],  function(overrides){
         string: function(list, valuesPrefix = ''){
             return list.map((item) => {
                 const { title, range } = item;
-                const values = range ? item.values : buildRange(range);
-                return `${title}: ${valuesPrefix}${values.join(', ')}`;
+                const values = range ? buildRange(range) : item.values;
+                if (values && values.length > 0){
+                    return `${title}: ${valuesPrefix}${values.join(', ')}`;
+                } else {
+                    return title;
+                }
             });
         },
         ...overrides.render

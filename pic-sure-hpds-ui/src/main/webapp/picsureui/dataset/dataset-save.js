@@ -32,6 +32,16 @@ define([
             $('#errors').html(text);
             $("#errors").removeClass('hidden');
         },
+        validateError: function(name){
+            if(name === ""){
+                return "Please input a Dataset ID name";
+            }
+            const validName = /^[\w\d \-\\/?+=\[\]\.():"']+$/g;
+            if(!name.match(validName)){
+                return "Name can only contain letters, numbers, and these special symbols - ? + = [ ] . ( ) : &apos; &quot;";
+            }
+            return false;
+        },
         onSave: function() {
             if (overrides && overrides.onSave) {
                 overrides.onSave(this);
@@ -39,8 +49,9 @@ define([
             }
 
             const name = $("#dataset-name").val();
-            if(name === ""){
-                this.onError("Please input a Dataset ID Name value");
+            const validationError = this.validateError(name);
+            if(validationError){
+                this.onError(validationError);
                 $("#dataset-name").addClass('error');
                 return;
             }
