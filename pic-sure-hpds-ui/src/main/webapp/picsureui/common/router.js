@@ -274,16 +274,16 @@ define([
                         {title: "Start Tour", "action": ()=>{
                             this.isStartTour = true;
                             $('.close')?.get(0).click();
-                        }, classes: "btn btn-primary"}
+                        }, classes: "btn btn-tertiary"}
                     ];
-                    const messages = [
+                    const title = routerOverrides.tourTitle || 'Welcome To PIC-SURE';
+                    const messages = routerOverrides.tourMessages || [
                         'PIC-SURE Search allows you to search for variable level data.',
                         'Once the tour starts you can click anywhere to go to the next step. You can press the escape key to stop the tour at any point. You may also use the arrow keys, enter key, or the spacebar to navigate the tour.'
                     ];
                     const dialogView = new dialog({options: dialogOptions, messages: messages});
-                    modal.displayModal(dialogView, 'Welcome to PIC-SURE', () => {
-                        const idsToWaitFor = settings.idsToWaitFor;
-                        const tour = new tourView({idsToWaitFor: idsToWaitFor});
+                    modal.displayModal(dialogView, title, () => {
+                        const tour = new tourView();
                         if (this.isStartTour) {
                             tour.setUpTour(filterRef);
                             tour.render(filterRef);
@@ -292,7 +292,7 @@ define([
                             this.isStartTour = false;
                             $('#guide-me-button').focus();
                         }
-                    }, {isHandleTabs: true, width: 400});
+                    }, {isHandleTabs: true, width: 500});
                 });
             }
             },

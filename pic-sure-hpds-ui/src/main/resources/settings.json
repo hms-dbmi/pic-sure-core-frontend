@@ -32,5 +32,6 @@
 	"enableTour": true,
 	"idsToWaitFor": [
 		"search-results-container"
-	]
+	],
+	"tourSearchTerm": "age"
 }

@@ -4,7 +4,8 @@ define([
     'underscore',
     "chardin",
     'common/keyboard-nav',
-], function($, BB, _, chardin, keyboardNav) {
+    'picSure/settings'
+], function($, BB, _, chardin, keyboardNav, settings) {
     const CHARDIN_SELECTOR = '#chardin-mask';
     const delay = function(t, v) {
         return new Promise(function(resolve) { 
@@ -41,7 +42,7 @@ define([
         },
         initChardinJs: function() {
             let callback = () => {
-                this.checkIfPreRenderCompleted(this.opts.idsToWaitFor).then(() => {
+                this.checkIfPreRenderCompleted(settings.idsToWaitFor).then(() => {
                     this.checkIfOverlayIsReady().then((overlay) => {
                         this.startTour(overlay);
                         this.stopListening(Backbone.pubSub, 'searchResultsRenderCompleted');
@@ -133,8 +134,9 @@ define([
             this.addKeyboardNav();
 		},
         setUpTour: (filterRef) => {
-            let deferredSearchResults = filterRef.searchTerm('age');
-            document.getElementById('search-box').value = 'age';
+            let searchTerm = settings.tourSearchTerm || 'age';
+            let deferredSearchResults = filterRef.searchTerm(searchTerm);
+            document.getElementById('search-box').value = searchTerm;
             $.when(deferredSearchResults).then(()=>{
                 const ulElement = document.querySelector('ul.nav.nav-pills');
                 const secondChild = ulElement?.children[1]?.children[0];
