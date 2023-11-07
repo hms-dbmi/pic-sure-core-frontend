@@ -18,17 +18,7 @@ define([
     tourView, dialog, modal,
 ) {
     var publicRoutes = ["not_authorized", "login", "logout"];
-    let setUpTour = (filterRef, tour) => {
-        let deferredSearchResults = filterRef.searchTerm('age');
-        document.getElementById('search-box').value = 'age';
-        $.when(deferredSearchResults).then(()=>{
-            const ulElement = document.querySelector('ul.nav.nav-pills');
-            const secondChild = ulElement?.children[1]?.children[0];
-            secondChild?.click(); //Second child of Age has subcategories
-            tour.render();
-            $('#tour-container').hide();
-        });
-    };
+    
     var Router = Backbone.Router.extend({
         routes: {
             "psamaui/userManagement(/)": "displayUserManagement",
@@ -295,9 +285,11 @@ define([
                         const idsToWaitFor = settings.idsToWaitFor;
                         const tour = new tourView({idsToWaitFor: idsToWaitFor});
                         if (this.isStartTour) {
-                            setUpTour(filterRef, tour);
+                            tour.setUpTour(filterRef);
+                            tour.render(filterRef);
                         } else {
                             tour.destroy();
+                            this.isStartTour = false;
                             $('#guide-me-button').focus();
                         }
                     }, {isHandleTabs: true, width: 400});

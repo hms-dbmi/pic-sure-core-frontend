@@ -132,6 +132,16 @@ define([
             delay(250).then($(this.loadingScreen).remove());
             this.addKeyboardNav();
 		},
+        setUpTour: (filterRef) => {
+            let deferredSearchResults = filterRef.searchTerm('age');
+            document.getElementById('search-box').value = 'age';
+            $.when(deferredSearchResults).then(()=>{
+                const ulElement = document.querySelector('ul.nav.nav-pills');
+                const secondChild = ulElement?.children[1]?.children[0];
+                secondChild?.click(); //Second child of Age has subcategories
+                $('#tour-container').hide();
+            });
+        },
         stopTour: function() {
             $('body').chardinJs('stop');
         },
