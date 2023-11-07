@@ -13,7 +13,7 @@ define(['jquery', 'backbone','handlebars', "underscore",
         const geneKey = 'Gene_with_variant';
         const consequenceKey = 'Variant_consequence_calculated';
         const severityKey = 'Variant_severity';
-        const frequencyDescription = 'The variant allele frequency in gnomAD exomes of combined population as discrete text categories. Possible values: Rare (variant frequency less than 1%), Common (variant frequency greater than or equal to 1%).';
+        const frequencyDescription = overrides.frequencyDescription || 'The variant allele frequency in gnomAD exomes of combined population as discrete text categories. Possible values: Rare (variant frequency less than 1%), Common (variant frequency greater than or equal to 1%).';
         const TABABLE_CLASS = '.tabable';
         const SELECTED = 'selected';
         const LIST_ITEM = 'list-item';
@@ -32,7 +32,7 @@ define(['jquery', 'backbone','handlebars', "underscore",
                 this.loadingInfoColumns = ontology.getInstance().allInfoColumnsLoaded.then(function(){
                     this.infoColumns = ontology.getInstance().allInfoColumns();
                     this.data.geneDesc = this.infoColumns.find(col => col.key === geneKey).description.split('"')[1]
-                                      || this.infoColumns.find(col => col.key === geneKey).description.split('"')[0] 
+                                      || this.infoColumns.find(col => col.key === geneKey).description.split('"')[0]
                                       || 'Error loading description';
                     this.data.consequenceDesc = this.infoColumns.find(col => col.key === consequenceKey).description.split('"')[1]
                                              || this.infoColumns.find(col => col.key === consequenceKey).description.split('"')[0]

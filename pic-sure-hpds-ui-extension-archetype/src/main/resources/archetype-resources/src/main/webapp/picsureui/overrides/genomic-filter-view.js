@@ -18,5 +18,8 @@ define([], function(){
          * to disable the apply button if there is no filters selected.
          */
         updateDisabledButtons: undefined,
+
+        // Describe the frequency to the user. Used for the tool tip
+        frequencyDescription: undefined,
 	};
 });
