@@ -123,7 +123,6 @@ define([
 		"keypress #search-box": "enterButtonEventHandler",
 		"click #genomic-filter-btn": "openGenomicFilteringModal",
 		"click #search-reset-button": "resetPage",
-		"click #guide-me-button": "startTour",
 	  },
 	  showAnyRecordOfVariables: function (event) {
 		var valueListEl = $(".anyrecordof-value-list", this.$el);
