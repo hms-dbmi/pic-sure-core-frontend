@@ -28,6 +28,24 @@ define([
                     path: ['query', 'uuid'],
                     renderId: "detail-summary-id"
                 },
+                anyRecordOf: {
+                    path: ['query', 'anyRecordOf'],
+                    renderId: "detail-filters",
+                    render: function(filtersList = []){
+                        const data = dataUtils.format.anyRecordOf(filtersList);
+                        return dataUtils.render.html(data)
+                            .map(item => `<li>${item}</li>`).join('');
+                    }
+                },
+                anyRecordOfMulti: {
+                    path: ['query', 'anyRecordOfMulti'],
+                    renderId: "detail-filters",
+                    render: function(filtersList = []){
+                        const data = dataUtils.format.anyRecordOfMulti(filtersList);
+                        return dataUtils.render.html(data)
+                            .map(item => `<li>${item}</li>`).join('');
+                    }
+                },
                 categories: {
                     path: ['query', 'categoryFilters'],
                     renderId: "detail-filters",
