@@ -1,12 +1,40 @@
 define([ "underscore", "overrides/dataset/utilities" ],  function(_, overrides){
     const titleRegex = /(\\[^\\]+)*\\(?<title>[^\\]+)\\/;
     function anyRecordOf(filters = []){
-        return filters.map(filter => titleRegex.exec(filter).groups);
+        return filters.map(filter => titleRegex.exec(filter).groups).map(({title}) => title);
+    }
+    function commonPrefix(concepts){
+        if(concepts.length == 0) return "";
+        else if (concepts.length == 1) return concepts[0];
+
+        function commonPrefixUtil(a, b){
+            let prefix = "";
+            for(let i = 0, j = 0; i <= a.length - 1 && j <= b.length - 1; i++, j++) {
+                if(a[i] != b[j]) break;
+                prefix += a[i];
+            }
+            return prefix;
+        }
+
+        return concepts.reduce((prefix, concept) => {
+            if(!prefix) return concept;
+            return commonPrefixUtil(prefix, concept);
+        }, "");
     }
     const format = {
-        anyRecordOf,
+        anyRecordOf: function(filters = []){
+            return filters.length > 0 ? [{
+                title: "Any record of",
+                values: anyRecordOf(filters)
+            }] : [];
+        },
         anyRecordOfMulti: function(filters = []){
-            return _.flatten(filters.map(filter => anyRecordOf(filter)));
+            if(filters.length === 0) return;
+            const prefixes = filters.map(commonPrefix)
+            return anyRecordOf(prefixes).map(value => ({
+                title: "Any record of",
+                values: [ value ]
+            }));
         },
         categories: function(filters = {}) {
             const filtersList = Object.entries(filters);
