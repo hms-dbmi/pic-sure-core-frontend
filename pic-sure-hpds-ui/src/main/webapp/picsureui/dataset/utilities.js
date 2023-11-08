@@ -1,6 +1,41 @@
-define([ "overrides/dataset/utilities" ],  function(overrides){
+define([ "underscore", "overrides/dataset/utilities" ],  function(_, overrides){
     const titleRegex = /(\\[^\\]+)*\\(?<title>[^\\]+)\\/;
+    function anyRecordOf(filters = []){
+        return filters.map(filter => titleRegex.exec(filter).groups).map(({title}) => title);
+    }
+    function commonPrefix(concepts){
+        if(concepts.length == 0) return "";
+        else if (concepts.length == 1) return concepts[0];
+
+        function commonPrefixUtil(a, b){
+            let prefix = "";
+            for(let i = 0, j = 0; i <= a.length - 1 && j <= b.length - 1; i++, j++) {
+                if(a[i] != b[j]) break;
+                prefix += a[i];
+            }
+            return prefix;
+        }
+
+        return concepts.reduce((prefix, concept) => {
+            if(!prefix) return concept;
+            return commonPrefixUtil(prefix, concept);
+        }, "");
+    }
     const format = {
+        anyRecordOf: function(filters = []){
+            return filters.length > 0 ? [{
+                title: "Any record of",
+                values: anyRecordOf(filters)
+            }] : [];
+        },
+        anyRecordOfMulti: function(filters = []){
+            if(filters.length === 0) return;
+            const prefixes = filters.map(commonPrefix)
+            return anyRecordOf(prefixes).map(value => ({
+                title: "Any record of",
+                values: [ value ]
+            }));
+        },
         categories: function(filters = {}) {
             const filtersList = Object.entries(filters);
             return filtersList.map(([ filter, values ]) => {
@@ -56,7 +91,7 @@ define([ "overrides/dataset/utilities" ],  function(overrides){
             return list.map((item) => {
                 const { title, range } = item;
                 const values = range ? buildRange(range) : item.values;
-                if (values.length > 0){
+                if (values && values.length > 0){
                     return `<span class="list-title">${title}:</span> ${valuesPrefix}${values.join(", ")}`;
                 } else {
                     return `<span class="list-title">${title}</span>`;
@@ -66,8 +101,12 @@ define([ "overrides/dataset/utilities" ],  function(overrides){
         string: function(list, valuesPrefix = ''){
             return list.map((item) => {
                 const { title, range } = item;
-                const values = range ? item.values : buildRange(range);
-                return `${title}: ${valuesPrefix}${values.join(', ')}`;
+                const values = range ? buildRange(range) : item.values;
+                if (values && values.length > 0){
+                    return `${title}: ${valuesPrefix}${values.join(', ')}`;
+                } else {
+                    return title;
+                }
             });
         },
         ...overrides.render
