@@ -1,0 +1,42 @@
+{
+    "#search-box": {
+        "text": "Search clinical variables of interest. Click anywhere to continue the tour.",
+        "position": "bottom"
+    },
+    "#genomic-filter-btn": { 
+        "text": "Use the genomic filtering button to apply a filter using genomic information. \n Note* you can also search for genomic variables using the search bar."
+    },
+    "#search-results": {
+        "text": "The results of the search are displayed in this area. Each row describes a different variable that matches your search result."
+    },
+    "#search-results-categories": {
+        "text": "Results are categorized by search result type.",
+        "position": "bottom"
+    },
+    "#search-results-sub-categories": {
+        "text": "Results are categorized further by group.",
+        "position": "bottom"
+    },
+    "#first-search-result-row": {
+        "text": "To add a filter, click on the variable of interest in the row."
+    },
+    "#first-search-result-ellipses": {
+        "text": "Click the blue ellipsis box to view the concept path for a specific search result. This path shows the hierarchical arrangement of search results. You can also expand your filter to encompass variables and values higher in the data hierarchy.",
+        "position": "right"        
+    },
+    "#results-panel": {
+        "text": "The Results Panel displays a summary of the filtered cohort based on the variable filters applied to the query.",
+        "position": "top"
+    },
+    "#variant-explorer": {
+        "text": "The Variant Explorer feature allows users to view the metadata of the variants found in their queried subset.",
+        "position": "left"
+    },
+    "#package-data": {
+        "text": "The Select and Package data feature allows users to select additional unfiltered data they would like to analyze in conjunction with the data included in their cohort.",
+        "position": "left"
+    },
+    "#help-header-button": {
+        "text": "To learn more about these features, consult the documentation and use the information links throughout the site."
+    }
+}
