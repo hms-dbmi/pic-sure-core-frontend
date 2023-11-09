@@ -5,7 +5,8 @@ define([
     'connection/connectionManagement', 'termsOfService/tos', "picSure/userFunctions",
     'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
     "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
-    "text!common/unexpected_error.hbs", "analytics/googleAnalytics", "header/bannerConfig", "header/banner"
+    "text!common/unexpected_error.hbs", "analytics/googleAnalytics", "header/bannerConfig", "header/banner",
+    'tour/tour-view', 'common/pic-sure-dialog-view', 'common/modal'
 ], function (
     Backbone, _, session, login, header, footer,
     userProfile, userManagement,
@@ -13,9 +14,11 @@ define([
     connectionManagement, tos, userFunctions,
     HBS, accessRuleManagement, routerOverrides, filterList,
     layoutTemplate, queryBuilder, output, settings,
-    unexpectedErrorTemplate, googleAnalytics, bannerConfig, BannerView
+    unexpectedErrorTemplate, googleAnalytics, bannerConfig, BannerView,
+    tourView, dialog, modal,
 ) {
     var publicRoutes = ["not_authorized", "login", "logout"];
+    
     var Router = Backbone.Router.extend({
         routes: {
             "psamaui/userManagement(/)": "displayUserManagement",
@@ -262,13 +265,42 @@ define([
             var query = queryBuilder.generateQuery({}, JSON.parse(parsedSess.queryTemplate), settings.picSureResourceId);
             outputPanelView.runQuery(query);
 
-                filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
+            let filterRef = filterList.init(settings.picSureResourceId, outputPanelView, JSON.parse(parsedSess.queryTemplate));
+            if (settings.enableTour) {
+                $('#tour-container').show();
+                document.getElementById('guide-me-button').addEventListener('click', () => {
+                    const dialogOptions = [
+                        {title: "Cancel", "action": ()=>{$('.close')?.get(0).click();}, classes: "btn btn-default"},
+                        {title: "Start Tour", "action": ()=>{
+                            this.isStartTour = true;
+                            $('.close')?.get(0).click();
+                        }, classes: "btn btn-tertiary"}
+                    ];
+                    const title = routerOverrides.tourTitle || 'Welcome To PIC-SURE';
+                    const messages = routerOverrides.tourMessages || [
+                        'PIC-SURE Search allows you to search for variable level data.',
+                        'Once the tour starts you can click anywhere to go to the next step. You can press the escape key to stop the tour at any point. You may also use the arrow keys, enter key, or the spacebar to navigate the tour.'
+                    ];
+                    const dialogView = new dialog({options: dialogOptions, messages: messages});
+                    modal.displayModal(dialogView, title, () => {
+                        const tour = new tourView();
+                        if (this.isStartTour) {
+                            tour.setUpTour(filterRef);
+                            tour.render(filterRef);
+                        } else {
+                            tour.destroy();
+                            this.isStartTour = false;
+                            $('#guide-me-button').focus();
+                        }
+                    }, {isHandleTabs: true, width: 500});
+                });
+            }
             },
-            displayGoogleAnalytics: function() {
-                let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
-                analyticsView.render();
-                $("head").append(analyticsView.$el);
-            },
+        displayGoogleAnalytics: function() {
+            let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
+            analyticsView.render();
+            $("head").append(analyticsView.$el);
+        },
         displayUserProfile: function() {
             $(".header-btn.active").removeClass('active');
             $(".header-btn[href='/picsureui/user']").addClass('active');
@@ -280,15 +312,15 @@ define([
                 profile.render();
             });
         },
-            defaultAction: function () {
-                console.log("Default action");
-                $(".header-btn.active").removeClass('active');
-                if (routerOverrides.defaultAction)
-                    routerOverrides.defaultAction();
-                else {
-                    this.displayQueryBuilder();
-                }
+        defaultAction: function () {
+            console.log("Default action");
+            $(".header-btn.active").removeClass('active');
+            if (routerOverrides.defaultAction)
+                routerOverrides.defaultAction();
+            else {
+                this.displayQueryBuilder();
             }
+        }
         });
         return new Router();
     });

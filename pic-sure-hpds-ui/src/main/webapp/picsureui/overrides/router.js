@@ -9,6 +9,7 @@ define([], function(){
              * "picsureui/queryBuilder2" : function() { renderQueryBuilder2(); }
              */
         },
+        tourMessages: undefined,
         /**
          * Allows the default action to be overriden. If this is not set, the query builder will be shown for any
          * route that does not have a defined action
