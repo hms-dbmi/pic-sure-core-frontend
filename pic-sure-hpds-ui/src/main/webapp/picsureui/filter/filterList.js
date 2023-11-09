@@ -124,7 +124,7 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 			}
 			this.outputPanelView = outputPanelView;
 			this.queryTemplate = queryTemplate;
-			this.addFilter();
+			let filterRef = this.addFilter();
 			const dataForSelectedFitlers = {
 				title: 'Genomic Filters', 
 				editAction: this.editGenomicFilters.bind(this),
@@ -139,6 +139,7 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 			this.selectedGenomicFilters = new selectedGenomicFilters(dataForSelectedFitlers);
 			this.selectedGenomicFilters.render();
 			Backbone.pubSub.on("update:genomicFilter", this.addGenomicFilter);
+			return filterRef;
 		}
 	};
 	filterList.addFilter = function(){
@@ -156,6 +157,7 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 		if (typeof this.renderHelpCallback !== 'undefined') {
 			this.renderHelpCallback(this);
 		}
+		return newFilter;
 	}.bind(filterList);
 	filterList.addGenomicFilter = function(newFilter){
 		if ($("#selected-genomic-filter").html() == undefined || $("#selected-genomic-filter").html() == "") {

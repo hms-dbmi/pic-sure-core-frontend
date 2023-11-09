@@ -1,5 +1,5 @@
 <div class="filter-search row">
-    <ul class="nav nav-pills">
+    <ul class="nav nav-pills" data-intro="#search-results-categories" data-sequence="5">
     	
         {{#each aliases}}
 	        <li data-toggle="tooltip"  title="{{description}}" id="{{this.alias}}-pill"><a data-target="#{{../filterId}}  #{{this.alias}}" data-toggle="tab" aria-expanded="true">{{this.alias}}</a></li>

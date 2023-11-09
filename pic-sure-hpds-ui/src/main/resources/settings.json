@@ -28,5 +28,10 @@
 		"SOME_PATH" : "Value"
 	},
 	"variantExplorerStatus": "disabled",
-	"maxVariantCount": 100
+	"maxVariantCount": 100,
+	"enableTour": true,
+	"idsToWaitFor": [
+		"search-results-container"
+	],
+	"tourSearchTerm": "age"
 }
