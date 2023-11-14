@@ -33,8 +33,6 @@ require.config({
         termsOfService: "psamaui/termsOfService/",
         user: "psamaui/user/",
         util: "psamaui/util/",
-        moment: "webjars/momentjs/2.8.3/min/moment.min",
-        moment_timezone: "webjars/moment-timezone/0.5.5/moment-timezone-with-data",
     },
     shim: {
         "bootstrap": {

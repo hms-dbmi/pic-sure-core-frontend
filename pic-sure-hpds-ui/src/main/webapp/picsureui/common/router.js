@@ -112,17 +112,15 @@ define([
             $('#footer-content').html(footerView.$el);
         },
         shouldDisplayBanner: function (config) {
-            let currentDate = moment().tz("America/New_York").toDate();
-            // Convert the start and end dates to UTC -5 (EST).
-            // They are string values, so we need to convert them to Date objects.
-            // The format of the string is "YYYY-MM-DD HH:mm:ss"
-            let startDate = moment(config.startDate).tz("America/New_York").toDate();
-            let endDate = moment(config.endDate).tz("America/New_York").toDate();
+            let currentDate = new Date();
+            // Parse the start and end dates directly from the UTC timestamps.
+            let startDate = new Date(config.startDate);
+            let endDate = new Date(config.endDate);
 
             return (
                 currentDate >= startDate &&
                 currentDate <= endDate &&
-                config.styles && config.text && config.disabled !== true
+                config.text && config.disabled !== true
             );
         },
         renderBanner: function () {
@@ -149,7 +147,6 @@ define([
                             let banner = bannerView.render();
                             // Render the banner at the top of the page.
                             $('#header').prepend(banner.$el);
-                            break; // Stop the loop once a matching banner is found and displayed
                         }
                     }
                 }
