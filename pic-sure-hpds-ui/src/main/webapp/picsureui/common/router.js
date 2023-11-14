@@ -128,14 +128,10 @@ define([
             if (bannerConfig) {
                 let bannerConfiguration = bannerConfig.bannerConfiguration;
                 if (bannerConfiguration && bannerConfiguration.length > 0) {
-                    let currentDate = new Date();
-                    currentDate.setHours(0, 0, 0, 0); // Set the time part to 00:00:00 for accurate comparison
-
                     for (let i = 0; i < bannerConfiguration.length; i++) {
                         let config = bannerConfiguration[i];
-                        let banner = $('#banner');
 
-                        if (this.shouldDisplayBanner(config) && banner.length === 0) {
+                        if (this.shouldDisplayBanner(config)) {
                             // Instantiate and render the Banner View
                             let bannerView = new BannerView({
                                 bannerStyles: config.styles,
@@ -273,11 +269,17 @@ define([
                 $('#tour-container').show();
                 document.getElementById('guide-me-button').addEventListener('click', () => {
                     const dialogOptions = [
-                        {title: "Cancel", "action": ()=>{$('.close')?.get(0).click();}, classes: "btn btn-default"},
-                        {title: "Start Tour", "action": ()=>{
-                            this.isStartTour = true;
-                            $('.close')?.get(0).click();
-                        }, classes: "btn btn-tertiary"}
+                        {
+                            title: "Cancel", "action": () => {
+                                $('.close')?.get(0).click();
+                            }, classes: "btn btn-default"
+                        },
+                        {
+                            title: "Start Tour", "action": () => {
+                                this.isStartTour = true;
+                                $('.close')?.get(0).click();
+                            }, classes: "btn btn-tertiary"
+                        }
                     ];
                     const title = routerOverrides.tourTitle || 'Welcome To PIC-SURE';
                     const messages = routerOverrides.tourMessages || [
@@ -324,6 +326,6 @@ define([
                 this.displayQueryBuilder();
             }
         }
-        });
-        return new Router();
     });
+    return new Router();
+});
