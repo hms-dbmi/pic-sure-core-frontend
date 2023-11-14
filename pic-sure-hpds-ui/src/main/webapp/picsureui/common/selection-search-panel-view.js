@@ -115,12 +115,24 @@ define(['jquery',
                 this.renderLists();
             },
             selectAll: function() {
-                let unselectedItems = $('.selection-search-results input:not(:checked)').map(function(){
-                    return $(this).val();
-                  }).get();
-                this.data.selectedResults = this.data.selectedResults.concat(unselectedItems);
-                this.data.searchResultOptions = [];
-                this.renderLists();
+                let unselectedItems;
+                if (this.completedResults) {
+                    unselectedItems = $('.selection-search-results input:not(:checked)').map(function(){
+                                        return $(this).val();
+                                      }).get();
+                    this.data.selectedResults = this.data.selectedResults.concat(unselectedItems);
+                    this.data.searchResultOptions = [];
+                    this.renderLists();
+                } else {
+                    this.getAllOptions().then((allOptions) => {
+                        unselectedItems = allOptions.results.filter((item) => {
+                            return this.data.selectedResults.indexOf(item) === -1;
+                        });
+                        this.data.selectedResults = this.data.selectedResults.concat(unselectedItems);
+                        this.data.searchResultOptions = [];
+                        this.renderLists();
+                    });
+                }
             },
             focusItem: function(e) {
                 console.debug('focusItem', e.target);
@@ -217,6 +229,9 @@ define(['jquery',
                             });
                     }
                 }
+            },
+            getAllOptions: function() {
+                return this.data.getNextOptions(this.data.page, undefined, true);
             },
             reset() {
                 typeof this.data.getNextOptions === typeof(Function) ? this.data.searchResultOptions.concat(this.data.cachedResults) : this.data.searchResultOptions = this.data.results;

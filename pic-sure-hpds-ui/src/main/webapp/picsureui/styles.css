@@ -3,12 +3,14 @@
     --picsure-primary: #c4b49c;
     --picsure-primary-hover: #9c8f7c;
     --picsure-secondary: #848484;
+    --picsure-ter: #675AFF;
     --picsure-alt: #c4b49c;
     --picsure-action: #c0143c;
     --picsure-other: #90a8a4;
     --picsure-lite: #90a8a4;
     --picsure-dark: #333333;
     --picsure-error: #FF0000;
+    --picsure-success: #5cb85c;
     --picsure-blue: #337ab7;
 }
 
@@ -25,13 +27,25 @@
 }
 
 .btn-primary {
-	background-color: var(--picsure-primary);
-	border-color: var(--picsure-primary);
+    background-color: var(--picsure-primary);
+    border-color: var(--picsure-primary);
 }
 
 .btn-primary:hover {
-	background-color: var(--picsure-primary-hover);
+    background-color: var(--picsure-primary-hover);
+    border-color: var(--picsure-primary-hover);
+}
+
+.btn-tertiary {
+    background-color: var(--picsure-primary);
+	border-color: var(--picsure-primary);
+    color: #ffffff;
+}
+
+.btn-tertiary:hover {
+    background-color: var(--picsure-primary-hover);
 	border-color: var(--picsure-primary-hover);
+    color: #ffffff;
 }
 
 #query-builder h3 {
@@ -43,8 +57,8 @@
 }
 
 #query-results .panel-heading {
-	text-align: center;
-	margin-bottom: 8px;
+    text-align: center;
+    margin-bottom: 8px;
 }
 
 .no-top-margin {
@@ -56,31 +70,31 @@
 }
 
 #selected-genomic-filter h4 {
-	font-size: 18px;
+    font-size: 18px;
     color: black;
 }
 
 #selected-genomic-filter .panel {
-	border: none;
+    border: none;
 }
 
 #selected-genomic-filter .panel .panel-heading {
-	border: none;
-	padding-left: 0;
-	padding-right: 0;
+    border: none;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 #selected-genomic-filter .panel .panel-heading.panel-extra-large {
-	padding: 0;
+    padding: 0;
 }
 
 #selected-genomic-filter .panel .panel-body {
-	padding-left: 0;
-	padding-right: 0;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .panel {
-	border-color: var(--picsure-primary);
+    border-color: var(--picsure-primary);
 }
 
 .panel-default>.panel-heading {
@@ -112,6 +126,30 @@
     color: var(--picsure-error);
 }
 
+.btn-outline.success {
+    border: 1px solid var(--picsure-success);
+    background-color: white;
+    color: var(--picsure-dark);
+}
+
+.btn-outline.success:hover {
+    border: 1px solid var(--picsure-success);
+    background-color: var(--picsure-success);
+    color: white;
+}
+
+.btn-outline.action {
+    border: 1px solid var(--picsure-action);
+    background-color: white;
+    color:  var(--picsure-action);
+}
+
+.btn-outline.action:hover {
+    border: 1px solid var(--picsure-action);
+    background-color: var(--picsure-action);
+    color: white;
+}
+
 .btn-outline.primary {
     border: 1px solid var(--picsure-primary);
     background-color: white;
@@ -135,16 +173,28 @@
     background-color: var(--picsure-secondary);
     color: white;
 }
+
+.btn-outline.alternate {
+    border: 1px solid var(--picsure-alt);
+    background-color: white;
+    color: var(--picsure-dark);
+}
+
+.btn-outline.alternate:hover {
+    border: 1px solid var(--picsure-alt);
+    background-color: var(--picsure-alt);
+    color: white;
+}
 /************************* End Outline Buttons ***************************/
 
 .query-builder-heading {
-	color: gray;
+    color: gray;
 }
 .advanced-search-btn {
-	top: 2em;
+    top: 2em;
 }
 .query-name {
-	font-size: 2.5em;
+    font-size: 2.5em;
 }
  .large {
      font-size: 5em;
@@ -217,7 +267,7 @@
 }
 
 .spinner-div {
-	float:right	
+    float:right	
 }
 
  .search-box-spinner {
@@ -258,7 +308,7 @@
 }
 
 /* .dropdown.header-btn {
-	padding: 0px 0px;
+    padding: 0px 0px;
 }
 .dropdown-toggle {
     padding: 6px 12px;
@@ -389,6 +439,10 @@
     display: none;
 }
 
+.filter-edit {
+    text-align: center;
+}
+
 .filter-result-saved {
     font-size: 1.2em;
     border: 1px solid black;
@@ -500,7 +554,7 @@ body {
 
 
 .autocomplete-term-parent {
-	color: #337ab7;
+    color: #337ab7;
 }
 
 .top-bar__btn {
@@ -545,7 +599,7 @@ body {
 }
 
 .value-operator-range-label {
-	width: unset;
+    width: unset;
 }
 
 .filter-qualifier {
@@ -602,7 +656,7 @@ body {
     min-width: 160px;
 }
 .back-btn {
-	float: right;
+    float: right;
     width: unset;
     margin: 5px;
 }
@@ -612,7 +666,7 @@ body {
     float:left;
 }
 .constrain-apply-btn {
-	background-color: #4a90e2;
+    background-color: #4a90e2;
     color: white;
     border-radius: 0px;
 }
@@ -656,7 +710,7 @@ body {
 }
 
 .query-result-container{
-	width: 90%;
+    width: 90%;
 }
 
 .spinner-small {
@@ -670,31 +724,31 @@ body {
 }
 
 .copy-button {
-	margin-left: auto;
+    margin-left: auto;
     margin-right: auto;
 }
 
 .advanced-search-btn {
-	float:right;
-	margin-right: 100px;
+    float:right;
+    margin-right: 100px;
 }
 
 .numeric-label {
-	padding-top: 10px;
+    padding-top: 10px;
 }
 
 .numeric-separator {
-	width: 100%;	
+    width: 100%;	
     text-align: center;
 }
 
 .modal {
-	max-height: 100%;
-	overflow-y: auto;
+    max-height: 100%;
+    overflow-y: auto;
 }
 
 .modal-body {
-	overflow-x: scroll;
+    overflow-x: scroll;
 }
 
 
@@ -844,50 +898,50 @@ body {
 
 /* merging webtask code */
 #frmAuth0Login {
-	width: 280px;
-	margin: 30px auto;
+    width: 280px;
+    margin: 30px auto;
 }
 
 .a0-body-content {
-	padding: 30px;
-	border-radius: 0 0 3px 3px;
-	box-shadow: 0 0 2px rgb(17 17 24 / 60%);
+    padding: 30px;
+    border-radius: 0 0 3px 3px;
+    box-shadow: 0 0 2px rgb(17 17 24 / 60%);
 }
 
 .a0-zocial {
-	white-space: nowrap;
-	position: relative;
-	display: block;
-	border-radius: 3px;
-	padding: 0;
-	overflow: hidden;
-	text-decoration: none !important;
-	color: #fff;
-	height: 47px;
+    white-space: nowrap;
+    position: relative;
+    display: block;
+    border-radius: 3px;
+    padding: 0;
+    overflow: hidden;
+    text-decoration: none !important;
+    color: #fff;
+    height: 47px;
 }
 
 .a0-zocial:hover {
-	filter: brightness(85%);
-	color: #fff;
-	cursor: pointer;
+    filter: brightness(85%);
+    color: #fff;
+    cursor: pointer;
 }
 
 .a0-zocial-icon {
-	max-height: 100%;
-	max-width: 100%;
+    max-height: 100%;
+    max-width: 100%;
 }
 
 .a0-button-text {
-	text-transform: none;
+    text-transform: none;
 }
 
 /* default hidden class is flagged as important, so can't be unset with show() */
 .intitially-hidden {
-	display: none;
+    display: none;
 }
 
 .output-button-container {
-	width: 90%;
+    width: 90%;
 }
 
 
@@ -1016,14 +1070,16 @@ body {
     width: 125px;
 }
 
-.header-btn.active, .btn.alternate {
+.header-btn.active,
+.btn-default.alternate {
     color: white;
     background-color: var(--picsure-alt);
 }
 
-.btn.action {
-    color: white;
+.btn-default.action {
+    border: 1px solid var(--picsure-action);
     background-color: var(--picsure-action);
+    color: white;
 }
 
 .header-btn:hover {
@@ -1332,6 +1388,7 @@ input[type='checkbox'].categorical-filter-input {
     flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
 .space-even section:not(:last-child) {
@@ -1532,3 +1589,27 @@ remove when above bug is fixed */
     margin-bottom: 10px;
 }
 /* ==== END Cookie prefs ==== */
+
+/* ==== Tour ==== */
+
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(16, 16, 16, 0.5);
+}
+
+.spinner-vert-center {
+    top: 25%;
+}
+
+#tour-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ==== END Tour ==== */

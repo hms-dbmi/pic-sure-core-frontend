@@ -101,11 +101,14 @@
             <artifactId>chardin.js</artifactId>
             <version>0.2.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.webjars/moment-timezone -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>moment-timezone</artifactId>
-            <version>0.5.5</version>
-        </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>

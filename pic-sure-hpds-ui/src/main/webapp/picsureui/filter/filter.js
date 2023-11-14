@@ -174,6 +174,7 @@ define([
 		  );
 		  search.execute(term, deferredSearchResults.resolve, this.resourceUUID);
 		  $.when(deferredSearchResults).then(this.showSearchResults);
+		  return deferredSearchResults;
 		}
 	  },
 	  showGeneticSelectionOptions: function (term) {

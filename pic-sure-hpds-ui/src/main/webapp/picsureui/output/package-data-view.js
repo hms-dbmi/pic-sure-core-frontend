@@ -268,8 +268,10 @@ define([
             }
             const queryToUse = query || this.exportModel.get('query');
             $('#total-patients', this.el).text(this.outputModel.get('totalPatients') + " Patients");
+            const anyRecordOfMultiCount = queryToUse.query.anyRecordOfMulti?.reduce((sum, concepts) => sum + concepts.length, 0) || 0;
             let totalVariables = (Object.keys(queryToUse.query.categoryFilters)?.length + 
                                     queryToUse.query.anyRecordOf?.length +
+                                    anyRecordOfMultiCount +
                                     Object.keys(queryToUse.query.numericFilters)?.length + 
                                     queryToUse.query.requiredFields?.length) || 0;
             totalVariables += queryToUse.query?.fields?.length || 0;
