@@ -128,6 +128,9 @@ define([
             if (bannerConfig) {
                 let bannerConfiguration = bannerConfig.bannerConfiguration;
                 if (bannerConfiguration && bannerConfiguration.length > 0) {
+                    // Remove all banners from the DOM. Use banner_ to identify the banners.
+                    $('[id^=banner_]').remove();
+
                     for (let i = 0; i < bannerConfiguration.length; i++) {
                         let config = bannerConfiguration[i];
 
@@ -137,7 +140,8 @@ define([
                                 bannerStyles: config.styles,
                                 bannerText: config.text,
                                 isDismissible: config.isDismissible,
-                                class: config.class
+                                class: config.class,
+                                bannerCount: i
                             });
 
                             let banner = bannerView.render();
