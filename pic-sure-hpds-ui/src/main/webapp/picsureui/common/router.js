@@ -18,7 +18,7 @@ define([
     tourView, dialog, modal,
 ) {
     var publicRoutes = ["not_authorized", "login", "logout"];
-    
+
     var Router = Backbone.Router.extend({
         routes: {
             "psamaui/userManagement(/)": "displayUserManagement",
@@ -56,12 +56,12 @@ define([
             this.layoutTemplate = HBS.compile(layoutTemplate);
             this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
 
-                this.displayGoogleAnalytics();
-            },
-            execute: function (callback, args, name) {
-                if (routerOverrides.execute) {
-                    routerOverrides.execute.apply(this, [callback, args, name]);
-                } else {
+            this.displayGoogleAnalytics();
+        },
+        execute: function (callback, args, name) {
+            if (routerOverrides.execute) {
+                routerOverrides.execute.apply(this, [callback, args, name]);
+            } else {
                 if (publicRoutes.includes(name)) {
                     this.renderHeaderAndFooter();
                     callback.apply(this, args);
@@ -79,7 +79,7 @@ define([
                         }
                     }.bind(this));
                 }
-                }
+            }
         },
         login: function () {
             $(".header-btn.active").removeClass('active');
@@ -98,7 +98,7 @@ define([
         unexpected_error: function () {
             $(".header-btn.active").removeClass('active');
             $('#main-content').empty();
-            $('#main-content').html(this.unexpectedErrorTemplate(settings))
+            $('#main-content').html(this.unexpectedErrorTemplate(settings));
         },
         renderHeaderAndFooter: function () {
             var headerView = new header.View({});
@@ -111,39 +111,42 @@ define([
             footerView.render();
             $('#footer-content').html(footerView.$el);
         },
+        shouldDisplayBanner: function (config) {
+            let currentDate = new Date();
+            // Parse the start and end dates directly from the UTC timestamps.
+            let startDate = new Date(config.startDate);
+            let endDate = new Date(config.endDate);
+
+            return (
+                currentDate >= startDate &&
+                currentDate <= endDate &&
+                config.text && config.disabled !== true
+            );
+        },
         renderBanner: function () {
             // check if the file is present
             if (bannerConfig) {
                 let bannerConfiguration = bannerConfig.bannerConfiguration;
                 if (bannerConfiguration && bannerConfiguration.length > 0) {
-                    let currentDate = new Date();
-                    currentDate.setHours(0, 0, 0, 0); // Set the time part to 00:00:00 for accurate comparison
+                    // Remove all banners from the DOM. Use banner_ to identify the banners.
+                    $('[id^=banner_]').remove();
 
                     for (let i = 0; i < bannerConfiguration.length; i++) {
                         let config = bannerConfiguration[i];
 
-                        // Manually parse the date string to avoid timezone conversion
-                        let [year, month, day] = config.startDate.split("T")[0].split("-").map(Number);
-                        let startDate = new Date(year, month - 1, day); // Months are 0-indexed in JavaScript
-
-                        let [endYear, endMonth, endDay] = config.endDate.split("T")[0].split("-").map(Number);
-                        let endDate = new Date(endYear, endMonth - 1, endDay);
-
-                        // Check if the banner date is today's date and both text and color are present
-                        if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= endDate.getTime() && config.styles && config.text && config.disabled !== true) {
+                        if (this.shouldDisplayBanner(config)) {
                             // Instantiate and render the Banner View
                             let bannerView = new BannerView({
                                 bannerStyles: config.styles,
                                 bannerText: config.text,
-                                isDismissible: config.isDismissible
+                                isDismissible: config.isDismissible,
+                                class: config.class,
+                                bannerCount: i
                             });
 
-                            if ($('#banner').length === 0) { // Temporary fix to avoid duplicate banners
-                                let banner = bannerView.render();
-                                // Render the banner at the top of the page.
-                                $('#header').prepend(banner.$el);
-                                break; // Stop the loop once a matching banner is found and displayed
-                            }
+                            let banner = bannerView.render();
+                            // Render the banner at the top of the page.
+                            $('#header').prepend(banner.$el);
                         }
                     }
                 }
@@ -172,7 +175,7 @@ define([
             $('#main-content').empty();
             userFunctions.me(this, function (data) {
                 if (_.find(data.privileges, function (element) {
-                    return (element === 'SUPER_ADMIN')
+                    return (element === 'SUPER_ADMIN');
                 })) {
                     var appliMngmt = new applicationManagement.View({model: new applicationManagement.Model()});
                     appliMngmt.render();
@@ -270,11 +273,17 @@ define([
                 $('#tour-container').show();
                 document.getElementById('guide-me-button').addEventListener('click', () => {
                     const dialogOptions = [
-                        {title: "Cancel", "action": ()=>{$('.close')?.get(0).click();}, classes: "btn btn-default"},
-                        {title: "Start Tour", "action": ()=>{
-                            this.isStartTour = true;
-                            $('.close')?.get(0).click();
-                        }, classes: "btn btn-tertiary"}
+                        {
+                            title: "Cancel", "action": () => {
+                                $('.close')?.get(0).click();
+                            }, classes: "btn btn-default"
+                        },
+                        {
+                            title: "Start Tour", "action": () => {
+                                this.isStartTour = true;
+                                $('.close')?.get(0).click();
+                            }, classes: "btn btn-tertiary"
+                        }
                     ];
                     const title = routerOverrides.tourTitle || 'Welcome To PIC-SURE';
                     const messages = routerOverrides.tourMessages || [
@@ -295,13 +304,13 @@ define([
                     }, {isHandleTabs: true, width: 500});
                 });
             }
-            },
-        displayGoogleAnalytics: function() {
+        },
+        displayGoogleAnalytics: function () {
             let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
             analyticsView.render();
             $("head").append(analyticsView.$el);
         },
-        displayUserProfile: function() {
+        displayUserProfile: function () {
             $(".header-btn.active").removeClass('active');
             $(".header-btn[href='/picsureui/user']").addClass('active');
 
@@ -321,6 +330,6 @@ define([
                 this.displayQueryBuilder();
             }
         }
-        });
-        return new Router();
     });
+    return new Router();
+});
