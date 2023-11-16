@@ -7,6 +7,8 @@ define(["jquery", "backbone", "handlebars", "text!header/banner.hbs"], function 
             this.bannerText = options.bannerText;
             this.bannerStyles = options.bannerStyles;
             this.isDismissible = options.isDismissible;
+            this.bannerClass = options.class;
+            this.bannerCount = options.bannerCount;
             this.template = HBS.compile(template);
         },
         events: {
@@ -14,23 +16,25 @@ define(["jquery", "backbone", "handlebars", "text!header/banner.hbs"], function 
         },
         closeBanner: function () {
             this.$el.hide(); // Hide the banner on close button click
-            sessionStorage.setItem('bannerDismissed', 'true');
+            sessionStorage.setItem('bannerDismissed_' + this.bannerCount, 'true');
         },
         render: function () {
             // Check if the banner has been dismissed in this session
-            if (sessionStorage.getItem('bannerDismissed') === 'true') {
+            if (sessionStorage.getItem('bannerDismissed_' + this.bannerCount) === 'true') {
                 return this;
             }
 
-            if (!this.bannerStyles || !this.bannerText) {
-                // Do not render the banner if either color or text is missing
+            if (!this.bannerText) {
+                // Do not render the banner if text is missing
                 return this;
             }
 
             this.$el.html(this.template({
                 bannerText: this.bannerText,
                 bannerStyles: this.bannerStyles,
-                isDismissible: this.isDismissible
+                isDismissible: this.isDismissible,
+                bannerClass: this.bannerClass,
+                bannerCount: this.bannerCount
             }));
 
             // Set the color of the close button based on the background color of the banner
