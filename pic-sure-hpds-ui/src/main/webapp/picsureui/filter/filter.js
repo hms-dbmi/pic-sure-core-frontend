@@ -676,7 +676,7 @@ define([
 			  );
 			var selectedCategories = [];
 			$(".selected-categories > option", this.$el).each(function () {
-			  selectedCategories.push(this.text);
+			  selectedCategories.push(this.innerHTML);
 			});
 			this.model
 			  .get("constrainParams")
