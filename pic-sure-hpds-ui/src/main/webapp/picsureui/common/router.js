@@ -307,9 +307,9 @@ define([
             }
         },
         displayContactWidget: function () {
-            const contactWidget = new contactWidget.View({contactKey: settings.contactKey});
-            contactWidget.render();
-            $("head").append(contactWidget.$el);
+            const contactWidgetView = new contactWidget.View({contactKey: settings.contactKey});
+            contactWidgetView.render();
+            $("head").append(contactWidgetView.$el);
         },
         displayGoogleAnalytics: function () {
             let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
