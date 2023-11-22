@@ -12,7 +12,7 @@ define(["backbone", "handlebars", "text!common/contact-widget.hbs", "picSure/set
                     return;
                 }
 
-                this.$el.html(this.template({key: "839c6f3d-d032-4821-ba57-e59ba6e68abd"}));
+                this.$el.html(this.template({key: key}));
             }
         });
 
