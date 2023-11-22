@@ -9,8 +9,7 @@ define(["backbone", "handlebars", "text!common/contact-widget.hbs", "picSure/set
                 const key = settings.contactKey && settings.contactKey !== "__CONTACT_KEY__" ? settings.contactKey : false;
                 // if neither analyticsId nor tagManagerId are set, don't render anything
                 if (!key) {
-                    console.log("No contact key set, not rendering contact widget");
-                    // return;
+                    return;
                 }
 
                 this.$el.html(this.template({key: "839c6f3d-d032-4821-ba57-e59ba6e68abd"}));
