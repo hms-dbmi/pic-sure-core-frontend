@@ -309,7 +309,7 @@ define([
         displayContactWidget: function () {
             const contactWidgetView = new contactWidget.View({contactKey: settings.contactKey});
             contactWidgetView.render();
-            $("head").append(contactWidgetView.$el);
+            $("body").append(contactWidgetView.$el);
         },
         displayGoogleAnalytics: function () {
             let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
