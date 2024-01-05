@@ -5,7 +5,7 @@ define([
     'text!user/userDetails.hbs',
     'util/notification',
     'picSure/userFunctions',
-	'overrides/userDetails'
+	'overrides/userDetails', 
 ], function(BB, HBS, _, userTemplate, notification, userFunctions, overrides) {
     let userDetailsView = BB.View.extend({
         initialize: function(opts){
