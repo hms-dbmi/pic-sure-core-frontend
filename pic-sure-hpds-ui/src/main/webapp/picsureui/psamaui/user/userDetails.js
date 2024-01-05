@@ -63,6 +63,10 @@ define([
 			}
 		},
 		saveUserAction: function (e) {
+			if (overrides && overrides.saveUserAction) {
+				overrides.saveUserAction(e, this.model);
+				return;
+			}
 			e.preventDefault();
 			let user = {};
 			if (this.model.get("selectedUser") != null && this.model.get("selectedUser").uuid.trim().length > 0) {
