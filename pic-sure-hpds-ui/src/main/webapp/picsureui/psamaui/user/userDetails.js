@@ -65,7 +65,7 @@ define([
 		},
 		saveUserAction: function (e) {
 			if (overrides && overrides.saveUserAction) {
-				overrides.saveUserAction(e, this.model);
+				overrides.saveUserAction(e, this);
 				return;
 			}
 			e.preventDefault();

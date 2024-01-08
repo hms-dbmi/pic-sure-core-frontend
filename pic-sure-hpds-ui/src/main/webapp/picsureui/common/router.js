@@ -224,8 +224,8 @@ define([
             $('#super-admin-dropdown-toggle').addClass('active');
             $('#main-content').empty();
             userFunctions.me(this, function (data) {
-                if (_.find(data.accessRules, function (element) {
-                    return (element === 'ROLE_SUPER_ADMIN')
+                if (_.find(data.privileges, function (element) {
+                    return (element === 'SUPER_ADMIN')
                 })) {
                     var accRuleMngmt = new accessRuleManagement.View({model: new accessRuleManagement.Model()});
                     accRuleMngmt.render();
