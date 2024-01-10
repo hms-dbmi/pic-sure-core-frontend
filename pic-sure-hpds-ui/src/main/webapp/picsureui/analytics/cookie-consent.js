@@ -6,6 +6,7 @@ define([
 ], function(BB, HBS, viewTemplate, settings) {
     const CookieBanner = BB.View.extend({
         initialize: function(opts){
+            this.privacyPolicyLink = settings.privacyPolicyLink || 'http://www.google.com/policies/privacy/partners/';
             this.template = HBS.compile(viewTemplate);
         },
         events: {
@@ -47,7 +48,7 @@ define([
             if (!settings.analyticsId || settings.analyticsId === "__ANALYTICS_ID__" || settings.analyticsId === "") {
                 return;
             }
-            this.$el.html(this.template());
+            this.$el.html(this.template(this));
         }
     });
     return CookieBanner;
