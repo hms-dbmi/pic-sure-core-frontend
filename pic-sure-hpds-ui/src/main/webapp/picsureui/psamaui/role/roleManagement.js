@@ -1,19 +1,25 @@
-define(["backbone","handlebars",  "role/addRole", "text!role/roleManagement.hbs", "role/roleMenu", "text!role/roleTable.hbs", "common/modal", "picSure/roleFunctions", "util/notification","picSure/privilegeFunctions"],
-		function(BB, HBS, AddRoleView, template, roleMenu, roleTableTemplate, modal, roleFunctions, notification, privilegeFunctions){
+define(["backbone","handlebars",  "role/addRole", "text!role/roleManagement.hbs", 
+		"role/roleMenu", "text!role/roleTable.hbs", "common/modal", "picSure/roleFunctions", 
+		"util/notification","picSure/privilegeFunctions", "role/addManualStudy", "picSure/settings"],
+		function(BB, HBS, AddRoleView, template, roleMenu, roleTableTemplate, modal, 
+			roleFunctions, notification, privilegeFunctions, addManualStudyView, settings){
 	var roleManagementModel = BB.Model.extend({
 	});
 
 	var roleManagementView = BB.View.extend({
-		// connections : connections,
-		template : HBS.compile(template),
-		initialize : function(opts){
-
+		initialize: function (opts) {
+			this.template = HBS.compile(template);
 		},
 		events : {
 			"click .add-role-button":   "addRoleMenu",
+			"click #add-manual-study":  "addManualStudy",
 			"click .role-row":          "showRoleAction",
 			"click #delete-role-button":"deleteRole",
 			"submit":                   "saveRoleAction",
+		},
+		isUsingStudies: function () {
+			return settings && settings.idp_provider 
+							&& (settings.idp_provider === "fence" || settings.idp_provider === "okta");
 		},
 		displayRoles: function (result, view) {
 			this.roleTableTemplate = HBS.compile(roleTableTemplate);
@@ -31,13 +37,26 @@ define(["backbone","handlebars",  "role/addRole", "text!role/roleManagement.hbs"
 				() => {this.render(); $('.add-role-button').focus();},
 				{handleTabs: true});
 		},
+		addManualStudy: function (event) {
+			modal.displayModal(new addManualStudyView(),
+				"Add Manual Study",
+				() => {
+					this.render(); $('#add-manual-study').focus();
+				},
+				{handleTabs: true, width: "600px"}
+			);
+		},
 		editRoleMenu: function (events) {
             privilegeFunctions.fetchPrivileges(this, function(privileges,view){
                 view.showEditRoleMenu(privileges, view);
             });
 		},
 		showEditRoleMenu: function(result, view){
-			modal.displayModal(new AddRoleView({managementConsole: this, applications:result.applications}), "Add Privilege", () => {this.render(); $('.add-role-button').focus();}, {handleTabs: true});
+			modal.displayModal(new AddRoleView(
+				{managementConsole: this, applications:result.applications}), 
+				"Add Privilege", () => {this.render(); $('.add-role-button').focus();},
+				{handleTabs: true}
+			);
 		},
 		showRoleAction: function (event) {
 			const uuid = event.target.id;
@@ -72,7 +91,7 @@ define(["backbone","handlebars",  "role/addRole", "text!role/roleManagement.hbs"
 			$("#modalDialog").hide();
 		},
 		render : function(){
-			this.$el.html(this.template({}));
+			this.$el.html(this.template({showManualStudyButton: this.isUsingStudies()}));
 			roleFunctions.fetchRoles(this, function(roles){
 				this.displayRoles.bind(this)
 				(
