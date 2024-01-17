@@ -1,0 +1,53 @@
+<style>
+    #add-study-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    #add-study-container .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        margin: 10px 0px;
+    }
+
+    #add-study-container .form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+</style>
+
+<div id="add-study-container">
+    <p>This form can be used to manually add a role, its privileges, and access rules with one button for a given study identifier. 
+        The study must already be ingested and the Study Identifier given below must match with what is in the metadata json 
+        (a.k.a. studies-data.json) which generally means it shows in the data access table. The consent code is required if the
+        study in question has one, otherwise leave it blank.</p>
+    <p>Once the study is added, you can manually add the new role on the "Users" page. The role will generally appear like so: 
+        MANUAL_STUDY-IDENTIFIER_CONSENT-CODE, for example if the Study Identifier is "phs12345" and the consent is c3 then it 
+        will appear as MANUAL_phs12345_c3. The consent code is optional, so if the study does not have one then it will appear
+        as MANUAL_phs12345.
+    </p>
+
+    <div class="form">
+        <div>
+            <div>
+                <label for="study-identifier">Study Identifier:</label>
+                <input id="study-identifier" type="text" name="study-identifier" required>
+            </div>
+
+            <div>
+                <label for="consent-code">Consent code (optional):</label>
+                <input id="consent-code" type="text" name="consent code" style="width:50px;">
+            </div>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <button id="cancel-manual-study-button" class="btn btn-outline">Cancel</button>
+        <button id="save-manual-study-button" type="submit" class="btn btn-info">Save Manual Study</button>
+    </div>
+</div>
