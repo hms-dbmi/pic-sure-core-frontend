@@ -147,6 +147,13 @@ define([
                             let banner = bannerView.render();
                             // Render the banner at the top of the page.
                             $('#header').prepend(banner.$el);
+
+                            // Set the color of the close button based on the background color of the banner
+                            const backgroundColor = this.$('#banner').css('background-color');
+
+                            // Check if the background color is white or black. We cannot be sure if rgb, rgba, hex, or named color is used
+                            const isWhiteBackground = backgroundColor === 'rgb(255, 255, 255)' || backgroundColor === 'rgba(255, 255, 255, 0)' || backgroundColor === '#ffffff' || backgroundColor === 'white';
+                            this.$('#closeBannerBtn').css('color', isWhiteBackground ? 'black' : 'white');
                         }
                     }
                 }
