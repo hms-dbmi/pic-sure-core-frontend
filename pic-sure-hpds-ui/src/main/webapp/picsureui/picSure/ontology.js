@@ -4,7 +4,7 @@ define(["jquery", "underscore", "picSure/settings", "overrides/ontology",
                  search) {
 
     var instance;
-    var allConcepts, allInfoColumns;
+    var allConcepts, allInfoColumns, hybridNodes;
 
     let infoColumnsTimeout = overrides.infoColumnsTimeout ? overrides.infoColumnsTimeout : 60000;
 
@@ -12,6 +12,15 @@ define(["jquery", "underscore", "picSure/settings", "overrides/ontology",
     	allConceptsDeferred = $.Deferred();
 	    search.dictionary("\\", function(allConceptsRetrieved) {
 	        allConcepts = allConceptsRetrieved;
+	        var nodes = Object.keys(allConcepts.results.phenotypes);
+	        hybridNodes = [];
+	        for (i = 0; i < nodes.length - 1; i++) {
+                var cur = nodes[i];
+                var nex = nodes[i + 1];
+                if (nex.startsWith(cur)) {
+                    hybridNodes.push(cur);
+                }
+            };
 	        allConceptsDeferred.resolve();
 	    }, {}, settings.picSureResourceId);
 	    return allConceptsDeferred;
@@ -62,6 +71,10 @@ define(["jquery", "underscore", "picSure/settings", "overrides/ontology",
         return allConcepts;
     };
 
+    var getHybridNodes = function() {
+        return hybridNodes;
+    };
+
     var getInstance_ = function() {
         if (typeof instance === 'undefined') {
             var allConceptsLoaded = overrides.loadAllConceptsDeferred ? overrides.loadAllConceptsDeferred() : loadAllConceptsDeferred();
@@ -70,7 +83,8 @@ define(["jquery", "underscore", "picSure/settings", "overrides/ontology",
                 allConcepts: allConcepts_,
                 allConceptsLoaded: allConceptsLoaded,
                 allInfoColumns: allInfoColumns_,
-                allInfoColumnsLoaded: allInfoColumnsLoaded
+                allInfoColumnsLoaded: allInfoColumnsLoaded,
+                getHybridNodes: getHybridNodes
             }
             return instance;
         }
