@@ -2,9 +2,6 @@ FROM httpd:2.4.54-alpine
 
 RUN apk add --update openssl sed
 
-# Replace virtual host config file with ours
-COPY httpd/httpd-vhosts.conf ${HTTPD_PREFIX}/conf/extra/httpd-vhosts.conf
-
 # Enable virtual hosting config file
 RUN sed -i '/^#Include conf.extra.httpd-vhosts.conf/s/^#//' ${HTTPD_PREFIX}/conf/httpd.conf
 
