@@ -103,7 +103,7 @@ define([
         },
         gotoLogin: function (event) {
             this.logout();
-            window.location = "/psamaui/login" + window.location.search;
+            window.location = settings.loginRedirect ?? "/psamaui/login" + window.location.search;
         },
         headerClick: function(event) {
 		    if ($(event.target).data("href")) {
