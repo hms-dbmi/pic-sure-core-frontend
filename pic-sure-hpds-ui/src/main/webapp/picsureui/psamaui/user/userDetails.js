@@ -5,7 +5,8 @@ define([
     'text!user/userDetails.hbs',
     'util/notification',
     'picSure/userFunctions',
-], function(BB, HBS, _, userTemplate, notification, userFunctions) {
+	'overrides/userDetails', 
+], function(BB, HBS, _, userTemplate, notification, userFunctions, overrides) {
     let userDetailsView = BB.View.extend({
         initialize: function(opts){
 			this.model = opts.model || new BB.Model();
@@ -63,6 +64,10 @@ define([
 			}
 		},
 		saveUserAction: function (e) {
+			if (overrides && overrides.saveUserAction) {
+				overrides.saveUserAction(e, this);
+				return;
+			}
 			e.preventDefault();
 			let user = {};
 			if (this.model.get("selectedUser") != null && this.model.get("selectedUser").uuid.trim().length > 0) {

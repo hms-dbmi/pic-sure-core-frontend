@@ -64,5 +64,22 @@ define(["util/notification", "picSure/settings"],
         });
     }.bind(roleFunctions);
 
+    roleFunctions.addManualStudy = function (study_identifier, callback) {
+        $.ajax({
+            url: window.location.origin + '/psama/studyAccess',
+            type: 'POST',
+            contentType: 'application/json',
+            data: encodeURI(study_identifier),
+            success: function(response){
+                notification.showSuccessMessage(response);
+                callback(response);
+            }.bind(this),
+            error: function(response){
+                console.error(response);
+                notification.showFailureMessage(response.responseText);
+            }
+        });
+    }.bind(roleFunctions);
+
 	return roleFunctions;
 });
