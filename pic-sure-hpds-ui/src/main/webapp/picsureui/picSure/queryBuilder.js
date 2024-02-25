@@ -99,7 +99,8 @@ define(["underscore"],
 						}
 					}else if(filter.attributes.valueType==="VARIANT"){
 						var zygosities = [];
-						query.query.categoryFilters[filter.get("constrainParams").get("constrainValueOne").split(/[:_/]/).join(",")] = zygosities;
+						var cat = filter.get("constrainParams").get("constrainValueOne").split(/[:_/]/).join(",");
+						query.query.categoryFilters[cat] = zygosities;
 						var zygosityText = filter.get("constrainParams").get("constrainValueTwo").trim();
 						if(zygosityText.includes("Homozygous")){
 							zygosities.push("1/1");
