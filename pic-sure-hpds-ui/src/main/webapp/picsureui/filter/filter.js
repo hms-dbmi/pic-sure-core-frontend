@@ -179,11 +179,13 @@ define([
 	  },
 	  showGeneticSelectionOptions: function (term) {
 		$(".autocomplete-suggestions").hide();
+		this.model.set("constrainParams", new valueConstrainModel());
+		this.model.get("constrainParams").set("constrainByValue", true);
+		this.model.get("constrainParams").set("constrainValueOne", term);
+
 		this.model.set("searching", false);
 		this.model.set("constrainByValue", true);
-		this.model.get("constrainParams").set("constrainByValue", true);
 		this.model.set("searchTerm", term);
-		this.model.get("constrainParams").set("constrainValueOne", term);
 		this.model.attributes.valueType = "VARIANT";
 		this.model.attributes.concept = { columnDataType: "VARIANT" };
 		this.updateConstrainFilterMenu();
