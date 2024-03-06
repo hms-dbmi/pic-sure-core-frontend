@@ -50,7 +50,7 @@ define([
                     path: ['query', 'categoryFilters'],
                     renderId: "detail-filters",
                     render: function(filtersList = []){
-                        const data = dataUtils.format.categories(filtersList);
+                        const data = dataUtils.format.categoryVariantOrCategory(filtersList);
                         return dataUtils.render.html(data, "Restrict values by ")
                             .map(item => `<li>${item}</li>`).join('');
                     }

@@ -56,6 +56,17 @@ define([ "underscore", "overrides/dataset/utilities" ],  function(_, overrides){
                 return { title: title.replaceAll("_", " "), values };
             });
         },
+        categoryVariantOrCategory: function(filters = {}) {
+            const filtersList = Object.entries(filters);
+            return filtersList.map(([ filter, values ]) => {
+                if (filter.match(titleRegex)) {
+                    const { title } = titleRegex.exec(filter).groups;
+                    return { title, values };
+                } else {
+                    return { title: filter.replaceAll("_", " "), values };
+                }
+            });
+        },
         numericVariant: function(filters = {}) {
             const filtersList = Object.entries(filters);
             return filtersList.map(([ title, { min, max } ]) => {
