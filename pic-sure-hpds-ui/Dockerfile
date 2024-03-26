@@ -18,7 +18,7 @@ RUN sed -i '/^#LoadModule socache_shmcb_module modules\/mod_socache_shmcb.so/s/^
 RUN mkdir /usr/local/apache2/logs/ssl_mutex
 
 # Disable directory browsing
-RUN sed -i 's/Options Indexes FollowSymLinks/Options FollowSymLinks/' ${HTTPD_PREFIX}/conf/httpd.conf
+RUN sed -i 's/Options Indexes FollowSymLinks/Options -Indexes FollowSymLinks/' ${HTTPD_PREFIX}/conf/httpd.conf
 
 COPY target/webjars/META-INF/resources/webjars /usr/local/apache2/htdocs/picsureui/webjars
 RUN sed -i 's/\.\.\/images\//\/picsureui\/webjars\/datatables\/1\.13\.5\/images\//g' ${HTTPD_PREFIX}/htdocs/picsureui/webjars/datatables/1.13.5/css/jquery.dataTables.min.css
