@@ -179,6 +179,16 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 		this.runQuery();
 	}.bind(filterList);
 	filterList.runQuery = function(){
+	    var duplicatePaths = this.filters
+	        .filter(f => f.model.attributes.concept)
+	        .map(f => f.model.attributes.concept.data)
+	        // group by count(*)
+	        .reduce((acc, cur) => { acc.set(cur, (acc.get(cur) || 0) + 1); return acc;}, new Map())
+	        .entries() // key = 0, count = 1
+	        .filter(e => e[1] > 1)
+	        .map(e => e[0]);
+	    duplicatePaths = Array.from(duplicatePaths);
+	    $("#duplicate-query-warning").attr("hidden", duplicatePaths.length === 0);
 		var query = queryBuilder.generateQuery(
 				_.pluck(this.filters, "model"), this.queryTemplate, this.resourceUUID);
 		let filterFromSelectedGenomicFilters = this.selectedGenomicFilters?.getCurrentFilter()?.variantInfoFilters;

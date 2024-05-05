@@ -1613,3 +1613,11 @@ remove when above bug is fixed */
 }
 
 /* ==== END Tour ==== */
+
+#duplicate-query-warning {
+    border: solid 1px red;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 10px;
+    text-align: center;
+}
