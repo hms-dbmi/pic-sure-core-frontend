@@ -180,7 +180,7 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 	}.bind(filterList);
 	filterList.runQuery = function(){
 	    var duplicatePaths = this.filters
-	        .filter(f => f.model.attributes.concept)
+	        .filter(f => f.model.attributes.concept && f.model.attributes.concept.data)
 	        .map(f => f.model.attributes.concept.data)
 	        // group by count(*)
 	        .reduce((acc, cur) => { acc.set(cur, (acc.get(cur) || 0) + 1); return acc;}, new Map())
