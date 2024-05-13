@@ -132,7 +132,11 @@ define([
                 var children = $('#concept-tree', this.$el).jstree().get_node(child).children;
                 return children == undefined || children.length === 0;
             }.bind(this));
-            query.query.expectedResultType = "DATAFRAME";
+            if (this.settings.timeSeriesExport && this.settings.timeSeriesExport.toUpperCase() === "TRUE") {
+                query.query.expectedResultType = "DATAFRAME_TIMESERIES";
+            } else {
+                query.query.expectedResultType = "DATAFRAME";
+            }
 
             //we can only clear the unused consents AFTER adding the fields
             if (outputOverride.updateConsentFilters) {
