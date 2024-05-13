@@ -21,6 +21,7 @@
 		"SOME_PATH"
 	],
 	"pageTitle": "PIC-SURE",
+	"timeSeriesExport": "FALSE",
 	"queryExportType":"EXPORT_IMMEDIATE",
 	"queryButtonLabel":"Export for analysis",
 	"defaultValues": {
