@@ -80,7 +80,7 @@ define(['jquery', 'backbone','handlebars', "underscore",
             setUpViews: function() {
                 const parsedVariantData = JSON.parse(variantDataJson);
                 const consequencesList = parsedVariantData.consequences;
-                this.data.frequencyOptions = ['Rare', 'Common'];
+                this.data.frequencyOptions = ['Rare', 'Common', 'Novel'];
                 const dataForGeneSearch = {
                     heading: 'Gene with Variant',
                     searchContext: 'Select genes of interest',
