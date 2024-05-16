@@ -13,7 +13,7 @@ define(['jquery', 'backbone','handlebars', "underscore",
         const geneKey = 'Gene_with_variant';
         const consequenceKey = 'Variant_consequence_calculated';
         const severityKey = 'Variant_severity';
-        const frequencyDescription = overrides.frequencyDescription || 'The variant allele frequency in gnomAD exomes of combined population as discrete text categories. Possible values: Rare (variant frequency less than 1%), Common (variant frequency greater than or equal to 1%).';
+        const frequencyDescription = overrides.frequencyDescription || 'The variant allele frequency in gnomAD genomes of the combined population as discrete text categories. Possible values: Rare (variant frequency less than 1%), Common (variant frequency greater than or equal to 1%), or Novel (variant not in gnomAD database).';
         const TABABLE_CLASS = '.tabable';
         const SELECTED = 'selected';
         const LIST_ITEM = 'list-item';
@@ -80,7 +80,7 @@ define(['jquery', 'backbone','handlebars', "underscore",
             setUpViews: function() {
                 const parsedVariantData = JSON.parse(variantDataJson);
                 const consequencesList = parsedVariantData.consequences;
-                this.data.frequencyOptions = ['Rare', 'Common'];
+                this.data.frequencyOptions = ['Rare', 'Common', 'Novel'];
                 const dataForGeneSearch = {
                     heading: 'Gene with Variant',
                     searchContext: 'Select genes of interest',
