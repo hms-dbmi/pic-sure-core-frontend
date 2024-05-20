@@ -179,12 +179,12 @@ define(["jquery", "handlebars", "underscore", "picSure/queryBuilder", "filter/fi
 		this.runQuery();
 	}.bind(filterList);
 	filterList.runQuery = function(){
-	    var duplicatePaths = this.filters
+	    var duplicatePaths = Array.from(this.filters
 	        .filter(f => f.model.attributes.concept)
 	        .map(f => f.model.attributes.concept.data)
 	        // group by count(*)
 	        .reduce((acc, cur) => { acc.set(cur, (acc.get(cur) || 0) + 1); return acc;}, new Map())
-	        .entries() // key = 0, count = 1
+	        .entries()) // key = 0, count = 1
 	        .filter(e => e[1] > 1)
 	        .map(e => e[0]);
 	    duplicatePaths = Array.from(duplicatePaths);
