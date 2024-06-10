@@ -209,7 +209,7 @@ define(['jquery',
                     const scrollThreshold = 5;
                     if (contentHeight - (scrollTop + containerHeight) <= scrollThreshold) {
                         this.data.page++;
-                        let searchTerm = $(this.data.searchId).val();
+                        let searchTerm = $('#'+this.data.searchId).val();
                         if (!searchTerm) { // .val() could return empty string
                             searchTerm = undefined;
                         }
