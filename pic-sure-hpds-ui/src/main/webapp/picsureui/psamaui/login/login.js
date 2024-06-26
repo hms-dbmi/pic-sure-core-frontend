@@ -22,7 +22,7 @@ define(['common/session', 'common/searchParser', 'jquery', 'handlebars', 'login/
                 $('#main-content').html(overrides.waitingMessage);
             }
             $.ajax({
-                url: '/psama/authentication',
+                url: '/psama/authentication/auth0',
                 type: 'post',
                 data: JSON.stringify({
                     access_token : queryObject.access_token,
