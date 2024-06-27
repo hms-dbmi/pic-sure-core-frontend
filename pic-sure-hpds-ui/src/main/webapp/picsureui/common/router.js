@@ -6,7 +6,7 @@ define([
     'handlebars', 'psamaui/accessRule/accessRuleManagement', 'overrides/router', "filter/filterList",
     "text!common/mainLayout.hbs", "picSure/queryBuilder", "output/outputPanel", "picSure/settings",
     "text!common/unexpected_error.hbs", "analytics/googleAnalytics", "header/bannerConfig", "header/banner",
-    'tour/tour-view', 'common/pic-sure-dialog-view', 'common/modal'
+    'tour/tour-view', 'common/pic-sure-dialog-view', 'common/modal', 'common/contact-widget',
 ], function (
     Backbone, _, session, login, header, footer,
     userProfile, userManagement,
@@ -15,7 +15,7 @@ define([
     HBS, accessRuleManagement, routerOverrides, filterList,
     layoutTemplate, queryBuilder, output, settings,
     unexpectedErrorTemplate, googleAnalytics, bannerConfig, BannerView,
-    tourView, dialog, modal,
+    tourView, dialog, modal, contactWidget,
 ) {
     var publicRoutes = ["not_authorized", "login", "logout"];
 
@@ -57,6 +57,7 @@ define([
             this.unexpectedErrorTemplate = HBS.compile(unexpectedErrorTemplate);
 
             this.displayGoogleAnalytics();
+            this.displayContactWidget();
         },
         execute: function (callback, args, name) {
             if (routerOverrides.execute) {
@@ -309,6 +310,11 @@ define([
             let analyticsView = new googleAnalytics.View({analyticsId: settings.analyticsId});
             analyticsView.render();
             $("head").append(analyticsView.$el);
+        },
+        displayContactWidget: function () {
+            const contactWidgetView = new contactWidget.View({contactKey: settings.contactKey});
+            contactWidgetView.render();
+            $("body").append(contactWidgetView.$el);
         },
         displayUserProfile: function () {
             $(".header-btn.active").removeClass('active');
