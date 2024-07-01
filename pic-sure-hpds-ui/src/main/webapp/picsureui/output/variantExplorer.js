@@ -101,7 +101,6 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
                                     output["variants"].push(values);
                                 }
                             }
-                            output = this.reorderColumns(output);
                         }
                         this.variantData = output;
                     }.bind(this),
@@ -119,31 +118,6 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
             },
             handleSiteDisabled: function(){
                 this.$el.html('<div class="variant-exporer-error"><i class="fa fa-TODO"></i><h4>There is no data to display</h4><br><h5>The Variant Explorer is not enabled for this site</h5><div>');
-            },
-            reorderColumns: function(input){
-                const headersToMoveInOrder = ['CHROM', 'POSITION', 'REF', 'ALT', 'Patients with this variant in subset', 'Patients with this variant NOT in subset', 'Variant_consequence_calculated', 'Gene_with_variant', 'Variant_class', 'Variant_severity', 'Variant_frequency_in_gnomAD', 'Variant_frequency_as_text', 'AC', 'AN'];
-                // Create a map of header indexes for quick lookup
-                const headerIndexMap = {};
-                input.headers.forEach((header, index) => {
-                    headerIndexMap[header] = index;
-                });
-                const reorderedHeaders = headersToMoveInOrder.concat(input.headers.filter(header => !headersToMoveInOrder.includes(header)));
-                //variants is an array of arrays so we need to reorder each variant array
-                const reorderedVariants = input.variants.map(variant => {
-                    const reorderedVariant = [];
-                    reorderedHeaders.forEach(header => {
-                        const headerIndex = headerIndexMap[header];
-                        if (headerIndex !== undefined) {
-                            reorderedVariant.push(variant[headerIndex]);
-                        }
-                    });
-                    return reorderedVariant;
-                });
-
-                return output = {
-                    headers: reorderedHeaders,
-                    variants: reorderedVariants
-                };
             },
             render: function() {
                 this.$el.html(this.variantTableTemplate());
