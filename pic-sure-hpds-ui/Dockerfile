@@ -1,4 +1,4 @@
-FROM httpd:2.4.54-alpine
+FROM httpd:alpine3.20
 
 RUN apk add --update openssl sed
 
