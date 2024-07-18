@@ -35,7 +35,7 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
                         },
                         {
                             targets: [12,13],
-                            visible: false
+                            visible: this.showColumns,
                         }
                       ],
                     deferRender: true,
@@ -101,7 +101,7 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
                                     output["variants"].push(values);
                                 }
                             }
-
+                            this.showColumns = !this.shouldReorderColumns(output);
                             output = this.shouldReorderColumns(output) ? this.reorderColumns(output) : output;
                         }
                         this.variantData = output;
