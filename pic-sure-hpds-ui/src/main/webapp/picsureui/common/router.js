@@ -88,7 +88,6 @@ define([
         logout: function () {
             $(".header-btn.active").removeClass('active');
             sessionStorage.clear();
-            localStorage.clear();
             window.location = "/psamaui/login";
         },
         not_authorized: function () {

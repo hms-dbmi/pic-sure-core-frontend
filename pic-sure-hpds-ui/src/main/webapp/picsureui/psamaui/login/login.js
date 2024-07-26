@@ -86,7 +86,6 @@ define(['common/session', 'common/searchParser', 'jquery', 'handlebars', 'login/
                 overrides.displayNotAuthorized()
             else {
                 sessionStorage.clear();
-                localStorage.clear();
                 $('#main-content').html(HBS.compile(notAuthorizedTemplate)({helpLink:settings.helpLink, loginLink: (settings.loginLink ? settings.loginLink : "/psamaui/login/?redirection_url=/picsureui/")}));
             }
         }

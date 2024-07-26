@@ -99,7 +99,6 @@ define([
         	redirection_url = sessionStorage.redirection_url;
             sessionStorage.clear();
             sessionStorage.redirection_url = redirection_url;
-            localStorage.clear();
         },
         gotoLogin: function (event) {
             this.logout();
