@@ -32,7 +32,7 @@ require.config({
         role: "psamaui/role/",
         termsOfService: "psamaui/termsOfService/",
         user: "psamaui/user/",
-        util: "psamaui/util/",
+        util: "psamaui/util/"
     },
     shim: {
         "bootstrap": {
