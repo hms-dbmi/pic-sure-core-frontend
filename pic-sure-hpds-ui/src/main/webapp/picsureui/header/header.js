@@ -1,42 +1,42 @@
 define([
-	"jquery", "backbone", "underscore", "handlebars", "text!header/header.hbs", "overrides/header",
-	"picSure/settings", "common/pic-dropdown", "common/menu-nav-controls","common/keyboard-nav"
-], function(
-	$, BB, _, HBS, template, overrides, 
-	settings, dropdown, menuNavControls, keyboardNav
-){
+    "jquery", "backbone", "underscore", "handlebars", "text!header/header.hbs", "overrides/header",
+    "picSure/settings", "common/pic-dropdown", "common/menu-nav-controls", "common/keyboard-nav"
+], function (
+    $, BB, _, HBS, template, overrides,
+    settings, dropdown, menuNavControls, keyboardNav
+) {
 
     let headerTabs = undefined;
-	/*
-		Sets the navigable view and adds the selection class to the active tab.
-	*/
-	let tabsFocus = (e) => {
-		console.debug("tabsFocus", e.target);
-		keyboardNav.setCurrentView("headerTabs");
-		dropdown.isOpen() ? e.target.querySelector('.header-btn.nav-dropdown').classList.add('selected') : headerTabs.querySelector('.header-btn.active').classList.add('selected');
-	}
-	/*
-		If the tabs loose focus and the loss of focus is from something out side the #header-tabs div then
-		we unset the navigable view. If a drodown is open it closes it. It also removes the selected class
-		from any selected items.
+    /*
+        Sets the navigable view and adds the selection class to the active tab.
+    */
+    let tabsFocus = (e) => {
+        console.debug("tabsFocus", e.target);
+        keyboardNav.setCurrentView("headerTabs");
+        dropdown.isOpen() ? e.target.querySelector('.header-btn.nav-dropdown').classList.add('selected') : headerTabs.querySelector('.header-btn.active').classList.add('selected');
+    }
+    /*
+        If the tabs loose focus and the loss of focus is from something out side the #header-tabs div then
+        we unset the navigable view. If a drodown is open it closes it. It also removes the selected class
+        from any selected items.
 
-		@param {e} The event that triggered the blur.
-	*/
-	let tabsBlur = (e) => {
-		console.debug("tabsBlur", e);
-		keyboardNav.setCurrentView(undefined);
-		const selectedTab = headerTabs.querySelector('.header-btn.selected');
-		selectedTab && selectedTab.classList.remove('selected');
-		if (!e.relatedTarget) {
-			dropdown.closeDropdown(e);
-		}
-	}
+        @param {e} The event that triggered the blur.
+    */
+    let tabsBlur = (e) => {
+        console.debug("tabsBlur", e);
+        keyboardNav.setCurrentView(undefined);
+        const selectedTab = headerTabs.querySelector('.header-btn.selected');
+        selectedTab && selectedTab.classList.remove('selected');
+        if (!e.relatedTarget) {
+            dropdown.closeDropdown(e);
+        }
+    }
 
-	var headerView = BB.View.extend({
-		initialize : function(){
-			if(settings.pageTitle){
-				document.title = settings.pageTitle;
-			}
+    var headerView = BB.View.extend({
+        initialize: function () {
+            if (settings.pageTitle) {
+                document.title = settings.pageTitle;
+            }
             HBS.registerHelper('not_contains', function (array, object, opts) {
                 var found = _.find(array, function (element) {
                     return (element === object);
@@ -46,14 +46,14 @@ define([
                 else
                     return opts.fn(this);
             });
-            HBS.registerHelper('contains', function(list, element, options) {
-                if(list != undefined && list.indexOf(element) > -1) {
+            HBS.registerHelper('contains', function (list, element, options) {
+                if (list != undefined && list.indexOf(element) > -1) {
                     return options.fn(this);
                 }
                 return options.inverse(this);
             });
             HBS.registerHelper('not_empty', function (array, opts) {
-                if (array && array.length>0)
+                if (array && array.length > 0)
                     return opts.fn(this);
                 else
                     return opts.inverse(this);
@@ -68,77 +68,103 @@ define([
             }
             menuNavControls.init(this);
             this.on({
-				'keynav-arrowup document': menuNavControls.upKeyPressed,
-				'keynav-arrowdown document': menuNavControls.downKeyPressed,
-				'keynav-arrowright document': menuNavControls.rightKeyPressed,
-				'keynav-arrowleft document': menuNavControls.leftKeyPressed,
-				'keynav-enter': menuNavControls.selectItem,
-				'keynav-space': menuNavControls.selectItem,
-				'keynav-escape': menuNavControls.escapeKeyPressed,
-				'keynav-home': menuNavControls.homeKeyPressed,
-				'keynav-end': menuNavControls.endKeyPressed,
-				'keynav-letters': menuNavControls.letterKeyPressed,
-			});
+                'keynav-arrowup document': menuNavControls.upKeyPressed,
+                'keynav-arrowdown document': menuNavControls.downKeyPressed,
+                'keynav-arrowright document': menuNavControls.rightKeyPressed,
+                'keynav-arrowleft document': menuNavControls.leftKeyPressed,
+                'keynav-enter': menuNavControls.selectItem,
+                'keynav-space': menuNavControls.selectItem,
+                'keynav-escape': menuNavControls.escapeKeyPressed,
+                'keynav-home': menuNavControls.homeKeyPressed,
+                'keynav-end': menuNavControls.endKeyPressed,
+                'keynav-letters': menuNavControls.letterKeyPressed,
+            });
             if (!keyboardNav.navigableViews || !keyboardNav.navigableViews['headerTabs']) {
-				keyboardNav.addNavigableView('headerTabs', this);
-			}
-		},
-		events : {
-			"click #logout-btn" : "gotoLogin",
+                keyboardNav.addNavigableView('headerTabs', this);
+            }
+        },
+        events: {
+            "click #logout-btn": "gotoLogin",
             "click .header-navigation": "headerClick",
             "keypress #help-dropdown": "helpDropdownFocused"
-		},
-        helpDropdownFocused: function(event){
-            if(event.keyCode===13){
+        },
+        helpDropdownFocused: function (event) {
+            if (event.keyCode === 13) {
                 $("#help-dropdown-toggle").click();
                 event.preventDefault();
             }
         },
         logout: function (event) {
-        	//save redirection URL so we can log back in after logging out
-        	redirection_url = sessionStorage.redirection_url;
-            sessionStorage.clear();
-            sessionStorage.redirection_url = redirection_url;
-            localStorage.clear();
+            let doLogout = () => {
+                // save redirection URL so we can log back in after logging out
+                let redirection_url = sessionStorage.redirection_url;
+                sessionStorage.clear();
+                sessionStorage.redirection_url = redirection_url;
+                localStorage.clear();
+            }
+
+            $.ajax({
+                url: "/psama/logout",
+                type: 'GET',
+                contentType: 'application/json',
+                success: function (response) {
+                    doLogout();
+                },
+                error: function (response) {
+                    doLogout();
+                }
+            });
         },
         gotoLogin: function (event) {
+            // Get idp before logout or it will be cleared
+            let idp = sessionStorage.getItem('idp');
             this.logout();
-            window.location = settings.loginRedirect ?? "/psamaui/login" + window.location.search;
+            if (idp === 'ras') {
+                // window.location = "https://hms-srce.oktapreview.com/oauth2/default/v1/logout?" +
+                window.location = settings.loginRedirect +
+                    "?id_token_hint=" + JSON.parse(sessionStorage.getItem("session")).oktaIdToken +
+                    "&post_logout_redirect_uri=" + window.location.protocol
+                    + "//" + window.location.hostname
+                    + (window.location.port ? ":" + window.location.port : "")
+                    + "/psamaui/login";
+            } else {
+                window.location = settings.loginRedirect ?? "/psamaui/login" + window.location.search;
+            }
         },
-        headerClick: function(event) {
-		    if ($(event.target).data("href")) {
+        headerClick: function (event) {
+            if ($(event.target).data("href")) {
                 window.history.pushState({}, "", $(event.target).data("href"));
             }
         },
-		render : function(){
+        render: function () {
             dropdown.init(this, [
                 {'click #super-admin-dropdown-toggle': dropdown.toggleDropdown},
-				{'click #help-dropdown-toggle': dropdown.toggleDropdown}, 
-				{'blur .nav-dropdown-menu': dropdown.dropdownBlur}
-			]);
-			this.$el.html(this.template({
-				logoPath: (overrides.logoPath
-					? overrides.logoPath : "/images/logo.png"),
-				helpLink: settings.helpLink,
-				pdfLink: settings.pdfLink,
-				videoLink: settings.videoLink,
+                {'click #help-dropdown-toggle': dropdown.toggleDropdown},
+                {'blur .nav-dropdown-menu': dropdown.dropdownBlur}
+            ]);
+            this.$el.html(this.template({
+                logoPath: (overrides.logoPath
+                    ? overrides.logoPath : "/images/logo.png"),
+                helpLink: settings.helpLink,
+                pdfLink: settings.pdfLink,
+                videoLink: settings.videoLink,
                 jupyterExampleLink: settings.jupyterExampleLink,
                 documentationLink: settings.documentationLink,
                 privileges: this.privileges,
                 applications: this.applications,
                 authenticated: !!sessionStorage.getItem("session")
-			}));
-			headerTabs = this.el.querySelector('#header-tabs');
+            }));
+            headerTabs = this.el.querySelector('#header-tabs');
             headerTabs.addEventListener('focus', tabsFocus);
-			headerTabs.addEventListener('blur', tabsBlur);
+            headerTabs.addEventListener('blur', tabsBlur);
 
-			if(overrides.renderExt){
-				overrides.renderExt(this);
-			}
-		}
-	});
+            if (overrides.renderExt) {
+                overrides.renderExt(this);
+            }
+        }
+    });
 
-	return {
-		View : headerView
-	};
+    return {
+        View: headerView
+    };
 });
