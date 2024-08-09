@@ -120,7 +120,6 @@ define([
             let idp = sessionStorage.getItem('idp');
             this.logout();
             if (idp === 'ras') {
-                // window.location = "https://hms-srce.oktapreview.com/oauth2/default/v1/logout?" +
                 window.location = settings.loginRedirect +
                     "?id_token_hint=" + JSON.parse(sessionStorage.getItem("session")).oktaIdToken +
                     "&post_logout_redirect_uri=" + window.location.protocol
