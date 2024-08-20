@@ -287,7 +287,7 @@ define(['jquery', 'backbone','handlebars', "underscore",
                 let selectedItem = e.target.querySelector('.' + SELECTED);
                 selectedItem && selectedItem.click();
             },
-            getNextGenes: function(page, searchTerm="a") {
+            getNextGenes: function(page, searchTerm="") {
                 const url =
                   window.location.origin + "/picsure/search/" + settings.picSureResourceId +
                   "/values/?genomicConceptPath=" + this.data.genomicConceptPath +
