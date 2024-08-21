@@ -118,24 +118,32 @@ define([
         gotoLogin: function (event) {
             // Get idp before logout or it will be cleared
             let idp = sessionStorage.getItem('idp');
+            let sessionData = JSON.parse(sessionStorage.getItem("session"));
             this.logout();
             if (idp === 'ras') {
                 fetch(settings.ras_session_logout_uri, {
                     method: 'GET',
                     mode: 'no-cors'
-                }).then(response => {
-                    console.debug('RAS session ended');
-                }).finally(() => {
-                    console.debug('Redirecting to login page');
-                    window.location = settings.loginRedirect +
-                        "?id_token_hint=" + JSON.parse(sessionStorage.getItem("session")).oktaIdToken +
-                        "&post_logout_redirect_uri=" + window.location.protocol
-                        + "//" + window.location.hostname
-                        + (window.location.port ? ":" + window.location.port : "")
-                        + "/psamaui/login";
                 })
-
-
+                    .then(response => {
+                        console.debug('RAS session ended');
+                    })
+                    .catch(error => {
+                        console.error('Failed to end RAS session', error);
+                    })
+                    .finally(() => {
+                        console.debug('Redirecting to login page');
+                        if (sessionData && sessionData.oktaIdToken) {
+                            window.location = settings.loginRedirect +
+                                "?id_token_hint=" + sessionData.oktaIdToken +
+                                "&post_logout_redirect_uri=" + window.location.protocol
+                                + "//" + window.location.hostname
+                                + (window.location.port ? ":" + window.location.port : "")
+                                + "/psamaui/login";
+                        } else {
+                            window.location = settings.loginRedirect ?? "/psamaui/login" + window.location.search;
+                        }
+                    });
             } else {
                 window.location = settings.loginRedirect ?? "/psamaui/login" + window.location.search;
             }
