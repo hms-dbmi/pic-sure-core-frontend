@@ -120,12 +120,22 @@ define([
             let idp = sessionStorage.getItem('idp');
             this.logout();
             if (idp === 'ras') {
-                window.location = settings.loginRedirect +
-                    "?id_token_hint=" + JSON.parse(sessionStorage.getItem("session")).oktaIdToken +
-                    "&post_logout_redirect_uri=" + window.location.protocol
-                    + "//" + window.location.hostname
-                    + (window.location.port ? ":" + window.location.port : "")
-                    + "/psamaui/login";
+                fetch(settings.ras_session_logout_uri, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                }).then(response => {
+                    console.debug('RAS session ended');
+                }).finally(() => {
+                    console.debug('Redirecting to login page');
+                    window.location = settings.loginRedirect +
+                        "?id_token_hint=" + JSON.parse(sessionStorage.getItem("session")).oktaIdToken +
+                        "&post_logout_redirect_uri=" + window.location.protocol
+                        + "//" + window.location.hostname
+                        + (window.location.port ? ":" + window.location.port : "")
+                        + "/psamaui/login";
+                })
+
+
             } else {
                 window.location = settings.loginRedirect ?? "/psamaui/login" + window.location.search;
             }
