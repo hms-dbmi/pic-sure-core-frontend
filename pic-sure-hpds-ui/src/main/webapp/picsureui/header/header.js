@@ -101,6 +101,9 @@ define([
                 sessionStorage.clear();
                 sessionStorage.redirection_url = redirection_url;
                 localStorage.clear();
+
+                // Clear session cookie
+                document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             }
 
             $.ajax({
