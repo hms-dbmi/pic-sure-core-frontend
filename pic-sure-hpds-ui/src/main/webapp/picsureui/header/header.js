@@ -96,15 +96,27 @@ define([
         },
         logout: function (event) {
             let doLogout = () => {
-                // save redirection URL so we can log back in after logging out
+                // Attempt to load the logout iFrame for third-party session termination
+                let iframe = document.createElement('iframe');
+                iframe.src = "https://authtest.nih.gov/siteminderagent/smlogoutiframe.asp";
+                iframe.style.display = "none";  // Hide the iframe from view
+                iframe.sandbox = "allow-scripts allow-same-origin";  // Adjust the sandbox if needed
+                document.body.appendChild(iframe);
+
+                // Remove the iframe after 5 seconds
+                setTimeout(() => {
+                    document.body.removeChild(iframe);
+                }, 5000);
+
+                // Clear session cookie
+                document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                // Save redirection URL so we can log back in after logging out
                 let redirection_url = sessionStorage.redirection_url;
                 sessionStorage.clear();
                 sessionStorage.redirection_url = redirection_url;
                 localStorage.clear();
-
-                // Clear session cookie
-                document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            }
+            };
 
             $.ajax({
                 url: "/psama/logout",
