@@ -86,7 +86,7 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
                 return $.ajax({
                     url: window.location.origin + "/psama/user/me/queryTemplate/" + settings.applicationIdForBaseQuery,
                     type: 'GET',
-                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
                     contentType: 'application/json'
                 });
             };
@@ -94,7 +94,7 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
                 return $.ajax({
                     url: window.location.origin + "/psama/user/me",
                     type: 'GET',
-                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
                     contentType: 'application/json'
                 });
             };
@@ -118,6 +118,7 @@ define(["jquery", "underscore", "overrides/session", "picSure/settings", "common
         };
 
         return {
+            updatePrivileges: updatePrivileges,
             username: session.username,
             may: function (permission) {
                 return _.contains(permission, session.permissions);
