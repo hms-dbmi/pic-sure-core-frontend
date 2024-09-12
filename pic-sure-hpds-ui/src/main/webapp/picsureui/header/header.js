@@ -134,12 +134,14 @@ define([
             this.logout();
             if (idp === 'ras') {
                 if (sessionData && sessionData.oktaIdToken) {
-                    window.location = settings.loginRedirect +
+                    let oktaRedirect = settings.loginRedirect +
                         "?id_token_hint=" + sessionData.oktaIdToken +
                         "&post_logout_redirect_uri=" + window.location.protocol
                         + "//" + window.location.hostname
                         + (window.location.port ? ":" + window.location.port : "")
                         + "/psamaui/login";
+                    let oktaEncodedRedirect = encodeURIComponent(oktaRedirect);
+                    window.location = settings.ras_session_logout_uri + oktaEncodedRedirect;
                 } else {
                     window.location = settings.loginRedirect ?? "/psamaui/login" + window.location.search;
                 }
