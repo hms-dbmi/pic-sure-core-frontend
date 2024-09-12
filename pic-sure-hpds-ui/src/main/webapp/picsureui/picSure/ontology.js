@@ -30,7 +30,7 @@ define(["jquery", "underscore", "picSure/settings", "overrides/ontology",
             url: window.location.origin + "/picsure/query/sync",
             type: 'POST',
             headers: {
-                "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
+                "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token
             },
             contentType: 'application/json',
             dataType: 'json',

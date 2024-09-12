@@ -79,7 +79,7 @@ define([
             $.ajax({
                 url: window.location.origin + "/picsure/query/" + queryId + "/result",
                 type: 'POST',
-                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
                 contentType: 'application/json',
                 dataType: 'text',
                 data: "{}", //TODO: check if needed
@@ -205,7 +205,7 @@ define([
                 $.ajax({
                     url: window.location.origin + "/picsure/query" + queryUrlFragment,
                     type: 'POST',
-                    headers: { "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token },
+                    headers: { "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token },
                     contentType: 'application/json',
                     dataType: 'text',
                     data: JSON.stringify(query),
@@ -249,7 +249,7 @@ define([
                 $.ajax({
                     url: window.location.origin + "/picsure/query/sync",
                     type: 'POST',
-                    headers: { "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token },
+                    headers: { "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token },
                     contentType: 'application/json',
                     dataType: 'text',
                     data: JSON.stringify(query),
@@ -366,7 +366,7 @@ define([
                                     $.ajax({
                                         url: window.location.origin + "/picsure/query/sync",
                                         type: 'POST',
-                                        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                                        headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
                                         contentType: 'application/json',
                                         data: JSON.stringify(query),
                                         success: function(crossCounts){
