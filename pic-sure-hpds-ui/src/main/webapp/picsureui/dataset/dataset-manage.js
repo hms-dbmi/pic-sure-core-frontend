@@ -127,7 +127,7 @@ define([
                 $.ajax({
                     url: window.location.origin + "/picsure/dataset/named",
                     type: "GET",
-                    headers: { "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token },
+                    headers: { "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token },
                     contentType: "application/json",
                     dataType: "json",
                     success: function (datasets) {
@@ -154,7 +154,7 @@ define([
             $.ajax({
                 url: window.location.origin + "/picsure/dataset/named/" + uuid,
                 type: "PUT",
-                headers: { "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token },
+                headers: { "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token },
                 contentType: "application/json",
                 dataType: "json",
                 data: JSON.stringify(body),

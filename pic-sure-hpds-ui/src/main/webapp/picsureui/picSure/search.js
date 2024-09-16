@@ -96,7 +96,7 @@ define(["underscore", "common/transportErrors", "overrides/search"], function(_,
                     "query": query
                 }),
                 headers: {
-                    "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token
+                    "Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token
                 },
                 contentType: 'application/json',
                 type: 'POST',

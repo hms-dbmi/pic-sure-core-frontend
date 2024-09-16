@@ -51,7 +51,7 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
                 return $.ajax({
                     url: window.location.origin + "/picsure/query/sync",
                     type: 'POST',
-                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
                     contentType: 'application/json',
                     data: JSON.stringify(deepCopyQuery),
                     dataType: 'text',
@@ -82,7 +82,7 @@ define(["jquery", "underscore", "datatables.net", "backbone", "handlebars", "tex
                 return $.ajax({
                     url: window.location.origin + "/picsure/query/sync",
                     type: 'POST',
-                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                    headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
                     contentType: 'application/json',
                     data: JSON.stringify(deepCopyQuery),
                     dataType: 'text',

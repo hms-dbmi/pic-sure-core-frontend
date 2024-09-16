@@ -62,7 +62,7 @@ define([
             $.ajax({
                 url: window.location.origin + "/picsure/dataset/named",
                 type: 'POST',
-                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+                headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
                 contentType: 'application/json',
                 data: JSON.stringify({
                     "queryId": this.queryUUID,

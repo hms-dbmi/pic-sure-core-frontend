@@ -74,7 +74,7 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 	  					$.ajax({
 	  						url: window.location.origin + "/picsure/query/sync",
 	  						type: 'POST',
-	  						headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+	  						headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
 	  						contentType: 'application/json',
 	  						dataType: 'text',
 	  						data: JSON.stringify(query),
@@ -108,7 +108,7 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
   					$.ajax({
   						url: window.location.origin + "/picsure/query" + queryUrlFragment,
   						type: 'POST',
-  						headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+  						headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
   						contentType: 'application/json',
   						dataType: 'text',
   						data: JSON.stringify(query),
@@ -148,7 +148,7 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 				$.ajax({
 					url: window.location.origin + "/picsure/query/" + queryId + "/result",
 					type: 'POST',
-					headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+					headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
 					contentType: 'application/json',
 					dataType: 'text',
 					data: "{}",
@@ -191,7 +191,7 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 					$.ajax({
 						url: window.location.origin + "/picsure/query/sync",
 						type: 'POST',
-						headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+						headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
 						contentType: 'application/json',
 						data: JSON.stringify(query),
 						success: function(crossCounts){
@@ -259,7 +259,7 @@ define(["jquery", "common/spinner", "backbone", "handlebars", "text!output/dataS
 								$.ajax({
 									url: window.location.origin + "/picsure/query/sync",
 									type: 'POST',
-									headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session")).token},
+									headers: {"Authorization": "Bearer " + JSON.parse(sessionStorage.getItem("session"))?.token},
 									contentType: 'application/json',
 									data: JSON.stringify(query),
 									success: function(crossCounts){
