@@ -131,7 +131,7 @@ define([
                     let oktaEncodedRedirect = encodeURIComponent(oktaRedirect);
                     window.location = settings.ras_session_logout_uri + oktaEncodedRedirect;
                 } else {
-                    window.location = settings.loginRedirect ?? "/psamaui/login" + window.location.search;
+                    window.location = settings.loginRedirect ?? "/psamaui/login";
                 }
             } else {
                 window.location = settings.loginRedirect ?? "/psamaui/login" + window.location.search;
